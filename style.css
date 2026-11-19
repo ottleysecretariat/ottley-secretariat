@@ -147,3 +147,40 @@ h2 { margin: 0 0 2px; font-size: 14px; font-weight: 600; letter-spacing: 2px; te
   .row { flex-direction: column; gap: 0; }
   .row dt { flex: none; }
 }
+
+/* ---- dashboard ---- */
+#view-app .card { margin-bottom: 16px; }
+.grow { flex: 1; min-width: 0; }
+.who-card { padding: 16px; }
+.who-name, #who-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn.sm { padding: 7px 12px; font-size: 13px; }
+.who { flex-wrap: wrap; }
+.msg:empty { display: none; }
+
+.day { margin: 0 0 18px; }
+.day:last-child { margin-bottom: 0; }
+.day-h { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; }
+.day-h b { font-size: 13px; font-weight: 700; color: var(--navy); }
+.day-h span { font-size: 12px; color: var(--muted); }
+.day-h .tag { font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: #fff; background: var(--gold-dark); border-radius: 999px; padding: 1px 9px; }
+.ev { display: flex; gap: 12px; padding: 10px 12px; margin-bottom: 6px; background: var(--soft); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 6px; }
+.ev.draft { border-left-color: #b8bec9; opacity: 0.85; }
+.ev-time { flex: 0 0 76px; font-size: 12px; font-weight: 600; color: var(--gold-dark); line-height: 1.5; }
+.ev-main { flex: 1; min-width: 0; }
+.ev-title { font-weight: 600; color: var(--navy); word-break: break-word; }
+.ev-sub { font-size: 12px; color: var(--muted); word-break: break-word; }
+.ev-sub a { color: var(--gold-dark); font-weight: 600; }
+
+.mail { padding: 10px 0; border-top: 1px solid var(--line); }
+.mail:first-child { border-top: 0; padding-top: 0; }
+.mail-subj { font-weight: 600; color: var(--navy); word-break: break-word; }
+.mail-meta { font-size: 12px; color: var(--muted); word-break: break-word; }
+.mail-res { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; border-radius: 999px; padding: 1px 9px; margin-right: 6px; background: #dcfce7; color: var(--ok); }
+.mail-res.bad { background: #fee2e2; color: var(--err); }
+.empty { color: var(--muted); font-size: 14px; margin: 0; }
+
+@media (max-width: 420px) {
+  .ev { flex-direction: column; gap: 2px; }
+  .ev-time { flex: none; }
+}
+@media (min-width: 900px) { .wrap { max-width: 720px; } }
