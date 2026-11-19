@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#112840">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="logo-square.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Ottley Secretariat</title>
   <link rel="icon" href="logo-square.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,24 +40,40 @@
       <p class="tiny" data-i18n="login_note"></p>
     </section>
 
-    <section id="view-app" class="card" hidden>
-      <div class="who">
-        <img id="who-pic" class="avatar" alt="" hidden>
-        <div>
-          <div id="who-name" class="who-name"></div>
-          <div id="who-email" class="muted small"></div>
+    <div id="view-app" hidden>
+      <section class="card who-card">
+        <div class="who">
+          <img id="who-pic" class="avatar" alt="" hidden>
+          <div class="grow">
+            <div id="who-name" class="who-name"></div>
+            <div id="who-email" class="muted small"></div>
+          </div>
+          <button id="btn-refresh" class="btn ghost sm" type="button" data-i18n="btn_refresh"></button>
+          <button id="btn-logout" class="btn ghost sm" type="button" data-i18n="btn_logout"></button>
         </div>
-      </div>
-      <div class="rule left"></div>
-      <h2 data-i18n="conn_title"></h2>
-      <p class="muted small" data-i18n="conn_sub"></p>
-      <dl id="conn" class="rows"></dl>
+      </section>
+
       <p id="app-msg" class="msg" role="status"></p>
-      <div class="bar">
-        <button id="btn-check" class="btn primary" type="button" data-i18n="btn_check"></button>
-        <button id="btn-logout" class="btn ghost" type="button" data-i18n="btn_logout"></button>
-      </div>
-    </section>
+
+      <section class="card">
+        <h2 data-i18n="agenda_title"></h2>
+        <p class="muted small" data-i18n="agenda_sub"></p>
+        <div class="rule left"></div>
+        <div id="agenda"></div>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="surat_title"></h2>
+        <p class="muted small" data-i18n="surat_sub"></p>
+        <div class="rule left"></div>
+        <div id="surat"></div>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="conn_title"></h2>
+        <dl id="conn" class="rows"></dl>
+      </section>
+    </div>
   </main>
 </body>
 </html>
