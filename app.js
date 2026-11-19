@@ -12,17 +12,7 @@
       login_note: 'Akses terbatas. Akun lain akan ditolak.',
       signing_in: 'Memeriksa akun...',
       conn_title: 'Status koneksi',
-      conn_sub: 'Pemeriksaan sistem.',
-      btn_refresh: 'Segarkan',
-      agenda_title: 'Agenda',
-      agenda_sub: '7 hari ke depan (jadwal yang dibatalkan tidak ditampilkan).',
-      agenda_empty: 'Tidak ada jadwal dalam 7 hari ke depan.',
-      surat_title: 'Riwayat surat',
-      surat_sub: '15 surat terakhir yang dikirim.',
-      surat_empty: 'Belum ada surat terkirim.',
-      today: 'Hari ini', tomorrow: 'Besok', allday: 'Seharian', draft: 'Draf', guests_n: '{n} undangan',
-      maps: 'Peta', to_: 'Kepada', cc_: 'Cc', att_: 'Lampiran', by_: 'oleh', sent: 'Terkirim',
-      loading: 'Memuat...',
+      conn_sub: 'Pemeriksaan sistem sebelum fitur lain dipasang.',
       row_user: 'Masuk sebagai',
       row_sender: 'Pengirim email dan kalender',
       row_time: 'Waktu server (WIB)',
@@ -51,17 +41,7 @@
       login_note: 'Restricted access. Other accounts will be rejected.',
       signing_in: 'Checking account...',
       conn_title: 'Connection status',
-      conn_sub: 'System check.',
-      btn_refresh: 'Refresh',
-      agenda_title: 'Agenda',
-      agenda_sub: 'Next 7 days (cancelled items are hidden).',
-      agenda_empty: 'No schedule in the next 7 days.',
-      surat_title: 'Letter history',
-      surat_sub: 'Last 15 letters sent.',
-      surat_empty: 'No letters sent yet.',
-      today: 'Today', tomorrow: 'Tomorrow', allday: 'All day', draft: 'Draft', guests_n: '{n} invited',
-      maps: 'Map', to_: 'To', cc_: 'Cc', att_: 'Attachments', by_: 'by', sent: 'Sent',
-      loading: 'Loading...',
+      conn_sub: 'System check before other features are added.',
       row_user: 'Signed in as',
       row_sender: 'Email and calendar sender',
       row_time: 'Server time (WIB)',
@@ -107,7 +87,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); }
+    if (state.session && !$('view-app').hidden) renderConn(lastPing);
   }
 
   function setLang(l) {
@@ -162,7 +142,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null;
+    lastPing = null;
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -202,8 +182,8 @@
       .then(function () { state.busy = false; });
   }
 
-  // ---------- halaman utama ----------
-  var lastPing = null, lastDash = null;
+  // ---------- halaman utama (status koneksi) ----------
+  var lastPing = null;
 
   function enterApp() {
     var u = state.session.user || {};
@@ -212,95 +192,7 @@
     var pic = $('who-pic');
     if (u.picture) { pic.src = u.picture; pic.hidden = false; } else { pic.hidden = true; }
     show('view-app');
-    refresh();
-  }
-
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-
-  var MONTHS = {
-    id: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  };
-  var DAYS = {
-    id: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
-    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  };
-
-  // ymd = 'YYYYMMDD'
-  function dayLabel(ymd) {
-    var y = +ymd.slice(0, 4), m = +ymd.slice(4, 6), d = +ymd.slice(6, 8);
-    var wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
-    return DAYS[state.lang][wd] + ', ' + d + ' ' + MONTHS[state.lang][m - 1] + ' ' + y;
-  }
-
-  function addDaysYmd(isoDate, n) {
-    var p = isoDate.split('-');
-    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n));
-    return d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2);
-  }
-
-  function safeUrl(u) { return /^https:\/\//i.test(u || '') ? u : ''; }
-
-  function renderDash(data) {
-    var ag = $('agenda'), su = $('surat');
-    ag.innerHTML = ''; su.innerHTML = '';
-    if (!data) return;
-
-    if (!data.agenda.length) ag.appendChild(el('p', 'empty', t('agenda_empty')));
-    var todayYmd = data.today.replace(/-/g, ''), tomorrowYmd = addDaysYmd(data.today, 1);
-    var cur = null, box = null;
-    data.agenda.forEach(function (it) {
-      if (it.ymd !== cur) {
-        cur = it.ymd;
-        box = el('div', 'day');
-        var h = el('div', 'day-h');
-        h.appendChild(el('b', '', dayLabel(it.ymd)));
-        if (it.ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
-        else if (it.ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
-        box.appendChild(h);
-        ag.appendChild(box);
-      }
-      var ev = el('div', 'ev' + (it.status === 'Draf' ? ' draft' : ''));
-      ev.appendChild(el('div', 'ev-time', it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
-      var main = el('div', 'ev-main');
-      main.appendChild(el('div', 'ev-title', it.title));
-      var sub = [];
-      if (it.status === 'Draf') sub.push(t('draft'));
-      if (it.location && !safeUrl(it.location)) sub.push(it.location);
-      if (it.guests) sub.push(t('guests_n', { n: it.guests }));
-      var s2 = el('div', 'ev-sub', sub.join(' · '));
-      var mu = safeUrl(it.maps);
-      if (mu) {
-        if (sub.length) s2.appendChild(document.createTextNode(' · '));
-        var a = el('a', '', t('maps'));
-        a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer';
-        s2.appendChild(a);
-      }
-      if (s2.textContent) main.appendChild(s2);
-      ev.appendChild(main);
-      box.appendChild(ev);
-    });
-
-    if (!data.surat.length) su.appendChild(el('p', 'empty', t('surat_empty')));
-    data.surat.forEach(function (m) {
-      var d = el('div', 'mail');
-      d.appendChild(el('div', 'mail-subj', m.subject || '-'));
-      var meta = el('div', 'mail-meta');
-      var ok = (m.result || '').toLowerCase() === 'terkirim';
-      meta.appendChild(el('span', 'mail-res' + (ok ? '' : ' bad'), ok ? t('sent') : (m.result || '?')));
-      var parts = [m.time, t('to_') + ': ' + m.to];
-      if (m.cc) parts.push(t('cc_') + ': ' + m.cc);
-      if (m.attachments) parts.push(t('att_') + ': ' + m.attachments);
-      if (m.by) parts.push(t('by_') + ' ' + m.by);
-      meta.appendChild(document.createTextNode(parts.join(' · ')));
-      d.appendChild(meta);
-      su.appendChild(d);
-    });
+    runPing();
   }
 
   function renderConn(p) {
@@ -312,38 +204,30 @@
     if (p.sheetError) problems.push(t('sheet_bad') + p.sheetError);
 
     function row(label, value, cls) {
-      var r = el('div', 'row');
-      r.appendChild(el('dt', '', label));
-      r.appendChild(el('dd', cls || '', value));
-      dl.appendChild(r);
+      var r = document.createElement('div'); r.className = 'row';
+      var dt = document.createElement('dt'); dt.textContent = label;
+      var dd = document.createElement('dd'); dd.textContent = value; if (cls) dd.className = cls;
+      r.appendChild(dt); r.appendChild(dd); dl.appendChild(r);
     }
     row(t('row_user'), p.user);
     row(t('row_sender'), p.sender, p.senderOk ? '' : 'err');
     row(t('row_time'), p.serverTime);
     row(t('row_sheet'), p.jadwalRows == null ? '-' : String(p.jadwalRows), p.sheetError ? 'err' : '');
     row(t('row_status'), problems.length ? t('status_warn') : t('status_ok'), problems.length ? 'err' : 'ok');
-    return problems;
+    say('app-msg', problems.join(' '), problems.length ? 'err' : '');
   }
 
-  function handleErr(e) {
-    if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return true; }
-    say('app-msg', errText(e), 'err');
-    return false;
-  }
-
-  function refresh() {
-    if (state.refreshing) return;
-    state.refreshing = true;
-    $('btn-refresh').disabled = true;
-    say('app-msg', t('loading'));
-    var msgs = [];
-    Promise.all([
-      api('ping').then(function (p) { lastPing = p; var pr = renderConn(p); if (pr) msgs = msgs.concat(pr); }),
-      api('dashboard').then(function (d) { lastDash = d; renderDash(d); })
-    ])
-      .then(function () { say('app-msg', msgs.join(' '), msgs.length ? 'err' : ''); })
-      .catch(function (e) { handleErr(e); })
-      .then(function () { state.refreshing = false; $('btn-refresh').disabled = false; });
+  function runPing() {
+    $('btn-check').disabled = true;
+    say('app-msg', t('checking'));
+    api('ping')
+      .then(function (p) { lastPing = p; renderConn(p); })
+      .catch(function (e) {
+        if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; }
+        $('conn').innerHTML = '';
+        say('app-msg', errText(e), 'err');
+      })
+      .then(function () { $('btn-check').disabled = false; });
   }
 
   // ---------- mulai ----------
@@ -352,7 +236,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', refresh);
+    $('btn-check').addEventListener('click', runPing);
     $('btn-logout').addEventListener('click', function () { logout(''); });
 
     applyLang();
@@ -369,10 +253,6 @@
     show('view-login');
     initGoogle();
     setTimeout(function () { if (!googleReady) say('login-msg', t('err_google_load'), 'err'); }, 8000);
-  }
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { /* abaikan */ }); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
