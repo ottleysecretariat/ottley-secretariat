@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#112840">
+  <title>Ottley Secretariat</title>
+  <link rel="icon" href="logo-square.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <span class="top-name">Ottley Secretariat</span>
+    <button id="btn-lang" class="chip" type="button" aria-label="Language"></button>
+  </header>
+
+  <main class="wrap">
+    <section id="view-boot" class="card center" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+    </section>
+
+    <section id="view-login" class="card center" hidden>
+      <img class="logo" src="logo-wide.png" alt="Ottley Secretariat">
+      <div class="rule"></div>
+      <h1 data-i18n="login_title"></h1>
+      <p class="muted" data-i18n="login_sub"></p>
+      <div id="gbtn" class="gbtn"></div>
+      <p id="login-msg" class="msg" role="status"></p>
+      <p class="tiny" data-i18n="login_note"></p>
+    </section>
+
+    <section id="view-app" class="card" hidden>
+      <div class="who">
+        <img id="who-pic" class="avatar" alt="" hidden>
+        <div>
+          <div id="who-name" class="who-name"></div>
+          <div id="who-email" class="muted small"></div>
+        </div>
+      </div>
+      <div class="rule left"></div>
+      <h2 data-i18n="conn_title"></h2>
+      <p class="muted small" data-i18n="conn_sub"></p>
+      <dl id="conn" class="rows"></dl>
+      <p id="app-msg" class="msg" role="status"></p>
+      <div class="bar">
+        <button id="btn-check" class="btn primary" type="button" data-i18n="btn_check"></button>
+        <button id="btn-logout" class="btn ghost" type="button" data-i18n="btn_logout"></button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
