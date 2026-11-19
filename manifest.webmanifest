@@ -1,0 +1,13 @@
+{
+  "name": "Ottley Secretariat",
+  "short_name": "Secretariat",
+  "description": "Office of Noel Ottley",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#efece5",
+  "theme_color": "#112840",
+  "icons": [
+    { "src": "logo-square.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
