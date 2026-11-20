@@ -23,6 +23,20 @@
       today: 'Hari ini', tomorrow: 'Besok', allday: 'Seharian', draft: 'Draf', guests_n: '{n} undangan',
       maps: 'Peta', to_: 'Kepada', cc_: 'Cc', att_: 'Lampiran', by_: 'oleh', sent: 'Terkirim',
       loading: 'Memuat...',
+      tab_home: 'Beranda', tab_jadwal: 'Jadwal',
+      jadwal_title: 'Jadwal', jadwal_sub: 'Tersinkron otomatis ke Google Calendar.',
+      j_add: '+ Tambah', scope_upcoming: 'Mendatang', scope_past: 'Lalu', scope_cancelled: 'Dibatalkan',
+      j_empty_upcoming: 'Belum ada jadwal mendatang.', j_empty_past: 'Tidak ada jadwal yang sudah lewat.', j_empty_cancelled: 'Tidak ada jadwal yang dibatalkan.',
+      j_edit: 'Ubah', j_cancel: 'Batalkan', j_restore: 'Aktifkan lagi', j_confirm_cancel: 'Batalkan jadwal "{t}"? Event di Google Calendar ikut dihapus.',
+      j_fix: 'Perlu diperbaiki: ', j_more: 'Menampilkan 200 dari {n} jadwal.', j_sync_err: 'Tersimpan di Sheet, tapi sinkron ke Calendar bermasalah: ',
+      j_saved: 'Tersimpan.', j_new: 'Jadwal baru', j_edit_title: 'Ubah jadwal',
+      f_title: 'Judul', f_date: 'Tanggal', f_start: 'Mulai', f_end: 'Selesai', f_time_hint: 'Kosongkan jam mulai untuk acara seharian.',
+      f_loc: 'Lokasi / tautan', f_maps: 'Tautan Google Maps (opsional)', f_guests: 'Undang (email, pisahkan koma)', f_rem: 'Pengingat (maks. 5)',
+      f_rem_none: 'Tanpa pengingat', f_notes: 'Catatan', f_status: 'Status',
+      st_Aktif: 'Aktif', st_Draf: 'Draf', st_Batal: 'Batal',
+      btn_save: 'Simpan', btn_close: 'Tutup', saving: 'Menyimpan...',
+      u_min: 'menit', u_hour: 'jam', u_day: 'hari', u_week: 'minggu',
+      v_title: 'Judul belum diisi.', v_date: 'Tanggal belum dipilih.',
       row_user: 'Masuk sebagai',
       row_sender: 'Pengirim email dan kalender',
       row_time: 'Waktu server (WIB)',
@@ -62,6 +76,20 @@
       today: 'Today', tomorrow: 'Tomorrow', allday: 'All day', draft: 'Draft', guests_n: '{n} invited',
       maps: 'Map', to_: 'To', cc_: 'Cc', att_: 'Attachments', by_: 'by', sent: 'Sent',
       loading: 'Loading...',
+      tab_home: 'Home', tab_jadwal: 'Schedule',
+      jadwal_title: 'Schedule', jadwal_sub: 'Automatically synced to Google Calendar.',
+      j_add: '+ Add', scope_upcoming: 'Upcoming', scope_past: 'Past', scope_cancelled: 'Cancelled',
+      j_empty_upcoming: 'No upcoming items.', j_empty_past: 'No past items.', j_empty_cancelled: 'No cancelled items.',
+      j_edit: 'Edit', j_cancel: 'Cancel item', j_restore: 'Reactivate', j_confirm_cancel: 'Cancel "{t}"? The Google Calendar event will be removed too.',
+      j_fix: 'Needs fixing: ', j_more: 'Showing 200 of {n} items.', j_sync_err: 'Saved to the Sheet, but syncing to Calendar had a problem: ',
+      j_saved: 'Saved.', j_new: 'New item', j_edit_title: 'Edit item',
+      f_title: 'Title', f_date: 'Date', f_start: 'Start', f_end: 'End', f_time_hint: 'Leave start empty for an all-day event.',
+      f_loc: 'Location / link', f_maps: 'Google Maps link (optional)', f_guests: 'Invite (emails, comma separated)', f_rem: 'Reminders (max 5)',
+      f_rem_none: 'No reminder', f_notes: 'Notes', f_status: 'Status',
+      st_Aktif: 'Active', st_Draf: 'Draft', st_Batal: 'Cancelled',
+      btn_save: 'Save', btn_close: 'Close', saving: 'Saving...',
+      u_min: 'min', u_hour: 'h', u_day: 'd', u_week: 'w',
+      v_title: 'Title is required.', v_date: 'Pick a date.',
       row_user: 'Signed in as',
       row_sender: 'Email and calendar sender',
       row_time: 'Server time (WIB)',
@@ -107,7 +135,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); }
   }
 
   function setLang(l) {
@@ -162,7 +190,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null;
+    lastPing = null; lastDash = null; jData = null; closeForm();
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -212,6 +240,7 @@
     var pic = $('who-pic');
     if (u.picture) { pic.src = u.picture; pic.hidden = false; } else { pic.hidden = true; }
     show('view-app');
+    switchTab('home');
     refresh();
   }
 
@@ -325,6 +354,184 @@
     return problems;
   }
 
+  // ---------- tab ----------
+  var tab = 'home', jScope = 'upcoming', jData = null, homeStale = false, formState = null;
+
+  function switchTab(name) {
+    tab = name;
+    document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-tab') === name); });
+    $('tab-home').hidden = name !== 'home';
+    $('tab-jadwal').hidden = name !== 'jadwal';
+    if (name === 'jadwal') loadJadwal();
+    if (name === 'home' && homeStale) { homeStale = false; refresh(); }
+  }
+
+  // ---------- jadwal ----------
+  function remLabel(m) {
+    var u = function (k) { return t(k); };
+    if (m === 0) return '0 ' + u('u_min');
+    if (m % 10080 === 0) return (m / 10080) + ' ' + u('u_week');
+    if (m % 1440 === 0) return (m / 1440) + ' ' + u('u_day');
+    if (m % 60 === 0) return (m / 60) + ' ' + u('u_hour');
+    return m + ' ' + u('u_min');
+  }
+
+  function loadJadwal() {
+    say('j-msg', t('loading'));
+    var scope = jScope;
+    api('jadwalList', { scope: scope })
+      .then(function (d) { if (scope !== jScope) return; jData = d; say('j-msg', ''); renderJadwal(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
+  }
+
+  function renderJadwal() {
+    var box = $('j-list');
+    box.innerHTML = '';
+    if (!jData) return;
+    if (!jData.items.length) { box.appendChild(el('p', 'empty', t('j_empty_' + jData.scope))); return; }
+    var todayYmd = jData.today.replace(/-/g, ''), tomorrowYmd = addDaysYmd(jData.today, 1);
+    var cur = null, day = null;
+    jData.items.forEach(function (it) {
+      var key = it.error ? 'bad' : it.ymd;
+      if (key !== cur) {
+        cur = key;
+        day = el('div', 'day');
+        var h = el('div', 'day-h');
+        h.appendChild(el('b', '', it.error ? t('j_fix').replace(/: $/, '') : dayLabel(it.ymd)));
+        if (it.ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
+        else if (it.ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
+        day.appendChild(h);
+        box.appendChild(day);
+      }
+      var ev = el('div', 'ev' + (it.error ? ' bad' : it.status === 'Draf' ? ' draft' : ''));
+      ev.appendChild(el('div', 'ev-time', it.error ? '-' : it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
+      var main = el('div', 'ev-main');
+      main.appendChild(el('div', 'ev-title', it.title));
+      if (it.error) main.appendChild(el('div', 'ev-warn', t('j_fix') + it.error));
+      var sub = [];
+      if (it.status === 'Draf') sub.push(t('draft'));
+      if (it.location) sub.push(it.location);
+      if (it.guests.length) sub.push(t('guests_n', { n: it.guests.length }));
+      var s2 = el('div', 'ev-sub', sub.join(' · '));
+      var mu = safeUrl(it.maps);
+      if (mu) {
+        if (sub.length) s2.appendChild(document.createTextNode(' · '));
+        var a = el('a', '', t('maps')); a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        s2.appendChild(a);
+      }
+      if (s2.textContent) main.appendChild(s2);
+      if (/^Galat/.test(it.sync)) main.appendChild(el('div', 'ev-warn', it.sync));
+      var act = el('div', 'ev-act');
+      var be = el('button', 'lnk', t('j_edit')); be.type = 'button';
+      be.addEventListener('click', function () { openForm(it); });
+      act.appendChild(be);
+      var bc = el('button', 'lnk' + (it.status === 'Batal' ? '' : ' danger'), it.status === 'Batal' ? t('j_restore') : t('j_cancel')); bc.type = 'button';
+      bc.addEventListener('click', function () { changeStatus(it, bc); });
+      act.appendChild(bc);
+      main.appendChild(act);
+      ev.appendChild(main);
+      day.appendChild(ev);
+    });
+    if (jData.total > jData.items.length) box.appendChild(el('p', 'more', t('j_more', { n: jData.total })));
+  }
+
+  function changeStatus(it, btn) {
+    var cancelling = it.status !== 'Batal';
+    if (cancelling && !window.confirm(t('j_confirm_cancel', { t: it.title }))) return;
+    btn.disabled = true;
+    say('j-msg', t('saving'));
+    api('jadwalStatus', { id: it.id, status: cancelling ? 'Batal' : 'Aktif' })
+      .then(function (r) {
+        homeStale = true;
+        say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
+        return api('jadwalList', { scope: jScope }).then(function (d) { jData = d; renderJadwal(); });
+      })
+      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
+  }
+
+  // ---------- form jadwal ----------
+  function newKey() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+
+  function openForm(it) {
+    formState = it ? JSON.parse(JSON.stringify(it)) : {
+      id: '', title: '', date: jData ? jData.today : '', start: '', end: '', location: '', maps: '', notes: '', guests: [],
+      reminders: jData ? jData.defaults.slice() : [], status: 'Aktif'
+    };
+    formState._key = newKey();
+    buildForm(formState);
+    $('sheet').hidden = false;
+    document.body.style.overflow = 'hidden';
+    say('jf-msg', '');
+    setTimeout(function () { $('f-title').focus(); }, 50);
+  }
+
+  function closeForm() {
+    var sh = $('sheet');
+    if (sh) sh.hidden = true;
+    document.body.style.overflow = '';
+    formState = null;
+  }
+
+  function buildForm(f) {
+    if (!f) return;
+    var editing = !!f.id;
+    $('jf-title').textContent = editing ? t('j_edit_title') : t('j_new');
+    $('f-title').value = f.title; $('f-date').value = f.date; $('f-start').value = f.start; $('f-end').value = f.end;
+    $('f-loc').value = f.location; $('f-maps').value = f.maps; $('f-notes').value = f.notes; $('f-guests').value = f.guests.join(', ');
+    var st = $('f-status'); st.innerHTML = '';
+    (editing ? ['Aktif', 'Draf', 'Batal'] : ['Aktif', 'Draf']).forEach(function (v) {
+      var o = el('option', '', t('st_' + v)); o.value = v; if (v === f.status) o.selected = true; st.appendChild(o);
+    });
+    var box = $('f-rem'); box.innerHTML = '';
+    var mins = (jData ? jData.presets : []).map(function (p) { return p.m; });
+    f.reminders.forEach(function (m) { if (mins.indexOf(m) < 0) mins.push(m); });
+    mins.sort(function (a, b) { return b - a; });
+    mins.forEach(function (m) {
+      var lb = el('label', 'chip-c');
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = String(m); cb.checked = f.reminders.indexOf(m) >= 0;
+      lb.appendChild(cb); lb.appendChild(document.createTextNode(remLabel(m)));
+      box.appendChild(lb);
+    });
+  }
+
+  function readForm() {
+    var rem = [];
+    $('f-rem').querySelectorAll('input:checked').forEach(function (c) { rem.push(Number(c.value)); });
+    return {
+      id: formState.id || undefined, title: $('f-title').value.trim(), date: $('f-date').value, start: $('f-start').value, end: $('f-end').value,
+      location: $('f-loc').value.trim(), maps: $('f-maps').value.trim(), notes: $('f-notes').value.trim(),
+      guests: $('f-guests').value, reminders: rem, status: $('f-status').value
+    };
+  }
+
+  function submitForm(ev) {
+    ev.preventDefault();
+    if (state.saving || !formState) return;
+    var item = readForm();
+    if (!item.title) { say('jf-msg', t('v_title'), 'err'); $('f-title').focus(); return; }
+    if (!item.date) { say('jf-msg', t('v_date'), 'err'); $('f-date').focus(); return; }
+    if (item.reminders.length > 5) { say('jf-msg', t('f_rem'), 'err'); return; }
+    state.saving = true;
+    $('jf-save').disabled = true;
+    say('jf-msg', t('saving'));
+    api('jadwalSave', { item: item, key: formState._key })
+      .then(function (r) {
+        closeForm();
+        homeStale = true;
+        say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
+        // lompat ke daftar yang memuat jadwal ini
+        var today = jData ? jData.today : '';
+        if (r.item.status === 'Batal') jScope = 'cancelled'; else if (r.item.date && r.item.date < today) jScope = 'past'; else jScope = 'upcoming';
+        document.querySelectorAll('.seg-b').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-scope') === jScope); });
+        return api('jadwalList', { scope: jScope }).then(function (d) { jData = d; renderJadwal(); });
+      })
+      .catch(function (e) {
+        if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; }
+        say('jf-msg', errText(e), 'err');
+      })
+      .then(function () { state.saving = false; $('jf-save').disabled = false; });
+  }
+
   function handleErr(e) {
     if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return true; }
     say('app-msg', errText(e), 'err');
@@ -352,7 +559,20 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', refresh);
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') loadJadwal(); else refresh(); });
+    document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
+    document.querySelectorAll('.seg-b').forEach(function (b) {
+      b.addEventListener('click', function () {
+        jScope = b.getAttribute('data-scope');
+        document.querySelectorAll('.seg-b').forEach(function (x) { x.classList.toggle('on', x === b); });
+        loadJadwal();
+      });
+    });
+    $('j-add').addEventListener('click', function () { openForm(null); });
+    $('jf').addEventListener('submit', submitForm);
+    $('jf-cancel').addEventListener('click', closeForm);
+    $('sheet').addEventListener('click', function (e) { if (e.target === $('sheet')) closeForm(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('sheet').hidden) closeForm(); });
     $('btn-logout').addEventListener('click', function () { logout(''); });
 
     applyLang();
