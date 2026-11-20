@@ -53,8 +53,14 @@
         </div>
       </section>
 
+      <nav class="tabs" aria-label="Menu">
+        <button class="tab on" type="button" data-tab="home" data-i18n="tab_home"></button>
+        <button class="tab" type="button" data-tab="jadwal" data-i18n="tab_jadwal"></button>
+      </nav>
+
       <p id="app-msg" class="msg" role="status"></p>
 
+      <div id="tab-home">
       <section class="card">
         <h2 data-i18n="agenda_title"></h2>
         <p class="muted small" data-i18n="agenda_sub"></p>
@@ -73,7 +79,48 @@
         <h2 data-i18n="conn_title"></h2>
         <dl id="conn" class="rows"></dl>
       </section>
+      </div>
+
+      <div id="tab-jadwal" hidden>
+        <section class="card">
+          <div class="head-row">
+            <div class="grow"><h2 data-i18n="jadwal_title"></h2><p class="muted small" data-i18n="jadwal_sub"></p></div>
+            <button id="j-add" class="btn primary sm" type="button" data-i18n="j_add"></button>
+          </div>
+          <div class="seg" role="tablist">
+            <button class="seg-b on" type="button" data-scope="upcoming" data-i18n="scope_upcoming"></button>
+            <button class="seg-b" type="button" data-scope="past" data-i18n="scope_past"></button>
+            <button class="seg-b" type="button" data-scope="cancelled" data-i18n="scope_cancelled"></button>
+          </div>
+          <p id="j-msg" class="msg" role="status"></p>
+          <div id="j-list"></div>
+        </section>
+      </div>
     </div>
   </main>
+
+  <div id="sheet" class="sheet" hidden>
+    <form id="jf" class="sheet-card" novalidate autocomplete="off">
+      <h2 id="jf-title"></h2>
+      <label class="fl"><span data-i18n="f_title"></span><input id="f-title" type="text" maxlength="200"></label>
+      <div class="grid3">
+        <label class="fl"><span data-i18n="f_date"></span><input id="f-date" type="date"></label>
+        <label class="fl"><span data-i18n="f_start"></span><input id="f-start" type="time"></label>
+        <label class="fl"><span data-i18n="f_end"></span><input id="f-end" type="time"></label>
+      </div>
+      <p class="tiny tight" data-i18n="f_time_hint"></p>
+      <label class="fl"><span data-i18n="f_loc"></span><input id="f-loc" type="text" maxlength="300"></label>
+      <label class="fl"><span data-i18n="f_maps"></span><input id="f-maps" type="url" inputmode="url" placeholder="https://maps.app.goo.gl/..."></label>
+      <label class="fl"><span data-i18n="f_guests"></span><textarea id="f-guests" rows="2" placeholder="nama@email.com, ..."></textarea></label>
+      <div class="fl"><span data-i18n="f_rem"></span><div id="f-rem" class="chips"></div></div>
+      <label class="fl"><span data-i18n="f_notes"></span><textarea id="f-notes" rows="3" maxlength="3000"></textarea></label>
+      <label class="fl"><span data-i18n="f_status"></span><select id="f-status"></select></label>
+      <p id="jf-msg" class="msg" role="alert"></p>
+      <div class="bar">
+        <button id="jf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
+        <button id="jf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>
