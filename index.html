@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#112840">
+  <meta name="theme-color" content="#14263a">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="logo-square.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +13,7 @@
   <link rel="icon" href="logo-square.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -25,77 +25,84 @@
     <button id="btn-lang" class="chip" type="button" aria-label="Language"></button>
   </header>
 
+  <nav id="nav" class="nav" aria-label="Menu" hidden>
+    <div class="nav-brand">
+      <img src="logo-square.png" alt="" width="44" height="44">
+      <div><div class="nav-name">Ottley Secretariat</div><div class="nav-sub">Office of Noel Ottley</div></div>
+    </div>
+    <button class="tab on" type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 10v9h4v-5h4v5h4v-9"/></svg><span data-i18n="tab_home"></span></button>
+    <button class="tab" type="button" data-tab="jadwal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span data-i18n="tab_jadwal"></span></button>
+    <button class="tab" type="button" data-tab="surat"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="1"/><path d="M3 7l9 7 9-7"/></svg><span data-i18n="tab_surat"></span></button>
+  </nav>
+
   <main class="wrap">
-    <section id="view-boot" class="card center" aria-live="polite">
+    <section id="view-boot" class="boot" aria-live="polite">
       <div class="spinner" aria-hidden="true"></div>
     </section>
 
-    <section id="view-login" class="card center" hidden>
-      <img class="logo" src="logo-wide.png" alt="Ottley Secretariat">
-      <div class="rule"></div>
-      <h1 data-i18n="login_title"></h1>
-      <p class="muted" data-i18n="login_sub"></p>
-      <div id="gbtn" class="gbtn"></div>
-      <p id="login-msg" class="msg" role="status"></p>
-      <p class="tiny" data-i18n="login_note"></p>
+    <section id="view-login" class="login" hidden>
+      <div class="login-band" aria-hidden="true"></div>
+      <div class="login-body">
+        <img class="logo" src="logo-wide.png" alt="Ottley Secretariat">
+        <h1 data-i18n="login_title"></h1>
+        <p class="lede" data-i18n="login_sub"></p>
+        <div id="gbtn" class="gbtn"></div>
+        <p id="login-msg" class="msg" role="status"></p>
+        <p class="tiny" data-i18n="login_note"></p>
+      </div>
     </section>
 
     <div id="view-app" hidden>
-      <section class="card who-card">
-        <div class="who">
-          <img id="who-pic" class="avatar" alt="" hidden>
-          <div class="grow">
-            <div id="who-name" class="who-name"></div>
-            <div id="who-email" class="muted small"></div>
-          </div>
-          <button id="btn-refresh" class="btn ghost sm" type="button" data-i18n="btn_refresh"></button>
-          <button id="btn-logout" class="btn ghost sm" type="button" data-i18n="btn_logout"></button>
+      <div class="who">
+        <img id="who-pic" class="avatar" alt="" hidden>
+        <div class="grow">
+          <div id="who-name" class="who-name"></div>
+          <div id="who-email" class="who-email"></div>
         </div>
-      </section>
-
-      <nav class="tabs" aria-label="Menu">
-        <button class="tab on" type="button" data-tab="home" data-i18n="tab_home"></button>
-        <button class="tab" type="button" data-tab="jadwal" data-i18n="tab_jadwal"></button>
-        <button class="tab" type="button" data-tab="surat" data-i18n="tab_surat"></button>
-      </nav>
+        <button id="btn-refresh" class="lnk" type="button" data-i18n="btn_refresh"></button>
+        <button id="btn-logout" class="lnk" type="button" data-i18n="btn_logout"></button>
+      </div>
 
       <p id="app-msg" class="msg" role="status"></p>
 
       <div id="tab-home">
-      <section class="card">
-        <h2 data-i18n="agenda_title"></h2>
-        <p class="muted small" data-i18n="agenda_sub"></p>
-        <div class="rule left"></div>
-        <div id="agenda"></div>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="surat_title"></h2>
-        <p class="muted small" data-i18n="surat_sub"></p>
-        <div class="rule left"></div>
-        <div id="surat"></div>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="conn_title"></h2>
-        <dl id="conn" class="rows"></dl>
-      </section>
+        <div class="hero">
+          <div id="hero-date" class="eyebrow"></div>
+          <h1 id="hero-hello" class="hello"></h1>
+          <p id="hero-sum" class="lede"></p>
+        </div>
+        <div class="cols">
+          <section class="block">
+            <h2 data-i18n="agenda_title"></h2>
+            <p class="sub" data-i18n="agenda_sub"></p>
+            <div id="agenda"></div>
+          </section>
+          <section class="block">
+            <h2 data-i18n="surat_title"></h2>
+            <p class="sub" data-i18n="surat_sub"></p>
+            <div id="surat"></div>
+          </section>
+        </div>
+        <details id="sys" class="sys">
+          <summary data-i18n="conn_title"></summary>
+          <dl id="conn" class="rows"></dl>
+        </details>
       </div>
 
       <div id="tab-jadwal" hidden>
-        <section class="card">
+        <div class="hero">
           <div class="head-row">
-            <div class="grow"><h2 data-i18n="jadwal_title"></h2><p class="muted small" data-i18n="jadwal_sub"></p></div>
-            <button id="j-add" class="btn primary sm" type="button" data-i18n="j_add"></button>
+            <div class="grow"><h1 class="hello" data-i18n="jadwal_title"></h1><p class="lede" data-i18n="jadwal_sub"></p></div>
+            <button id="j-add" class="btn primary" type="button" data-i18n="j_add"></button>
           </div>
-          <div class="seg" role="tablist">
-            <button class="seg-b on" type="button" data-scope="upcoming" data-i18n="scope_upcoming"></button>
-            <button class="seg-b" type="button" data-scope="past" data-i18n="scope_past"></button>
-            <button class="seg-b" type="button" data-scope="cancelled" data-i18n="scope_cancelled"></button>
-          </div>
-          <p id="j-msg" class="msg" role="status"></p>
-          <div id="j-list"></div>
-        </section>
+        </div>
+        <div class="seg" role="tablist">
+          <button class="seg-b on" type="button" data-scope="upcoming" data-i18n="scope_upcoming"></button>
+          <button class="seg-b" type="button" data-scope="past" data-i18n="scope_past"></button>
+          <button class="seg-b" type="button" data-scope="cancelled" data-i18n="scope_cancelled"></button>
+        </div>
+        <p id="j-msg" class="msg" role="status"></p>
+        <div id="j-list"></div>
       </div>
 
       <div id="tab-surat" hidden>
