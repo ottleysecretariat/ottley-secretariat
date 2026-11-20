@@ -56,6 +56,7 @@
       <nav class="tabs" aria-label="Menu">
         <button class="tab on" type="button" data-tab="home" data-i18n="tab_home"></button>
         <button class="tab" type="button" data-tab="jadwal" data-i18n="tab_jadwal"></button>
+        <button class="tab" type="button" data-tab="surat" data-i18n="tab_surat"></button>
       </nav>
 
       <p id="app-msg" class="msg" role="status"></p>
@@ -94,6 +95,44 @@
           </div>
           <p id="j-msg" class="msg" role="status"></p>
           <div id="j-list"></div>
+        </section>
+      </div>
+
+      <div id="tab-surat" hidden>
+        <section class="card">
+          <h2 data-i18n="surat_form_title"></h2>
+          <p class="muted small"><span data-i18n="s_from"></span> <b id="s-sender">-</b></p>
+          <p id="s-warn" class="msg err" hidden></p>
+          <form id="sf" novalidate autocomplete="off">
+            <label class="fl"><span data-i18n="s_to"></span><input id="s-to" type="text" inputmode="email" placeholder="nama@contoh.com"></label>
+            <label class="fl"><span data-i18n="s_cc"></span><input id="s-cc" type="text" inputmode="email"></label>
+            <label class="fl"><span data-i18n="s_nama"></span><input id="s-nama" type="text" maxlength="150"></label>
+            <div class="grid2">
+              <label class="fl"><span data-i18n="s_lang"></span><select id="s-lang"><option value="ID">Bahasa Indonesia</option><option value="EN">English</option></select></label>
+              <label class="fl"><span data-i18n="s_part"></span><select id="s-part"></select></label>
+            </div>
+            <label class="fl"><span data-i18n="s_event"></span><select id="s-ev"></select></label>
+            <p class="greet">Pembuka / Opening: <b id="s-hello">-</b><br>Penutup / Closing: <b id="s-close">-</b></p>
+            <label class="fl"><span data-i18n="s_tpl"></span><select id="s-tpl"></select></label>
+            <div class="grid2">
+              <label class="fl"><span data-i18n="s_cardtitle"></span><input id="s-card" type="text" maxlength="80"></label>
+              <label class="fl"><span data-i18n="s_maps"></span><input id="s-maps" type="url" inputmode="url" placeholder="https://maps.app.goo.gl/..."></label>
+            </div>
+            <label class="fl"><span data-i18n="s_subject"></span><input id="s-subject" type="text" maxlength="300"></label>
+            <label class="fl"><span data-i18n="s_body"></span><textarea id="s-body" rows="8" maxlength="8000"></textarea></label>
+            <p class="tiny tight" data-i18n="s_body_hint"></p>
+            <div id="s-fields"></div>
+            <label class="fl"><span data-i18n="s_files"></span><textarea id="s-files" rows="2" placeholder="https://drive.google.com/file/d/.../view"></textarea></label>
+            <div id="s-filelist" class="files"></div>
+            <div class="subj"><span data-i18n="s_subj_prev"></span> <b id="s-subj">-</b></div>
+            <iframe id="s-prev" class="prev" sandbox="" title="Preview"></iframe>
+            <p id="s-msg" class="msg" role="status"></p>
+            <div class="bar">
+              <button id="s-test" class="btn ghost" type="button" data-i18n="s_test"></button>
+              <button id="s-send" class="btn primary" type="button" data-i18n="s_send"></button>
+              <button id="s-new" class="btn ghost" type="button" data-i18n="s_new" hidden></button>
+            </div>
+          </form>
         </section>
       </div>
     </div>
