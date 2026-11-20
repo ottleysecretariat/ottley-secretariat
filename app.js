@@ -7,26 +7,28 @@
 
   var I18N = {
     id: {
-      login_title: 'Selamat datang',
-      login_sub: 'Masuk dengan akun Google yang terdaftar untuk mengelola jadwal, surat, dan catatan.',
-      login_note: 'Akses terbatas. Akun lain akan ditolak.',
+      login_title: 'Selamat datang kembali.',
+      login_sub: 'Jadwal, surat, dan catatan Office of Noel Ottley ada di sini. Masuk dengan akun Google yang terdaftar.',
+      login_note: 'Hanya untuk akun yang terdaftar.',
       signing_in: 'Memeriksa akun...',
-      conn_title: 'Status koneksi',
+      conn_title: 'Kondisi sistem',
       conn_sub: 'Pemeriksaan sistem.',
       btn_refresh: 'Segarkan',
       agenda_title: 'Agenda',
-      agenda_sub: '7 hari ke depan (jadwal yang dibatalkan tidak ditampilkan).',
-      agenda_empty: 'Tidak ada jadwal dalam 7 hari ke depan.',
+      agenda_sub: 'Tujuh hari ke depan.',
+      agenda_empty: 'Seminggu ini masih kosong. Waktu yang bagus untuk bernapas.',
+      hello_pagi: 'Selamat pagi', hello_siang: 'Selamat siang', hello_sore: 'Selamat sore', hello_malam: 'Selamat malam',
+      sum_zero: 'Tidak ada agenda hari ini.', sum_one: 'Ada satu agenda hari ini.', sum_n: 'Ada {n} agenda hari ini.',
       surat_title: 'Riwayat surat',
-      surat_sub: '15 surat terakhir yang dikirim.',
-      surat_empty: 'Belum ada surat terkirim.',
+      surat_sub: 'Lima belas surat terakhir.',
+      surat_empty: 'Belum ada surat yang keluar.',
       today: 'Hari ini', tomorrow: 'Besok', allday: 'Seharian', draft: 'Draf', guests_n: '{n} undangan',
       maps: 'Peta', to_: 'Kepada', cc_: 'Cc', att_: 'Lampiran', by_: 'oleh', sent: 'Terkirim',
       loading: 'Memuat...',
       tab_home: 'Beranda', tab_jadwal: 'Jadwal', tab_surat: 'Surat',
-      jadwal_title: 'Jadwal', jadwal_sub: 'Tersinkron otomatis ke Google Calendar.',
-      j_add: '+ Tambah', scope_upcoming: 'Mendatang', scope_past: 'Lalu', scope_cancelled: 'Dibatalkan',
-      j_empty_upcoming: 'Belum ada jadwal mendatang.', j_empty_past: 'Tidak ada jadwal yang sudah lewat.', j_empty_cancelled: 'Tidak ada jadwal yang dibatalkan.',
+      jadwal_title: 'Jadwal', jadwal_sub: 'Semua yang tercatat di sini ikut masuk ke Google Calendar.',
+      j_add: 'Tambah jadwal', scope_upcoming: 'Mendatang', scope_past: 'Lalu', scope_cancelled: 'Dibatalkan',
+      j_empty_upcoming: 'Belum ada jadwal mendatang. Tekan "Tambah jadwal" untuk mulai.', j_empty_past: 'Tidak ada jadwal yang sudah lewat.', j_empty_cancelled: 'Tidak ada jadwal yang dibatalkan.',
       j_edit: 'Ubah', j_cancel: 'Batalkan', j_restore: 'Aktifkan lagi', j_confirm_cancel: 'Batalkan jadwal "{t}"? Event di Google Calendar ikut dihapus.',
       j_fix: 'Perlu diperbaiki: ', j_more: 'Menampilkan 200 dari {n} jadwal.', j_sync_err: 'Tersimpan di Sheet, tapi sinkron ke Calendar bermasalah: ',
       j_saved: 'Tersimpan.', j_new: 'Jadwal baru', j_edit_title: 'Ubah jadwal',
@@ -77,26 +79,28 @@
       err_google_load: 'Tombol login Google belum termuat. Muat ulang halaman.'
     },
     en: {
-      login_title: 'Welcome',
-      login_sub: 'Sign in with your registered Google account to manage schedules, letters and notes.',
-      login_note: 'Restricted access. Other accounts will be rejected.',
+      login_title: 'Welcome back.',
+      login_sub: 'The schedule, letters and notes of the Office of Noel Ottley live here. Sign in with your registered Google account.',
+      login_note: 'Registered accounts only.',
       signing_in: 'Checking account...',
-      conn_title: 'Connection status',
+      conn_title: 'System status',
       conn_sub: 'System check.',
       btn_refresh: 'Refresh',
       agenda_title: 'Agenda',
-      agenda_sub: 'Next 7 days (cancelled items are hidden).',
-      agenda_empty: 'No schedule in the next 7 days.',
+      agenda_sub: 'The coming seven days.',
+      agenda_empty: 'A clear week ahead. A good time to breathe.',
+      hello_pagi: 'Good morning', hello_siang: 'Good afternoon', hello_sore: 'Good afternoon', hello_malam: 'Good evening',
+      sum_zero: 'Nothing on the agenda today.', sum_one: 'One item on the agenda today.', sum_n: '{n} items on the agenda today.',
       surat_title: 'Letter history',
-      surat_sub: 'Last 15 letters sent.',
-      surat_empty: 'No letters sent yet.',
+      surat_sub: 'The last fifteen letters.',
+      surat_empty: 'No letters have gone out yet.',
       today: 'Today', tomorrow: 'Tomorrow', allday: 'All day', draft: 'Draft', guests_n: '{n} invited',
       maps: 'Map', to_: 'To', cc_: 'Cc', att_: 'Attachments', by_: 'by', sent: 'Sent',
       loading: 'Loading...',
       tab_home: 'Home', tab_jadwal: 'Schedule', tab_surat: 'Letters',
-      jadwal_title: 'Schedule', jadwal_sub: 'Automatically synced to Google Calendar.',
-      j_add: '+ Add', scope_upcoming: 'Upcoming', scope_past: 'Past', scope_cancelled: 'Cancelled',
-      j_empty_upcoming: 'No upcoming items.', j_empty_past: 'No past items.', j_empty_cancelled: 'No cancelled items.',
+      jadwal_title: 'Schedule', jadwal_sub: 'Everything recorded here also goes into Google Calendar.',
+      j_add: 'Add item', scope_upcoming: 'Upcoming', scope_past: 'Past', scope_cancelled: 'Cancelled',
+      j_empty_upcoming: 'Nothing upcoming yet. Press "Add item" to begin.', j_empty_past: 'No past items.', j_empty_cancelled: 'No cancelled items.',
       j_edit: 'Edit', j_cancel: 'Cancel item', j_restore: 'Reactivate', j_confirm_cancel: 'Cancel "{t}"? The Google Calendar event will be removed too.',
       j_fix: 'Needs fixing: ', j_more: 'Showing 200 of {n} items.', j_sync_err: 'Saved to the Sheet, but syncing to Calendar had a problem: ',
       j_saved: 'Saved.', j_new: 'New item', j_edit_title: 'Edit item',
@@ -187,6 +191,7 @@
 
   function errText(e) {
     var key = 'err_' + (e && e.code);
+    if (e && e.code === 'server_error' && e.message) return e.message;
     if (e && I18N.id[key]) return t(key, { email: (e && e.email) || '' });
     return (e && e.message) || t('err_server_error');
   }
@@ -194,6 +199,8 @@
   // ---------- tampilan ----------
   function show(view) {
     ['view-boot', 'view-login', 'view-app'].forEach(function (v) { $(v).hidden = (v !== view); });
+    $('nav').hidden = view !== 'view-app';
+    document.body.classList.toggle('in-app', view === 'view-app');
   }
 
   function configOk() {
@@ -309,25 +316,57 @@
 
   function safeUrl(u) { return /^https:\/\//i.test(u || '') ? u : ''; }
 
+  // Satu hari = tanggal besar di margin (seperti buku agenda) + daftar acara di sebelahnya
+  function dayBlock(ymd, todayYmd, tomorrowYmd) {
+    var y = +ymd.slice(0, 4), m = +ymd.slice(4, 6), d = +ymd.slice(6, 8);
+    var wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+    var box = el('div', 'day' + (ymd === todayYmd ? ' is-today' : ''));
+    var left = el('div', 'day-l');
+    left.appendChild(el('div', 'day-num', String(d)));
+    left.appendChild(el('div', 'day-mon', MONTHS[state.lang][m - 1].slice(0, 3)));
+    var body = el('div', 'day-r');
+    var h = el('div', 'day-h');
+    h.appendChild(el('b', '', DAYS[state.lang][wd] + (y !== new Date().getFullYear() ? ' ' + y : '')));
+    if (ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
+    else if (ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
+    body.appendChild(h);
+    box.appendChild(left); box.appendChild(body);
+    return { box: box, body: body };
+  }
+
+  function greetWord() {
+    var h = new Date().getHours();
+    var k = h >= 4 && h < 11 ? 'pagi' : h < 15 ? 'siang' : h < 18 ? 'sore' : 'malam';
+    return t('hello_' + k);
+  }
+
+  function renderHero(data) {
+    var u = (state.session && state.session.user) || {};
+    var first = String(u.name || '').split(/\s+/)[0];
+    if (!first || /^ottley$/i.test(first)) first = '';
+    var now = new Date();
+    $('hero-date').textContent = DAYS[state.lang][now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[state.lang][now.getMonth()] + ' ' + now.getFullYear();
+    $('hero-hello').textContent = greetWord() + (first ? ', ' + first : '') + '.';
+    var sum = '';
+    if (data) {
+      var ty = data.today.replace(/-/g, '');
+      var n = data.agenda.filter(function (a) { return a.ymd === ty; }).length;
+      sum = n === 0 ? t('sum_zero') : n === 1 ? t('sum_one') : t('sum_n', { n: n });
+    }
+    $('hero-sum').textContent = sum;
+  }
+
   function renderDash(data) {
+    renderHero(data);
     var ag = $('agenda'), su = $('surat');
     ag.innerHTML = ''; su.innerHTML = '';
     if (!data) return;
 
     if (!data.agenda.length) ag.appendChild(el('p', 'empty', t('agenda_empty')));
     var todayYmd = data.today.replace(/-/g, ''), tomorrowYmd = addDaysYmd(data.today, 1);
-    var cur = null, box = null;
+    var cur = null, blk = null;
     data.agenda.forEach(function (it) {
-      if (it.ymd !== cur) {
-        cur = it.ymd;
-        box = el('div', 'day');
-        var h = el('div', 'day-h');
-        h.appendChild(el('b', '', dayLabel(it.ymd)));
-        if (it.ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
-        else if (it.ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
-        box.appendChild(h);
-        ag.appendChild(box);
-      }
+      if (it.ymd !== cur) { cur = it.ymd; blk = dayBlock(it.ymd, todayYmd, tomorrowYmd); ag.appendChild(blk.box); }
       var ev = el('div', 'ev' + (it.status === 'Draf' ? ' draft' : ''));
       ev.appendChild(el('div', 'ev-time', it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
       var main = el('div', 'ev-main');
@@ -340,13 +379,12 @@
       var mu = safeUrl(it.maps);
       if (mu) {
         if (sub.length) s2.appendChild(document.createTextNode(' · '));
-        var a = el('a', '', t('maps'));
-        a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        var a = el('a', '', t('maps')); a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer';
         s2.appendChild(a);
       }
       if (s2.textContent) main.appendChild(s2);
       ev.appendChild(main);
-      box.appendChild(ev);
+      blk.body.appendChild(ev);
     });
 
     if (!data.surat.length) su.appendChild(el('p', 'empty', t('surat_empty')));
@@ -356,10 +394,9 @@
       var meta = el('div', 'mail-meta');
       var ok = (m.result || '').toLowerCase() === 'terkirim';
       meta.appendChild(el('span', 'mail-res' + (ok ? '' : ' bad'), ok ? t('sent') : (m.result || '?')));
-      var parts = [m.time, t('to_') + ': ' + m.to];
-      if (m.cc) parts.push(t('cc_') + ': ' + m.cc);
+      var parts = [t('to_') + ' ' + m.to];
       if (m.attachments) parts.push(t('att_') + ': ' + m.attachments);
-      if (m.by) parts.push(t('by_') + ' ' + m.by);
+      parts.push(String(m.time || '').slice(0, 16));
       meta.appendChild(document.createTextNode(parts.join(' · ')));
       d.appendChild(meta);
       su.appendChild(d);
@@ -385,6 +422,7 @@
     row(t('row_time'), p.serverTime);
     row(t('row_sheet'), p.jadwalRows == null ? '-' : String(p.jadwalRows), p.sheetError ? 'err' : '');
     row(t('row_status'), problems.length ? t('status_warn') : t('status_ok'), problems.length ? 'err' : 'ok');
+    $('sys').open = problems.length > 0;
     return problems;
   }
 
@@ -431,13 +469,19 @@
       var key = it.error ? 'bad' : it.ymd;
       if (key !== cur) {
         cur = key;
-        day = el('div', 'day');
-        var h = el('div', 'day-h');
-        h.appendChild(el('b', '', it.error ? t('j_fix').replace(/: $/, '') : dayLabel(it.ymd)));
-        if (it.ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
-        else if (it.ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
-        day.appendChild(h);
-        box.appendChild(day);
+        if (it.error) {
+          day = el('div', 'day');
+          day.appendChild(el('div', 'day-l', ''));
+          day.firstChild.appendChild(el('div', 'day-num', '!'));
+          var bd = el('div', 'day-r');
+          var hh = el('div', 'day-h'); hh.appendChild(el('b', '', t('j_fix').replace(/: $/, ''))); bd.appendChild(hh);
+          day.appendChild(bd);
+          day.body = bd;
+          box.appendChild(day);
+        } else {
+          day = dayBlock(it.ymd, todayYmd, tomorrowYmd);
+          box.appendChild(day.box);
+        }
       }
       var ev = el('div', 'ev' + (it.error ? ' bad' : it.status === 'Draf' ? ' draft' : ''));
       ev.appendChild(el('div', 'ev-time', it.error ? '-' : it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
@@ -466,7 +510,7 @@
       act.appendChild(bc);
       main.appendChild(act);
       ev.appendChild(main);
-      day.appendChild(ev);
+      (day.body || day).appendChild(ev);
     });
     if (jData.total > jData.items.length) box.appendChild(el('p', 'more', t('j_more', { n: jData.total })));
   }
