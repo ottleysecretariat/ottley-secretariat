@@ -44,6 +44,11 @@
       n_f_title: 'Judul (opsional)', n_f_body: 'Isi', n_f_tags: 'Tag (pisahkan koma)', n_new: 'Catatan baru', n_edit_t: 'Ubah catatan',
       n_edit: 'Ubah', n_del: 'Hapus', n_more: 'Selengkapnya', n_less: 'Ringkas', n_del_confirm: 'Hapus catatan ini? Tidak bisa dibatalkan.', n_saved: 'Catatan tersimpan.', n_deleted: 'Catatan dihapus.',
       v_note: 'Catatan masih kosong.',
+      surat_page_sub: 'Surat yang sudah keluar, dan tempat menulis yang baru.', s_write: 'Tulis surat', s_back: '\u2190 Riwayat surat',
+      sh_empty: 'Belum ada surat yang keluar. Tekan "Tulis surat" untuk mulai.',
+      d_mail: 'Tulis surat untuk jadwal ini', d_loc: 'Lokasi', d_guests: 'Undangan', d_rem: 'Pengingat', d_notes: 'Catatan', d_sync: 'Kalender', d_before: 'sebelumnya', d_no_rem: 'Tanpa pengingat', d_none: '-',
+      v_to: 'Kepada', v_cc: 'Cc', v_by: 'Dikirim oleh', v_lang: 'Bahasa', v_tpl: 'Template', v_att: 'Lampiran',
+      v_loading: 'Memuat surat...', v_nodata: 'Isi surat ini tidak tersimpan, karena dikirim sebelum riwayat isi aktif atau terlalu panjang. Yang tersedia hanya keterangannya.',
       surat_form_title: 'Tulis email', s_from: 'Dikirim dari', s_to: 'Kepada', s_cc: 'Cc (opsional)', s_nama: 'Nama penerima (untuk salam pembuka)',
       s_lang: 'Bahasa email', s_part: 'Salam sesuai waktu', s_event: 'Jadwal terkait (opsional)', s_tpl: 'Template (mengikuti bahasa email)',
       s_cardtitle: 'Judul kartu (opsional)', s_maps: 'Link Google Maps (opsional)', s_subject: 'Subjek',
@@ -121,6 +126,11 @@
       n_f_title: 'Title (optional)', n_f_body: 'Body', n_f_tags: 'Tags (comma separated)', n_new: 'New note', n_edit_t: 'Edit note',
       n_edit: 'Edit', n_del: 'Delete', n_more: 'Read more', n_less: 'Collapse', n_del_confirm: 'Delete this note? This cannot be undone.', n_saved: 'Note saved.', n_deleted: 'Note deleted.',
       v_note: 'The note is empty.',
+      surat_page_sub: 'Letters already sent, and a place to write new ones.', s_write: 'Write letter', s_back: '\u2190 Letter history',
+      sh_empty: 'No letters have gone out yet. Press "Write letter" to begin.',
+      d_mail: 'Write a letter for this item', d_loc: 'Location', d_guests: 'Invited', d_rem: 'Reminders', d_notes: 'Notes', d_sync: 'Calendar', d_before: 'before', d_no_rem: 'No reminder', d_none: '-',
+      v_to: 'To', v_cc: 'Cc', v_by: 'Sent by', v_lang: 'Language', v_tpl: 'Template', v_att: 'Attachments',
+      v_loading: 'Loading letter...', v_nodata: 'The content of this letter was not saved, because it was sent before content history was enabled or it was too long. Only the details are available.',
       surat_form_title: 'Write email', s_from: 'Sent from', s_to: 'To', s_cc: 'Cc (optional)', s_nama: 'Recipient name (for the greeting)',
       s_lang: 'Email language', s_part: 'Time-of-day greeting', s_event: 'Related schedule (optional)', s_tpl: 'Template (follows the email language)',
       s_cardtitle: 'Card title (optional)', s_maps: 'Google Maps link (optional)', s_subject: 'Subject',
@@ -183,7 +193,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); }
   }
 
   function setLang(l) {
@@ -241,7 +251,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; sCtx = null; nData = null; closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -383,11 +393,12 @@
       var ev = el('div', 'ev' + (it.status === 'Draf' ? ' draft' : ''));
       ev.appendChild(el('div', 'ev-time', it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
       var main = el('div', 'ev-main');
-      main.appendChild(el('div', 'ev-title', it.title));
+      main.appendChild(titleBtn(it));
       var sub = [];
       if (it.status === 'Draf') sub.push(t('draft'));
       if (it.location && !safeUrl(it.location)) sub.push(it.location);
-      if (it.guests) sub.push(t('guests_n', { n: it.guests }));
+      var gn = Array.isArray(it.guests) ? it.guests.length : it.guests;
+      if (gn) sub.push(t('guests_n', { n: gn }));
       var s2 = el('div', 'ev-sub', sub.join(' · '));
       var mu = safeUrl(it.maps);
       if (mu) {
@@ -403,7 +414,10 @@
     if (!data.surat.length) su.appendChild(el('p', 'empty', t('surat_empty')));
     data.surat.forEach(function (m) {
       var d = el('div', 'mail');
-      d.appendChild(el('div', 'mail-subj', m.subject || '-'));
+      var msb = el('div', 'mail-subj');
+      var mob = el('button', 'mail-open', m.subject || '-'); mob.type = 'button';
+      mob.addEventListener('click', function () { openMail(m); });
+      msb.appendChild(mob); d.appendChild(msb);
       var meta = el('div', 'mail-meta');
       var ok = (m.result || '').toLowerCase() === 'terkirim';
       meta.appendChild(el('span', 'mail-res' + (ok ? '' : ' bad'), ok ? t('sent') : (m.result || '?')));
@@ -450,7 +464,7 @@
     $('tab-surat').hidden = name !== 'surat';
     $('tab-catatan').hidden = name !== 'catatan';
     if (name === 'jadwal') loadJadwal();
-    if (name === 'surat') loadSurat();
+    if (name === 'surat') { if (sMode === 'compose') showCompose(); else showSuratList(); }
     if (name === 'catatan') loadCatatan();
     if (name === 'home' && homeStale) { homeStale = false; refresh(); }
   }
@@ -501,7 +515,7 @@
       var ev = el('div', 'ev' + (it.error ? ' bad' : it.status === 'Draf' ? ' draft' : ''));
       ev.appendChild(el('div', 'ev-time', it.error ? '-' : it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '')));
       var main = el('div', 'ev-main');
-      main.appendChild(el('div', 'ev-title', it.title));
+      main.appendChild(titleBtn(it));
       if (it.error) main.appendChild(el('div', 'ev-warn', t('j_fix') + it.error));
       var sub = [];
       if (it.status === 'Draf') sub.push(t('draft'));
@@ -573,11 +587,16 @@
     setTimeout(function () { $('f-title').focus(); }, 50);
   }
 
+  function syncScroll() {
+    var any = document.querySelector('.sheet:not([hidden])');
+    document.body.style.overflow = any ? 'hidden' : '';
+  }
+
   function closeForm() {
     var sh = $('sheet');
     if (sh) sh.hidden = true;
-    document.body.style.overflow = '';
     formState = null;
+    syncScroll();
   }
 
   function buildForm(f) {
@@ -627,6 +646,7 @@
       .then(function (r) {
         closeForm();
         homeStale = true;
+        if (tab === 'home') { homeStale = false; refresh(); }
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
         // lompat ke daftar yang memuat jadwal ini
         var today = jData ? jData.today : '';
@@ -704,8 +724,8 @@
   function closeNote() {
     var sh = $('nsheet');
     if (sh) sh.hidden = true;
-    if ($('sheet') && $('sheet').hidden) document.body.style.overflow = '';
     nForm = null;
+    syncScroll();
   }
 
   function submitNote(ev) {
@@ -729,6 +749,165 @@
       .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('n-msg', errText(e), 'err'); })
       .then(function () { lockBox($('n-list'), false); });
   }
+
+  // ---------- kartu detail jadwal ----------
+  function titleBtn(it) {
+    var b = el('button', 'ev-title ev-open', it.title); b.type = 'button';
+    b.addEventListener('click', function () { openDetail(it); });
+    return b;
+  }
+
+  function dlRow(dl, label, val) {
+    var r = el('div', 'row');
+    r.appendChild(el('dt', '', label));
+    var dd = el('dd', '');
+    if (val && val.nodeType) dd.appendChild(val); else dd.textContent = val == null || val === '' ? t('d_none') : val;
+    r.appendChild(dd); dl.appendChild(r);
+  }
+
+  function ensureJData(cb) {
+    if (jData) { cb(); return; }
+    api('jadwalList', { scope: 'upcoming' }).then(function (d) { jData = d; cb(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('app-msg', errText(e), 'err'); });
+  }
+
+  function openDetail(it) {
+    var w = wibNow();
+    var todayYmd = w.getFullYear() + ('0' + (w.getMonth() + 1)).slice(-2) + ('0' + w.getDate()).slice(-2);
+    $('d-when').textContent = it.error ? t('j_fix').replace(/: $/, '') : dayLabel(it.ymd) + ' · ' + (it.allDay ? t('allday') : it.start + (it.end ? ' - ' + it.end : '') + ' WIB');
+    $('d-title').textContent = it.title;
+    var tg = $('d-tags'); tg.innerHTML = '';
+    if (it.status === 'Draf' || it.status === 'Batal') tg.appendChild(el('span', 'note-tag', t(it.status === 'Draf' ? 'st_Draf' : 'st_Batal')));
+    var dl = $('d-rows'); dl.innerHTML = '';
+    if (it.error) dlRow(dl, '!', it.error);
+    var loc = document.createDocumentFragment();
+    if (it.location) loc.appendChild(document.createTextNode(it.location));
+    var mu = safeUrl(it.maps);
+    if (mu) {
+      if (it.location) loc.appendChild(document.createTextNode('\n'));
+      var a = el('a', '', t('maps')); a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer'; loc.appendChild(a);
+    }
+    dlRow(dl, t('d_loc'), loc.childNodes.length ? loc : '');
+    dlRow(dl, t('d_guests'), it.guests && it.guests.length ? it.guests.join('\n') : '');
+    dlRow(dl, t('d_rem'), it.reminders && it.reminders.length ? it.reminders.map(remLabel).join(', ') + ' ' + t('d_before') : t('d_no_rem'));
+    dlRow(dl, t('d_notes'), it.notes);
+    dlRow(dl, t('d_sync'), it.sync);
+    say('d-msg', '');
+    var cancelled = it.status === 'Batal';
+    $('d-cancel').textContent = t(cancelled ? 'j_restore' : 'j_cancel');
+    $('d-mail').hidden = !(it.status === 'Aktif' && !it.error && it.ymd >= todayYmd);
+    $('d-edit').onclick = function () { closeDetail(); ensureJData(function () { openForm(it); }); };
+    $('d-mail').onclick = function () { closeDetail(); pendingEvent = it.id; switchTab('surat'); showCompose(); };
+    $('d-cancel').onclick = function () {
+      if (!cancelled && !window.confirm(t('j_confirm_cancel', { t: it.title }))) return;
+      var card = $('dsheet').firstElementChild;
+      lockUi(card, true, '.msg'); say('d-msg', t('saving'));
+      api('jadwalStatus', { id: it.id, status: cancelled ? 'Aktif' : 'Batal' })
+        .then(function (r) {
+          closeDetail(); homeStale = true;
+          if (tab === 'jadwal') loadJadwal(); else if (tab === 'home') { homeStale = false; refresh(); }
+          if (r.syncError) say(tab === 'jadwal' ? 'j-msg' : 'app-msg', t('j_sync_err') + r.syncError, 'err');
+        })
+        .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('d-msg', errText(e), 'err'); })
+        .then(function () { lockUi(card, false); });
+    };
+    $('dsheet').hidden = false; syncScroll();
+  }
+  function closeDetail() { $('dsheet').hidden = true; syncScroll(); }
+
+  // ---------- riwayat surat ----------
+  var sMode = 'list', sHist = null, sHistStale = true, sBannerTried = false, pendingEvent = '', vSeq = 0;
+
+  function showSuratList() {
+    sMode = 'list';
+    $('s-list-view').hidden = false; $('s-compose-view').hidden = true;
+    if (sHistStale || !sHist) loadSuratHist(); else renderHist();
+  }
+  function showCompose() {
+    sMode = 'compose';
+    $('s-list-view').hidden = true; $('s-compose-view').hidden = false;
+    loadSurat();
+    applyPendingEvent();
+    window.scrollTo(0, 0);
+  }
+  function applyPendingEvent() {
+    if (!pendingEvent || !sCtx) return;
+    var sel = $('s-ev'), want = pendingEvent;
+    pendingEvent = '';
+    sel.value = want;
+    if (sel.value === want) sel.dispatchEvent(new Event('change'));
+  }
+
+  function loadSuratHist() {
+    if (!sHist) say('sh-msg', t('loading'));
+    api('suratHistory')
+      .then(function (d) { sHist = d; sHistStale = false; say('sh-msg', ''); renderHist(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('sh-msg', errText(e), 'err'); });
+  }
+
+  function renderHist() {
+    var box = $('sh-list');
+    box.innerHTML = '';
+    if (!sHist) return;
+    if (!sHist.items.length) { box.appendChild(el('p', 'empty', t('sh_empty'))); return; }
+    var todayYmd = sHist.today.replace(/-/g, ''), tomorrowYmd = addDaysYmd(sHist.today, 1);
+    var cur = null, blk = null;
+    sHist.items.forEach(function (m) {
+      var ymd = String(m.time || '').slice(0, 10).replace(/-/g, '');
+      if (!/^\d{8}$/.test(ymd)) ymd = todayYmd;
+      if (ymd !== cur) { cur = ymd; blk = dayBlock(ymd, todayYmd, tomorrowYmd); box.appendChild(blk.box); }
+      var d = el('div', 'mail hmail');
+      var sb = el('div', 'mail-subj');
+      var ob = el('button', 'mail-open', m.subject || '-'); ob.type = 'button';
+      ob.addEventListener('click', function () { openMail(m); });
+      sb.appendChild(ob); d.appendChild(sb);
+      var meta = el('div', 'mail-meta');
+      var ok = (m.result || '').toLowerCase() === 'terkirim';
+      meta.appendChild(el('span', 'mail-res' + (ok ? '' : ' bad'), ok ? t('sent') : (m.result || '?')));
+      var parts = [t('to_') + ' ' + m.to];
+      if (m.attachments) parts.push(t('att_') + ': ' + m.attachments);
+      parts.push(String(m.time || '').slice(11, 16));
+      meta.appendChild(document.createTextNode(parts.join(' · ')));
+      d.appendChild(meta);
+      blk.body.appendChild(d);
+    });
+  }
+
+  function ensureBanner(cb) {
+    if (sBanner || sBannerTried) { cb(); return; }
+    sBannerTried = true;
+    api('suratBanner').then(function (b) { sBanner = b.banner || ''; cb(); }).catch(function () { cb(); });
+  }
+
+  function openMail(m) {
+    var seq = ++vSeq;
+    $('v-time').textContent = String(m.time || '').slice(0, 16);
+    $('v-subj').textContent = m.subject || '-';
+    var dl = $('v-rows'); dl.innerHTML = '';
+    dlRow(dl, t('v_to'), m.to);
+    if (m.cc) dlRow(dl, t('v_cc'), m.cc);
+    if (m.attachments) dlRow(dl, t('v_att'), m.attachments);
+    dlRow(dl, t('v_by'), m.by);
+    dlRow(dl, t('v_lang') + ' / ' + t('v_tpl'), (m.lang || '-') + ' · ' + (m.template || '-'));
+    say('v-note', t('v_loading'));
+    var fr = $('v-prev'); fr.hidden = true; fr.srcdoc = '';
+    $('vsheet').hidden = false; syncScroll();
+    api('suratView', { row: m.row, time: m.time })
+      .then(function (r) {
+        if (seq !== vSeq) return;
+        if (!r.html) { say('v-note', t('v_nodata')); return; }
+        ensureBanner(function () {
+          if (seq !== vSeq) return;
+          fr.srcdoc = sBanner ? r.html.split('cid:banner').join(sBanner) : r.html;
+          fr.hidden = false; say('v-note', '');
+        });
+      })
+      .catch(function (e) {
+        if (seq !== vSeq) return;
+        if (e && e.code === 'unauthorized') { closeMail(); logout(t('err_unauthorized')); } else say('v-note', errText(e), 'err');
+      });
+  }
+  function closeMail() { vSeq++; $('vsheet').hidden = true; $('v-prev').srcdoc = ''; syncScroll(); }
 
   // ---------- surat ----------
   var sCtx = null, sBanner = '', sValues = {}, sDirty = false, sShape = '', sTimer = null, sFileTimer = null, sSeq = 0;
@@ -774,9 +953,10 @@
         w.hidden = true;
         if (lastPing && !lastPing.senderOk) { w.hidden = false; w.textContent = t('s_sender_warn'); }
         fillEvents(); fillTemplates(); fillParts();
+        applyPendingEvent();
         say('s-msg', '');
         doPreview();
-        if (d.hasBanner) api('suratBanner').then(function (b) { sBanner = b.banner || ''; doPreview(); }).catch(function () { /* abaikan */ });
+        if (d.hasBanner && !sBanner) api('suratBanner').then(function (b) { sBanner = b.banner || ''; doPreview(); }).catch(function () { /* abaikan */ });
       })
       .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('s-msg', errText(e), 'err'); });
   }
@@ -920,6 +1100,7 @@
         if (test) { setBusy(false); say('s-msg', t('s_ok_test', { to: r.to }) + att, 'ok'); return; }
         sDone = true;
         homeStale = true;
+        sHistStale = true;
         setBusy(false);
         $('s-new').hidden = false;
         say('s-msg', t('s_ok_sent', { to: r.to }) + att + (r.logError ? t('s_log_err') + r.logError : ''), r.logError ? 'err' : 'ok');
@@ -1004,6 +1185,12 @@
     $('s-send').addEventListener('click', function () { doSend(false); });
     $('s-test').addEventListener('click', function () { doSend(true); });
     $('s-new').addEventListener('click', function () { resetSurat(false); });
+    $('s-write').addEventListener('click', showCompose);
+    $('s-back').addEventListener('click', function () { if (!sBusy) showSuratList(); });
+    $('d-close').addEventListener('click', closeDetail);
+    $('v-close').addEventListener('click', closeMail);
+    $('dsheet').addEventListener('click', function (e) { if (e.target === $('dsheet')) closeDetail(); });
+    $('vsheet').addEventListener('click', function (e) { if (e.target === $('vsheet')) closeMail(); });
     $('sf').addEventListener('submit', function (e) { e.preventDefault(); });
     resetSurat(true);
     $('n-add').addEventListener('click', function () { openNote(null); });
@@ -1015,7 +1202,7 @@
     $('jf').addEventListener('submit', submitForm);
     $('jf-cancel').addEventListener('click', closeForm);
     $('sheet').addEventListener('click', function (e) { if (e.target === $('sheet')) closeForm(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!$('sheet').hidden) closeForm(); if (!$('nsheet').hidden) closeNote(); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!$('sheet').hidden) closeForm(); else if (!$('nsheet').hidden) closeNote(); else if (!$('dsheet').hidden) closeDetail(); else if (!$('vsheet').hidden) closeMail(); } });
     $('btn-logout').addEventListener('click', function () { logout(''); });
 
     applyLang();
