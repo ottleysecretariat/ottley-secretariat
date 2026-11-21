@@ -253,3 +253,21 @@ body.in-app .chip:hover { background: var(--paper-2); }
 
 /* ---------- terkunci saat menyimpan ---------- */
 .locked { opacity: 0.45; filter: grayscale(1); pointer-events: none; user-select: none; transition: opacity 0.15s; }
+
+/* ---------- detail & riwayat ---------- */
+.ev-open, .mail-open { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; font: inherit; font-weight: 600; color: var(--ink); line-height: 1.35; word-break: break-word; }
+.ev-open:hover, .mail-open:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.ev.draft .ev-open { color: var(--muted); font-style: italic; }
+.ev.bad .ev-open { color: var(--err); }
+.back { margin: 22px 0 -14px; }
+.sheet-card.wide { max-width: 760px; }
+.d-title { margin: 4px 0 8px; font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1.15; color: var(--ink); word-break: break-word; }
+.sheet-card .rows { margin: 14px 0 0; }
+.sheet-card .row dd { white-space: pre-wrap; }
+.sheet-card .row dd a { color: var(--gold-d); font-weight: 600; }
+#v-prev { height: 480px; margin-top: 14px; }
+@media (min-width: 900px) { #v-prev { height: 560px; } }
+.hmail { margin: 0; }
+.hmail .mail-meta { margin-top: 1px; }
+
+.ev-open { display: block; }
