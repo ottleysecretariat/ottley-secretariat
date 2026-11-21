@@ -48,6 +48,9 @@
       sh_empty: 'Belum ada surat yang keluar. Tekan "Tulis surat" untuk mulai.',
       d_mail: 'Tulis surat untuk jadwal ini', d_loc: 'Lokasi', d_guests: 'Undangan', d_rem: 'Pengingat', d_notes: 'Catatan', d_sync: 'Kalender', d_before: 'sebelumnya', d_no_rem: 'Tanpa pengingat', d_none: '-',
       v_to: 'Kepada', v_cc: 'Cc', v_by: 'Dikirim oleh', v_lang: 'Bahasa', v_tpl: 'Template', v_att: 'Lampiran',
+      s_upload: 'Lampiran dari perangkat ini (maks. {mb} MB per file)', s_pick: 'Pilih file', s_drop: 'atau tarik file ke sini',
+      s_up_busy: 'mengunggah...', s_up_big: 'Lebih dari {mb} MB.', s_up_type: 'Jenis file diblokir Gmail.', s_up_x: 'Hapus',
+      s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
       v_loading: 'Memuat surat...', v_nodata: 'Isi surat ini tidak tersimpan, karena dikirim sebelum riwayat isi aktif atau terlalu panjang. Yang tersedia hanya keterangannya.',
       surat_form_title: 'Tulis email', s_from: 'Dikirim dari', s_to: 'Kepada', s_cc: 'Cc (opsional)', s_nama: 'Nama penerima (untuk salam pembuka)',
       s_lang: 'Bahasa email', s_part: 'Salam sesuai waktu', s_event: 'Jadwal terkait (opsional)', s_tpl: 'Template (mengikuti bahasa email)',
@@ -130,6 +133,9 @@
       sh_empty: 'No letters have gone out yet. Press "Write letter" to begin.',
       d_mail: 'Write a letter for this item', d_loc: 'Location', d_guests: 'Invited', d_rem: 'Reminders', d_notes: 'Notes', d_sync: 'Calendar', d_before: 'before', d_no_rem: 'No reminder', d_none: '-',
       v_to: 'To', v_cc: 'Cc', v_by: 'Sent by', v_lang: 'Language', v_tpl: 'Template', v_att: 'Attachments',
+      s_upload: 'Attachments from this device (max {mb} MB per file)', s_pick: 'Choose files', s_drop: 'or drag files here',
+      s_up_busy: 'uploading...', s_up_big: 'Larger than {mb} MB.', s_up_type: 'File type blocked by Gmail.', s_up_x: 'Remove',
+      s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
       v_loading: 'Loading letter...', v_nodata: 'The content of this letter was not saved, because it was sent before content history was enabled or it was too long. Only the details are available.',
       surat_form_title: 'Write email', s_from: 'Sent from', s_to: 'To', s_cc: 'Cc (optional)', s_nama: 'Recipient name (for the greeting)',
       s_lang: 'Email language', s_part: 'Time-of-day greeting', s_event: 'Related schedule (optional)', s_tpl: 'Template (follows the email language)',
@@ -193,7 +199,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); }
   }
 
   function setLang(l) {
@@ -942,6 +948,11 @@
     return out;
   }
 
+  function setUploadLabel() {
+    var lb = document.querySelector('[data-i18n="s_upload"]');
+    if (lb) lb.textContent = t('s_upload', { mb: upMB() });
+  }
+
   function loadSurat() {
     if (sCtx) return;
     say('s-msg', t('s_loading'));
@@ -949,6 +960,7 @@
       .then(function (d) {
         sCtx = d;
         $('s-sender').textContent = d.sender;
+        setUploadLabel();
         var w = $('s-warn');
         w.hidden = true;
         if (lastPing && !lastPing.senderOk) { w.hidden = false; w.textContent = t('s_sender_warn'); }
@@ -1033,7 +1045,8 @@
     return {
       to: $('s-to').value, cc: $('s-cc').value, nama: $('s-nama').value, lang: sl(), part: $('s-part').value,
       eventId: $('s-ev').value, templateId: $('s-tpl').value, subject: $('s-subject').value, body: $('s-body').value,
-      title: $('s-card').value, maps: $('s-maps').value, fields: fields, files: $('s-files').value
+      title: $('s-card').value, maps: $('s-maps').value, fields: fields, files: $('s-files').value,
+      uploads: sUps.filter(function (u) { return u.status === 'ok'; }).map(function (u) { return u.id; })
     };
   }
 
@@ -1051,23 +1064,94 @@
       .catch(function (e) { if (seq === sSeq && !(e && e.code === 'unauthorized')) say('s-msg', errText(e), 'err'); else if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); });
   }
 
+  // ---------- lampiran dari perangkat ----------
+  var sUps = [], sUpQueue = Promise.resolve(), sDriveCount = 0, sDriveBytes = 0;
+  var BLOCKED_EXT = /\.(exe|bat|cmd|com|scr|vbs|vbe|js|jse|jar|msi|msp|dll|cpl|lnk|pif|reg|wsf|wsh|ps1|apk|dmg)$/i;
+
+  function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+  function upMB() { return (sCtx && sCtx.uploadMaxMB) || 10; }
+  function readB64(file) {
+    return new Promise(function (res, rej) {
+      var r = new FileReader();
+      r.onload = function () { var x = String(r.result); res(x.slice(x.indexOf(',') + 1)); };
+      r.onerror = function () { rej({ code: 'read', message: file.name }); };
+      r.readAsDataURL(file);
+    });
+  }
+
+  function limitMsg() {
+    if (!sCtx) return '';
+    var okUps = sUps.filter(function (u) { return u.status === 'ok'; });
+    if (sDriveCount + okUps.length > sCtx.attachMax) return t('s_e_limit_files', { n: sCtx.attachMax });
+    var bytes = sDriveBytes; okUps.forEach(function (u) { bytes += u.size; });
+    if (bytes > sCtx.attachMaxMB * 1048576) return t('s_e_limit_mb', { mb: sCtx.attachMaxMB });
+    return '';
+  }
+
+  function renderUps() {
+    var box = $('s-ups'); box.innerHTML = '';
+    sUps.forEach(function (u) {
+      var row = el('div', 'up ' + (u.status === 'ok' ? 'good' : u.status === 'err' ? 'bad err' : 'busy'));
+      row.appendChild(el('span', 'up-name', (u.status === 'ok' ? '✓ ' : u.status === 'err' ? '✗ ' : '') + u.name + (u.status === 'err' ? ': ' + u.msg : u.status === 'busy' ? ' (' + t('s_up_busy') + ')' : '')));
+      row.appendChild(el('span', 'up-size', fmtSize(u.size)));
+      if (u.status !== 'busy') {
+        var x = el('button', 'lnk danger', t('s_up_x')); x.type = 'button';
+        x.addEventListener('click', function () { removeUp(u); });
+        row.appendChild(x);
+      }
+      box.appendChild(row);
+    });
+    var lm = limitMsg(), lb = $('s-limit'); lb.innerHTML = '';
+    if (lm) lb.appendChild(el('div', 'bad', lm));
+  }
+
+  function removeUp(u) {
+    sUps = sUps.filter(function (x) { return x !== u; });
+    renderUps();
+    if (u.status === 'ok' && u.id) api('suratUploadRemove', { id: u.id }).catch(function () { /* abaikan */ });
+  }
+
+  function addFiles(list) {
+    if (!sCtx || sBusy || sDone) return;
+    Array.prototype.forEach.call(list, function (file) {
+      var u = { name: file.name, size: file.size, status: 'busy', id: '', msg: '' };
+      sUps.push(u);
+      if (file.size > upMB() * 1048576) { u.status = 'err'; u.msg = t('s_up_big', { mb: upMB() }); return; }
+      if (BLOCKED_EXT.test(file.name)) { u.status = 'err'; u.msg = t('s_up_type'); return; }
+      // satu per satu, supaya koneksi HP tidak tersedak
+      sUpQueue = sUpQueue.then(function () {
+        if (sUps.indexOf(u) < 0) return;
+        return readB64(file)
+          .then(function (data) { return api('suratUpload', { name: file.name, mime: file.type || '', data: data }); })
+          .then(function (r) { u.id = r.id; u.name = r.name; u.size = r.size; u.status = 'ok'; })
+          .catch(function (e) {
+            if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; }
+            u.status = 'err'; u.msg = errText(e);
+          });
+      }).then(renderUps, renderUps);
+    });
+    renderUps();
+  }
+
   function schedFiles() {
     clearTimeout(sFileTimer);
     var txt = $('s-files').value.trim(), box = $('s-filelist');
     sFilesBad = false; box.innerHTML = '';
-    if (!txt) { sFilesBusy = false; return; }
+    if (!txt) { sFilesBusy = false; sDriveCount = 0; sDriveBytes = 0; renderUps(); return; }
     box.appendChild(el('span', 'tiny', t('s_checking')));
     sFilesBusy = true;
     sFileTimer = setTimeout(function () {
       api('suratCheckFiles', { files: $('s-files').value })
         .then(function (items) {
           sFilesBusy = false; box.innerHTML = '';
-          var n = 0;
+          var n = 0; sDriveBytes = 0;
           items.forEach(function (it) {
-            if (it.ok) { n++; box.appendChild(el('div', 'good', '✓ ' + it.name + (it.size ? ' (' + (it.size / 1048576).toFixed(2) + ' MB)' : ''))); }
+            if (it.ok) { n++; sDriveBytes += it.size || 0; box.appendChild(el('div', 'good', '✓ ' + it.name + (it.size ? ' (' + (it.size / 1048576).toFixed(2) + ' MB)' : ''))); }
             else { sFilesBad = true; box.appendChild(el('div', 'bad', '✗ ' + it.name + ': ' + it.reason)); }
           });
+          sDriveCount = n;
           if (sCtx && n > sCtx.attachMax) { sFilesBad = true; box.appendChild(el('div', 'bad', t('s_max_files', { n: sCtx.attachMax }))); }
+          renderUps();
         })
         .catch(function (e) { sFilesBusy = false; sFilesBad = true; box.innerHTML = ''; box.appendChild(el('div', 'bad', errText(e))); });
     }, 700);
@@ -1090,6 +1174,9 @@
     if (miss.length) { say('s-msg', t('s_e_fields', { f: miss.join(', ') }), 'err'); return; }
     if ($('s-files').value.trim() && sFilesBusy) { say('s-msg', t('s_e_files_busy'), 'err'); return; }
     if (sFilesBad) { say('s-msg', t('s_e_files_bad'), 'err'); return; }
+    if (sUps.some(function (u) { return u.status === 'busy'; })) { say('s-msg', t('s_e_uploading'), 'err'); return; }
+    var lm = limitMsg();
+    if (lm) { say('s-msg', lm, 'err'); return; }
     if (!test && !sArmed) { arm(); return; }
     disarm();
     setBusy(true);
@@ -1116,6 +1203,7 @@
     ['s-to', 's-cc', 's-nama', 's-card', 's-maps', 's-subject', 's-body', 's-files'].forEach(function (id) { var e = $(id); if (e) e.value = ''; });
     if ($('s-tpl')) $('s-tpl').value = '';
     if ($('s-ev')) $('s-ev').value = '';
+    sUps = []; sDriveCount = 0; sDriveBytes = 0; if ($('s-ups')) renderUps();
     sValues = {}; sShape = ''; sDirty = false; sDone = false; sFilesBad = false; sFilesBusy = false; sMapsAuto = '';
     sKey = newKey();
     if ($('s-fields')) $('s-fields').innerHTML = '';
@@ -1186,6 +1274,11 @@
     $('s-test').addEventListener('click', function () { doSend(true); });
     $('s-new').addEventListener('click', function () { resetSurat(false); });
     $('s-write').addEventListener('click', showCompose);
+    $('s-pick').addEventListener('click', function () { $('s-file').click(); });
+    $('s-file').addEventListener('change', function () { addFiles($('s-file').files); $('s-file').value = ''; });
+    ['dragenter', 'dragover'].forEach(function (n) { $('s-drop').addEventListener(n, function (e) { e.preventDefault(); $('s-drop').classList.add('over'); }); });
+    ['dragleave', 'drop'].forEach(function (n) { $('s-drop').addEventListener(n, function (e) { e.preventDefault(); $('s-drop').classList.remove('over'); }); });
+    $('s-drop').addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
     $('s-back').addEventListener('click', function () { if (!sBusy) showSuratList(); });
     $('d-close').addEventListener('click', closeDetail);
     $('v-close').addEventListener('click', closeMail);
