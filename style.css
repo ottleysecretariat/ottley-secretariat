@@ -271,3 +271,13 @@ body.in-app .chip:hover { background: var(--paper-2); }
 .hmail .mail-meta { margin-top: 1px; }
 
 .ev-open { display: block; }
+
+/* ---------- upload lampiran ---------- */
+.drop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; padding: 12px; border: 1px dashed #b9ad92; background: rgba(255, 255, 255, 0.45); }
+.drop.over { border-color: var(--ink); background: #f6ecd5; }
+.drop .tiny { margin: 0; }
+.up { display: flex; align-items: baseline; gap: 8px; padding: 2px 0; }
+.up-name { flex: 1; min-width: 0; word-break: break-all; }
+.up-size { color: var(--muted); white-space: nowrap; }
+.up.err .up-name { color: var(--err); }
+.up.busy .up-name { color: var(--muted); }
