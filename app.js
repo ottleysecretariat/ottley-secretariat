@@ -336,7 +336,7 @@
     left.appendChild(el('div', 'day-mon', MONTHS[state.lang][m - 1].slice(0, 3)));
     var body = el('div', 'day-r');
     var h = el('div', 'day-h');
-    h.appendChild(el('b', '', DAYS[state.lang][wd] + (y !== new Date().getFullYear() ? ' ' + y : '')));
+    h.appendChild(el('b', '', DAYS[state.lang][wd] + (y !== wibNow().getFullYear() ? ' ' + y : '')));
     if (ymd === todayYmd) h.appendChild(el('span', 'tag', t('today')));
     else if (ymd === tomorrowYmd) h.appendChild(el('span', 'tag', t('tomorrow')));
     body.appendChild(h);
@@ -344,9 +344,12 @@
     return { box: box, body: body };
   }
 
+  // Jam dinding WIB (Asia/Jakarta), apa pun zona waktu perangkatnya
+  function wibNow() { return new Date(Date.now() + (7 * 60 + new Date().getTimezoneOffset()) * 60000); }
+
   function greetWord() {
-    var h = new Date().getHours();
-    var k = h >= 4 && h < 11 ? 'pagi' : h < 15 ? 'siang' : h < 18 ? 'sore' : 'malam';
+    var h = wibNow().getHours();
+    var k = h >= 4 && h < 11 ? 'pagi' : h >= 11 && h < 15 ? 'siang' : h >= 15 && h < 18 ? 'sore' : 'malam';
     return t('hello_' + k);
   }
 
@@ -354,7 +357,7 @@
     var u = (state.session && state.session.user) || {};
     var first = String(u.name || '').split(/\s+/)[0];
     if (!first || /^ottley$/i.test(first)) first = '';
-    var now = new Date();
+    var now = wibNow();
     $('hero-date').textContent = DAYS[state.lang][now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[state.lang][now.getMonth()] + ' ' + now.getFullYear();
     $('hero-hello').textContent = greetWord() + (first ? ', ' + first : '') + '.';
     var sum = '';
@@ -531,6 +534,7 @@
     var cancelling = it.status !== 'Batal';
     if (cancelling && !window.confirm(t('j_confirm_cancel', { t: it.title }))) return;
     btn.disabled = true;
+    lockBox($('j-list'), true);
     say('j-msg', t('saving'));
     api('jadwalStatus', { id: it.id, status: cancelling ? 'Batal' : 'Aktif' })
       .then(function (r) {
@@ -538,10 +542,22 @@
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
         return api('jadwalList', { scope: jScope }).then(function (d) { jData = d; renderJadwal(); });
       })
-      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
+      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); })
+      .then(function () { lockBox($('j-list'), false); });
   }
 
   // ---------- form jadwal ----------
+  // Saat menyimpan/mengirim: semua bagian jadi abu-abu dan tidak bisa disentuh, supaya tidak ada klik atau edit di tengah loading
+  function lockUi(root, on, keepSel) {
+    if (!root) return;
+    Array.prototype.forEach.call(root.children, function (c) {
+      if (keepSel && c.matches(keepSel)) return;
+      c.inert = !!on;
+      c.classList.toggle('locked', !!on);
+    });
+  }
+  function lockBox(box, on) { if (!box) return; box.inert = !!on; box.classList.toggle('locked', !!on); }
+
   function newKey() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
 
   function openForm(it) {
@@ -605,6 +621,7 @@
     if (item.reminders.length > 5) { say('jf-msg', t('f_rem'), 'err'); return; }
     state.saving = true;
     $('jf-save').disabled = true;
+    lockUi($('jf'), true, '.msg');
     say('jf-msg', t('saving'));
     api('jadwalSave', { item: item, key: formState._key })
       .then(function (r) {
@@ -621,7 +638,7 @@
         if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; }
         say('jf-msg', errText(e), 'err');
       })
-      .then(function () { state.saving = false; $('jf-save').disabled = false; });
+      .then(function () { state.saving = false; $('jf-save').disabled = false; lockUi($('jf'), false); });
   }
 
   // ---------- catatan ----------
@@ -696,19 +713,21 @@
     if (nSaving || !nForm) return;
     var item = { id: nForm.id || undefined, title: $('nf-t').value.trim(), body: $('nf-b').value, tags: $('nf-g').value };
     if (!item.title && !item.body.trim()) { say('nf-msg', t('v_note'), 'err'); return; }
-    nSaving = true; $('nf-save').disabled = true; say('nf-msg', t('saving'));
+    nSaving = true; $('nf-save').disabled = true; lockUi($('nf'), true, '.msg'); say('nf-msg', t('saving'));
     api('catatanSave', { item: item, key: nForm._key })
       .then(function () { closeNote(); return api('catatanList').then(function (d) { nData = d; renderNotes(); say('n-msg', t('n_saved'), 'ok'); }); })
       .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('nf-msg', errText(e), 'err'); })
-      .then(function () { nSaving = false; $('nf-save').disabled = false; });
+      .then(function () { nSaving = false; $('nf-save').disabled = false; lockUi($('nf'), false); });
   }
 
   function delNote(n, btn) {
     if (!window.confirm(t('n_del_confirm'))) return;
     btn.disabled = true;
+    lockBox($('n-list'), true);
     api('catatanDelete', { id: n.id })
       .then(function () { return api('catatanList').then(function (d) { nData = d; renderNotes(); say('n-msg', t('n_deleted'), 'ok'); }); })
-      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('n-msg', errText(e), 'err'); });
+      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('n-msg', errText(e), 'err'); })
+      .then(function () { lockBox($('n-list'), false); });
   }
 
   // ---------- surat ----------
@@ -880,7 +899,7 @@
     clearTimeout(sArmTimer); sArmTimer = setTimeout(disarm, 5000);
   }
   function disarm() { sArmed = false; clearTimeout(sArmTimer); $('s-send').textContent = t('s_send'); }
-  function setBusy(b) { sBusy = b; $('s-send').disabled = b || sDone; $('s-test').disabled = b || sDone; }
+  function setBusy(b) { sBusy = b; $('s-send').disabled = b || sDone; $('s-test').disabled = b || sDone; lockUi($('sf'), b || sDone, '.msg, .bar'); }
 
   function doSend(test) {
     if (sBusy || sDone) return;
@@ -921,6 +940,7 @@
     if ($('s-fields')) $('s-fields').innerHTML = '';
     if ($('s-filelist')) $('s-filelist').innerHTML = '';
     if ($('s-new')) $('s-new').hidden = true;
+    if ($('sf')) lockUi($('sf'), false);
     if (!silent) { say('s-msg', ''); setBusy(false); disarm(); doPreview(); }
   }
 
