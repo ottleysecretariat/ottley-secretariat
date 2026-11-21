@@ -250,3 +250,6 @@ body.in-app .chip:hover { background: var(--paper-2); }
 .note-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .note-tag { font-size: 12px; font-weight: 600; color: var(--gold-d); border: 1px solid var(--gold-l); padding: 0 8px; border-radius: 2px; }
 .note-act { display: flex; gap: 16px; margin-top: 10px; padding-top: 8px; border-top: 1px dotted var(--line); }
+
+/* ---------- terkunci saat menyimpan ---------- */
+.locked { opacity: 0.45; filter: grayscale(1); pointer-events: none; user-select: none; transition: opacity 0.15s; }
