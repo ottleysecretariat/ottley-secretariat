@@ -25,7 +25,7 @@
       today: 'Hari ini', tomorrow: 'Besok', allday: 'Seharian', draft: 'Draf', guests_n: '{n} undangan',
       maps: 'Peta', to_: 'Kepada', cc_: 'Cc', att_: 'Lampiran', by_: 'oleh', sent: 'Terkirim',
       loading: 'Memuat...',
-      tab_home: 'Beranda', tab_jadwal: 'Jadwal', tab_surat: 'Surat',
+      tab_home: 'Beranda', tab_jadwal: 'Jadwal', tab_surat: 'Surat', tab_catatan: 'Catatan',
       jadwal_title: 'Jadwal', jadwal_sub: 'Semua yang tercatat di sini ikut masuk ke Google Calendar.',
       j_add: 'Tambah jadwal', scope_upcoming: 'Mendatang', scope_past: 'Lalu', scope_cancelled: 'Dibatalkan',
       j_empty_upcoming: 'Belum ada jadwal mendatang. Tekan "Tambah jadwal" untuk mulai.', j_empty_past: 'Tidak ada jadwal yang sudah lewat.', j_empty_cancelled: 'Tidak ada jadwal yang dibatalkan.',
@@ -39,6 +39,11 @@
       btn_save: 'Simpan', btn_close: 'Tutup', saving: 'Menyimpan...',
       u_min: 'menit', u_hour: 'jam', u_day: 'hari', u_week: 'minggu',
       v_title: 'Judul belum diisi.', v_date: 'Tanggal belum dipilih.',
+      catatan_title: 'Catatan', catatan_sub: 'Tempat menaruh apa pun yang tidak boleh terlupa.', n_add: 'Tulis catatan',
+      n_search: 'Cari', n_all: 'Semua', n_empty: 'Belum ada catatan. Tulis yang pertama.', n_none: 'Tidak ada catatan yang cocok.',
+      n_f_title: 'Judul (opsional)', n_f_body: 'Isi', n_f_tags: 'Tag (pisahkan koma)', n_new: 'Catatan baru', n_edit_t: 'Ubah catatan',
+      n_edit: 'Ubah', n_del: 'Hapus', n_more: 'Selengkapnya', n_less: 'Ringkas', n_del_confirm: 'Hapus catatan ini? Tidak bisa dibatalkan.', n_saved: 'Catatan tersimpan.', n_deleted: 'Catatan dihapus.',
+      v_note: 'Catatan masih kosong.',
       surat_form_title: 'Tulis email', s_from: 'Dikirim dari', s_to: 'Kepada', s_cc: 'Cc (opsional)', s_nama: 'Nama penerima (untuk salam pembuka)',
       s_lang: 'Bahasa email', s_part: 'Salam sesuai waktu', s_event: 'Jadwal terkait (opsional)', s_tpl: 'Template (mengikuti bahasa email)',
       s_cardtitle: 'Judul kartu (opsional)', s_maps: 'Link Google Maps (opsional)', s_subject: 'Subjek',
@@ -97,7 +102,7 @@
       today: 'Today', tomorrow: 'Tomorrow', allday: 'All day', draft: 'Draft', guests_n: '{n} invited',
       maps: 'Map', to_: 'To', cc_: 'Cc', att_: 'Attachments', by_: 'by', sent: 'Sent',
       loading: 'Loading...',
-      tab_home: 'Home', tab_jadwal: 'Schedule', tab_surat: 'Letters',
+      tab_home: 'Home', tab_jadwal: 'Schedule', tab_surat: 'Letters', tab_catatan: 'Notes',
       jadwal_title: 'Schedule', jadwal_sub: 'Everything recorded here also goes into Google Calendar.',
       j_add: 'Add item', scope_upcoming: 'Upcoming', scope_past: 'Past', scope_cancelled: 'Cancelled',
       j_empty_upcoming: 'Nothing upcoming yet. Press "Add item" to begin.', j_empty_past: 'No past items.', j_empty_cancelled: 'No cancelled items.',
@@ -111,6 +116,11 @@
       btn_save: 'Save', btn_close: 'Close', saving: 'Saving...',
       u_min: 'min', u_hour: 'h', u_day: 'd', u_week: 'w',
       v_title: 'Title is required.', v_date: 'Pick a date.',
+      catatan_title: 'Notes', catatan_sub: 'A place for anything that must not be forgotten.', n_add: 'Write a note',
+      n_search: 'Search', n_all: 'All', n_empty: 'No notes yet. Write the first one.', n_none: 'No matching notes.',
+      n_f_title: 'Title (optional)', n_f_body: 'Body', n_f_tags: 'Tags (comma separated)', n_new: 'New note', n_edit_t: 'Edit note',
+      n_edit: 'Edit', n_del: 'Delete', n_more: 'Read more', n_less: 'Collapse', n_del_confirm: 'Delete this note? This cannot be undone.', n_saved: 'Note saved.', n_deleted: 'Note deleted.',
+      v_note: 'The note is empty.',
       surat_form_title: 'Write email', s_from: 'Sent from', s_to: 'To', s_cc: 'Cc (optional)', s_nama: 'Recipient name (for the greeting)',
       s_lang: 'Email language', s_part: 'Time-of-day greeting', s_event: 'Related schedule (optional)', s_tpl: 'Template (follows the email language)',
       s_cardtitle: 'Card title (optional)', s_maps: 'Google Maps link (optional)', s_subject: 'Subject',
@@ -173,7 +183,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); }
   }
 
   function setLang(l) {
@@ -231,7 +241,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; sCtx = null; closeForm(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; sCtx = null; nData = null; closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -435,8 +445,10 @@
     $('tab-home').hidden = name !== 'home';
     $('tab-jadwal').hidden = name !== 'jadwal';
     $('tab-surat').hidden = name !== 'surat';
+    $('tab-catatan').hidden = name !== 'catatan';
     if (name === 'jadwal') loadJadwal();
     if (name === 'surat') loadSurat();
+    if (name === 'catatan') loadCatatan();
     if (name === 'home' && homeStale) { homeStale = false; refresh(); }
   }
 
@@ -610,6 +622,93 @@
         say('jf-msg', errText(e), 'err');
       })
       .then(function () { state.saving = false; $('jf-save').disabled = false; });
+  }
+
+  // ---------- catatan ----------
+  var nData = null, nTag = '', nForm = null, nSaving = false;
+
+  function loadCatatan() {
+    say('n-msg', t('loading'));
+    api('catatanList')
+      .then(function (d) { nData = d; say('n-msg', ''); renderNotes(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('n-msg', errText(e), 'err'); });
+  }
+
+  function renderNotes() {
+    var tb = $('n-tags'), box = $('n-list');
+    if (!tb || !box) return;
+    tb.innerHTML = ''; box.innerHTML = '';
+    if (!nData) return;
+    if (nData.tags.length) {
+      var all = el('button', 'chip-t' + (nTag ? '' : ' on'), t('n_all')); all.type = 'button';
+      all.addEventListener('click', function () { nTag = ''; renderNotes(); });
+      tb.appendChild(all);
+      nData.tags.forEach(function (g) {
+        var b = el('button', 'chip-t' + (nTag.toLowerCase() === g.toLowerCase() ? ' on' : ''), g); b.type = 'button';
+        b.addEventListener('click', function () { nTag = (nTag.toLowerCase() === g.toLowerCase()) ? '' : g; renderNotes(); });
+        tb.appendChild(b);
+      });
+    }
+    var q = ($('n-q').value || '').trim().toLowerCase();
+    var list = nData.items.filter(function (n) {
+      if (nTag && n.tags.map(function (x) { return x.toLowerCase(); }).indexOf(nTag.toLowerCase()) < 0) return false;
+      return !q || (n.title + ' ' + n.body + ' ' + n.tags.join(' ')).toLowerCase().indexOf(q) >= 0;
+    });
+    if (!list.length) { box.appendChild(el('p', 'empty', t(nData.items.length ? 'n_none' : 'n_empty'))); return; }
+    list.forEach(function (n) {
+      var d = el('article', 'note');
+      if (n.title) d.appendChild(el('h3', 'note-t', n.title));
+      d.appendChild(el('div', 'note-time', String(n.time || '').slice(0, 16)));
+      d.appendChild(el('p', 'note-b', n.body));
+      if (n.tags.length) { var tg = el('div', 'note-tags'); n.tags.forEach(function (x) { tg.appendChild(el('span', 'note-tag', x)); }); d.appendChild(tg); }
+      var act = el('div', 'note-act');
+      if (n.body.length > 220 || n.body.split('\n').length > 5) {
+        var mb = el('button', 'lnk', t('n_more')); mb.type = 'button';
+        mb.addEventListener('click', function () { var o = d.classList.toggle('open'); mb.textContent = t(o ? 'n_less' : 'n_more'); });
+        act.appendChild(mb);
+      }
+      var be = el('button', 'lnk', t('n_edit')); be.type = 'button'; be.addEventListener('click', function () { openNote(n); });
+      var bd = el('button', 'lnk danger', t('n_del')); bd.type = 'button'; bd.addEventListener('click', function () { delNote(n, bd); });
+      act.appendChild(be); act.appendChild(bd);
+      d.appendChild(act);
+      box.appendChild(d);
+    });
+  }
+
+  function openNote(n) {
+    nForm = { id: n ? n.id : '', _key: newKey() };
+    $('nf-title').textContent = t(n ? 'n_edit_t' : 'n_new');
+    $('nf-t').value = n ? n.title : ''; $('nf-b').value = n ? n.body : ''; $('nf-g').value = n ? n.tags.join(', ') : '';
+    say('nf-msg', '');
+    $('nsheet').hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () { $('nf-b').focus(); }, 50);
+  }
+  function closeNote() {
+    var sh = $('nsheet');
+    if (sh) sh.hidden = true;
+    if ($('sheet') && $('sheet').hidden) document.body.style.overflow = '';
+    nForm = null;
+  }
+
+  function submitNote(ev) {
+    ev.preventDefault();
+    if (nSaving || !nForm) return;
+    var item = { id: nForm.id || undefined, title: $('nf-t').value.trim(), body: $('nf-b').value, tags: $('nf-g').value };
+    if (!item.title && !item.body.trim()) { say('nf-msg', t('v_note'), 'err'); return; }
+    nSaving = true; $('nf-save').disabled = true; say('nf-msg', t('saving'));
+    api('catatanSave', { item: item, key: nForm._key })
+      .then(function () { closeNote(); return api('catatanList').then(function (d) { nData = d; renderNotes(); say('n-msg', t('n_saved'), 'ok'); }); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('nf-msg', errText(e), 'err'); })
+      .then(function () { nSaving = false; $('nf-save').disabled = false; });
+  }
+
+  function delNote(n, btn) {
+    if (!window.confirm(t('n_del_confirm'))) return;
+    btn.disabled = true;
+    api('catatanDelete', { id: n.id })
+      .then(function () { return api('catatanList').then(function (d) { nData = d; renderNotes(); say('n-msg', t('n_deleted'), 'ok'); }); })
+      .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('n-msg', errText(e), 'err'); });
   }
 
   // ---------- surat ----------
@@ -857,7 +956,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') loadJadwal(); else refresh(); });
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') loadJadwal(); else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
     document.querySelectorAll('.seg-b').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -887,11 +986,16 @@
     $('s-new').addEventListener('click', function () { resetSurat(false); });
     $('sf').addEventListener('submit', function (e) { e.preventDefault(); });
     resetSurat(true);
+    $('n-add').addEventListener('click', function () { openNote(null); });
+    $('n-q').addEventListener('input', renderNotes);
+    $('nf').addEventListener('submit', submitNote);
+    $('nf-cancel').addEventListener('click', closeNote);
+    $('nsheet').addEventListener('click', function (e) { if (e.target === $('nsheet')) closeNote(); });
     $('j-add').addEventListener('click', function () { openForm(null); });
     $('jf').addEventListener('submit', submitForm);
     $('jf-cancel').addEventListener('click', closeForm);
     $('sheet').addEventListener('click', function (e) { if (e.target === $('sheet')) closeForm(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('sheet').hidden) closeForm(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!$('sheet').hidden) closeForm(); if (!$('nsheet').hidden) closeNote(); } });
     $('btn-logout').addEventListener('click', function () { logout(''); });
 
     applyLang();
