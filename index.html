@@ -121,6 +121,18 @@
       </div>
 
       <div id="tab-surat" hidden>
+        <div id="s-list-view">
+          <div class="hero">
+            <div class="head-row">
+              <div class="grow"><h1 class="hello" data-i18n="tab_surat"></h1><p class="lede" data-i18n="surat_page_sub"></p></div>
+              <button id="s-write" class="btn primary" type="button" data-i18n="s_write"></button>
+            </div>
+          </div>
+          <p id="sh-msg" class="msg" role="status"></p>
+          <div id="sh-list"></div>
+        </div>
+        <div id="s-compose-view" hidden>
+          <button id="s-back" class="lnk back" type="button" data-i18n="s_back"></button>
         <section class="card">
           <h2 data-i18n="surat_form_title"></h2>
           <p class="muted small"><span data-i18n="s_from"></span> <b id="s-sender">-</b></p>
@@ -156,6 +168,7 @@
             </div>
           </form>
         </section>
+        </div>
       </div>
     </div>
   </main>
@@ -196,6 +209,33 @@
         <button id="nf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
       </div>
     </form>
+  </div>
+
+  <div id="dsheet" class="sheet" hidden>
+    <div class="sheet-card wide" role="dialog" aria-modal="true">
+      <div class="eyebrow" id="d-when"></div>
+      <h2 id="d-title" class="d-title"></h2>
+      <div id="d-tags" class="note-tags"></div>
+      <dl id="d-rows" class="rows"></dl>
+      <div class="bar">
+        <button id="d-edit" class="btn primary" type="button" data-i18n="j_edit"></button>
+        <button id="d-mail" class="btn ghost" type="button" data-i18n="d_mail"></button>
+        <button id="d-cancel" class="btn ghost" type="button"></button>
+        <button id="d-close" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+      <p id="d-msg" class="msg" role="status"></p>
+    </div>
+  </div>
+
+  <div id="vsheet" class="sheet" hidden>
+    <div class="sheet-card wide" role="dialog" aria-modal="true">
+      <div class="eyebrow" id="v-time"></div>
+      <h2 id="v-subj" class="d-title"></h2>
+      <dl id="v-rows" class="rows"></dl>
+      <p id="v-note" class="msg"></p>
+      <iframe id="v-prev" class="prev" sandbox="" title="Preview" hidden></iframe>
+      <div class="bar"><button id="v-close" class="btn ghost" type="button" data-i18n="btn_close"></button></div>
+    </div>
   </div>
 </body>
 </html>
