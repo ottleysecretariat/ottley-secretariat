@@ -158,6 +158,16 @@
             <div id="s-fields"></div>
             <label class="fl"><span data-i18n="s_files"></span><textarea id="s-files" rows="2" placeholder="https://drive.google.com/file/d/.../view"></textarea></label>
             <div id="s-filelist" class="files"></div>
+            <div class="fl">
+              <span data-i18n="s_upload"></span>
+              <div id="s-drop" class="drop">
+                <button id="s-pick" class="btn ghost sm" type="button" data-i18n="s_pick"></button>
+                <span class="tiny tight" data-i18n="s_drop"></span>
+                <input id="s-file" type="file" multiple hidden>
+              </div>
+              <div id="s-ups" class="files"></div>
+              <div id="s-limit" class="files"></div>
+            </div>
             <div class="subj"><span data-i18n="s_subj_prev"></span> <b id="s-subj">-</b></div>
             <iframe id="s-prev" class="prev" sandbox="" title="Preview"></iframe>
             <p id="s-msg" class="msg" role="status"></p>
