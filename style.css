@@ -234,3 +234,19 @@ body.in-app .chip:hover { background: var(--paper-2); }
 .sheet-card { background: var(--sheet); width: 100%; max-width: 580px; max-height: 94vh; overflow-y: auto; border-top: 3px solid var(--gold); padding: 24px 22px calc(26px + env(safe-area-inset-bottom)); }
 .sheet-card h2 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: 28px; color: var(--ink); }
 @media (min-width: 700px) { .sheet { align-items: center; } .sheet-card { border: 1px solid var(--line); border-top: 3px solid var(--gold); } }
+
+/* ---------- catatan: lembar catatan tempel ---------- */
+.search { margin-top: 14px; }
+.tagbar { margin: 10px 0 0; }
+.chip-t { font-size: 14px; font-weight: 600; color: var(--gold-d); background: transparent; border: 1px solid var(--gold-l); border-radius: 3px; padding: 3px 11px; cursor: pointer; }
+.chip-t.on { background: var(--gold-d); border-color: var(--gold-d); color: #fff; }
+#n-list { margin-top: 18px; display: grid; gap: 14px; }
+@media (min-width: 900px) { #n-list { grid-template-columns: 1fr 1fr; align-items: start; } }
+.note { background: var(--sheet); border: 1px solid var(--line); border-top: 3px solid var(--gold-l); padding: 14px 16px 12px; }
+.note-t { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.25; color: var(--ink); word-break: break-word; }
+.note-time { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin: 2px 0 8px; }
+.note-b { margin: 0; white-space: pre-wrap; word-break: break-word; color: var(--text); display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.note.open .note-b { display: block; }
+.note-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.note-tag { font-size: 12px; font-weight: 600; color: var(--gold-d); border: 1px solid var(--gold-l); padding: 0 8px; border-radius: 2px; }
+.note-act { display: flex; gap: 16px; margin-top: 10px; padding-top: 8px; border-top: 1px dotted var(--line); }
