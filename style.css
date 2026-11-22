@@ -338,3 +338,30 @@ body.in-app .chip:hover { background: var(--paper-2); }
 #cal.busy::after { content: ''; position: absolute; left: 50%; top: 90px; width: 26px; height: 26px; margin-left: -13px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: calspin .8s linear infinite; }
 .cal-label.busy { opacity: .55; }
 @keyframes calspin { to { transform: rotate(360deg); } }
+
+/* ---------- kelas ---------- */
+#k-list { display: grid; gap: 16px; }
+@media (min-width: 900px) { #k-list { grid-template-columns: 1fr 1fr; align-items: start; } }
+.kc { background: var(--sheet); border: 1px solid var(--line); border-left: 3px solid var(--gold); padding: 16px 18px; }
+.kc h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 2px; color: var(--ink); }
+.kc .meta { font-size: 14px; color: var(--muted); margin: 0 0 8px; }
+.kc .next { font-size: 15px; margin: 0 0 10px; }
+.kc .bar { margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 1px 7px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted); }
+.badge.on { color: #1d5d4f; border-color: #1d5d4f; }
+.badge.mk { color: #8a3b12; border-color: #8a3b12; }
+.ks { display: grid; gap: 0; margin-top: 8px; border-top: 1px solid var(--line); }
+.ks-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.ks-row .w { flex: 1 1 180px; font-size: 15px; }
+.ks-row .w small { display: block; color: var(--muted); font-size: 13px; }
+.ks-row .bar { margin: 0; }
+.kslot { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; gap: 8px; align-items: end; margin-bottom: 8px; }
+.kslot .fl { margin: 0; }
+.kslot .x { align-self: end; }
+@media (max-width: 460px) { .kslot { grid-template-columns: 1fr 1fr; } .kslot select { grid-column: 1 / -1; } }
+.kprev { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; max-height: 190px; overflow: auto; }
+.kp { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; border: 1px solid var(--line); border-radius: 3px; padding: 2px 4px 2px 9px; background: var(--sheet); }
+.kp button { border: 0; background: transparent; cursor: pointer; font-size: 16px; line-height: 1; color: var(--muted); padding: 2px 5px; }
+.skipbar .chip-c { font-size: 14px; }
+.cal-ev.kelas { border-left: 3px solid #1d5d4f; }
+.cal-ev.makeup { border-left: 3px solid #8a3b12; }
