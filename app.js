@@ -264,7 +264,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; calData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -567,7 +567,7 @@
       .then(function (r) {
         homeStale = true;
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
-        if (calMode !== 'list') { loadCal(); return; }
+        if (calMode !== 'list') { loadCal(true); return; }
         return api('jadwalList', { scope: jScope }).then(function (d) { jData = d; renderJadwal(); });
       })
       .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); })
@@ -623,21 +623,47 @@
     setViewUi();
     reloadJadwalView();
   }
-  function reloadJadwalView() { if (calMode === 'list') loadJadwal(); else loadCal(); }
+  function reloadJadwalView(force) { if (calMode === 'list') loadJadwal(); else loadCal(force); }
 
-  function loadCal() {
+  var calCache = {};
+  function calKey(r) { return r[0] + '|' + r[1]; }
+  function calFetch(r) {
+    var k = calKey(r), c = calCache[k];
+    if (c && c.data) return Promise.resolve(c.data);
+    if (c && c.p) return c.p;
+    var p = api('jadwalRange', { from: r[0], to: r[1] }).then(function (d) { calCache[k] = { data: d }; return d; })
+      .catch(function (e) { delete calCache[k]; throw e; });
+    calCache[k] = { p: p };
+    return p;
+  }
+  function calPrefetch() {
+    var keep = calAnchor, out = [];
+    [-1, 1].forEach(function (dir) {
+      var save = calAnchor; calAnchor = calStep(dir); var r = calRange(); calAnchor = save;
+      out.push(r);
+    });
+    out.forEach(function (r) { if (!calCache[calKey(r)]) calFetch(r).catch(function () { /* diam-diam */ }); });
+    calAnchor = keep;
+  }
+  function calBusy(on) {
+    var b = $('cal'); if (!b) return;
+    b.classList.toggle('busy', on);
+    $('cal-label').classList.toggle('busy', on);
+    if (on) say('j-msg', t('loading')); else if ($('j-msg').textContent === t('loading')) say('j-msg', '');
+  }
+  function loadCal(force) {
     if (!calAnchor) calAnchor = todayIso();
-    var r = calRange(), seq = ++calSeq;
+    if (force) calCache = {};
+    var r = calRange(), seq = ++calSeq, c = calCache[calKey(r)];
     $('cal-label').textContent = calLabel();
-    if (!calData) say('j-msg', t('loading'));
-    api('jadwalRange', { from: r[0], to: r[1] })
+    if (c && c.data) { calData = c.data; calBusy(false); renderCal(); calPrefetch(); return; }
+    calBusy(true);
+    calFetch(r)
       .then(function (d) {
         if (seq !== calSeq) return;
-        calData = d;
-        if ($('j-msg').textContent === t('loading')) say('j-msg', '');
-        renderCal();
+        calData = d; calBusy(false); renderCal(); calPrefetch();
       })
-      .catch(function (e) { if (seq !== calSeq) return; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
+      .catch(function (e) { if (seq !== calSeq) return; calBusy(false); if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
   }
 
   function spanOf(it) {
@@ -901,7 +927,7 @@
         homeStale = true;
         if (tab === 'home') { homeStale = false; refresh(); }
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
-        if (calMode !== 'list') { loadCal(); return; }
+        if (calMode !== 'list') { loadCal(true); return; }
         // lompat ke daftar yang memuat jadwal ini
         var today = jData ? jData.today : '';
         if (r.item.status === 'Batal') jScope = 'cancelled'; else if (r.item.date && r.item.date < today) jScope = 'past'; else jScope = 'upcoming';
@@ -1059,7 +1085,7 @@
       api('jadwalStatus', { id: it.id, status: cancelled ? 'Aktif' : 'Batal' })
         .then(function (r) {
           closeDetail(); homeStale = true;
-          if (tab === 'jadwal') reloadJadwalView(); else if (tab === 'home') { homeStale = false; refresh(); }
+          if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'home') { homeStale = false; refresh(); }
           if (r.syncError) say(tab === 'jadwal' ? 'j-msg' : 'app-msg', t('j_sync_err') + r.syncError, 'err');
         })
         .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('d-msg', errText(e), 'err'); })
@@ -1493,7 +1519,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(); else if (tab === 'catatan') loadCatatan(); else refresh(); });
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
     document.querySelectorAll('.seg-b').forEach(function (b) {
       b.addEventListener('click', function () {
