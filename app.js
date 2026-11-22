@@ -50,6 +50,8 @@
       v_to: 'Kepada', v_cc: 'Cc', v_by: 'Dikirim oleh', v_lang: 'Bahasa', v_tpl: 'Template', v_att: 'Lampiran',
       s_upload: 'Lampiran dari perangkat ini (maks. {mb} MB per file)', s_pick: 'Pilih file', s_drop: 'atau tarik file ke sini',
       s_up_busy: 'mengunggah...', s_up_big: 'Lebih dari {mb} MB.', s_up_type: 'Jenis file diblokir Gmail.', s_up_x: 'Hapus',
+      view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
+      cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
       v_loading: 'Memuat surat...', v_nodata: 'Isi surat ini tidak tersimpan, karena dikirim sebelum riwayat isi aktif atau terlalu panjang. Yang tersedia hanya keterangannya.',
       surat_form_title: 'Tulis email', s_from: 'Dikirim dari', s_to: 'Kepada', s_cc: 'Cc (opsional)', s_nama: 'Nama penerima (untuk salam pembuka)',
@@ -135,6 +137,8 @@
       v_to: 'To', v_cc: 'Cc', v_by: 'Sent by', v_lang: 'Language', v_tpl: 'Template', v_att: 'Attachments',
       s_upload: 'Attachments from this device (max {mb} MB per file)', s_pick: 'Choose files', s_drop: 'or drag files here',
       s_up_busy: 'uploading...', s_up_big: 'Larger than {mb} MB.', s_up_type: 'File type blocked by Gmail.', s_up_x: 'Remove',
+      view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
+      cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
       v_loading: 'Loading letter...', v_nodata: 'The content of this letter was not saved, because it was sent before content history was enabled or it was too long. Only the details are available.',
       surat_form_title: 'Write email', s_from: 'Sent from', s_to: 'To', s_cc: 'Cc (optional)', s_nama: 'Recipient name (for the greeting)',
@@ -199,12 +203,15 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); }
   }
 
   function setLang(l) {
     state.lang = l === 'en' ? 'en' : 'id';
     lsSet(KEY_LANG, state.lang);
+    var sv = lsGet('ottley.view');
+    calMode = CAL_VIEWS.indexOf(sv) >= 0 ? sv : (isNarrow() ? '3day' : 'week');
+    setViewUi();
     applyLang();
   }
 
@@ -257,7 +264,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; calData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -469,7 +476,7 @@
     $('tab-jadwal').hidden = name !== 'jadwal';
     $('tab-surat').hidden = name !== 'surat';
     $('tab-catatan').hidden = name !== 'catatan';
-    if (name === 'jadwal') loadJadwal();
+    if (name === 'jadwal') reloadJadwalView();
     if (name === 'surat') { if (sMode === 'compose') showCompose(); else showSuratList(); }
     if (name === 'catatan') loadCatatan();
     if (name === 'home' && homeStale) { homeStale = false; refresh(); }
@@ -560,10 +567,247 @@
       .then(function (r) {
         homeStale = true;
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
+        if (calMode !== 'list') { loadCal(); return; }
         return api('jadwalList', { scope: jScope }).then(function (d) { jData = d; renderJadwal(); });
       })
       .catch(function (e) { btn.disabled = false; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); })
       .then(function () { lockBox($('j-list'), false); });
+  }
+
+  // ---------- kalender ----------
+  var CAL_VIEWS = ['list', 'day', '3day', 'week', 'month'];
+  var calMode = 'week', calAnchor = '', calData = null, calSeq = 0, clashTimer = null, clashSeq = 0;
+
+  function isNarrow() { return window.innerWidth < 700; }
+  function pad2(n) { return ('0' + n).slice(-2); }
+  function isoOf(y, m, d) { return y + '-' + pad2(m) + '-' + pad2(d); }
+  function parseIso(iso) { var p = iso.split('-'); return { y: +p[0], m: +p[1], d: +p[2] }; }
+  function isoAdd(iso, n) { var p = parseIso(iso), d = new Date(Date.UTC(p.y, p.m - 1, p.d + n)); return isoOf(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); }
+  function wdOf(iso) { var p = parseIso(iso); return new Date(Date.UTC(p.y, p.m - 1, p.d)).getUTCDay(); }
+  function todayIso() { var w = wibNow(); return isoOf(w.getFullYear(), w.getMonth() + 1, w.getDate()); }
+  function mondayOf(iso) { return isoAdd(iso, -((wdOf(iso) + 6) % 7)); }
+  function toM(hhmm) { var m = /^(\d{1,2}):(\d{2})/.exec(hhmm || ''); return m ? (+m[1]) * 60 + (+m[2]) : null; }
+
+  function calRange() {
+    var a = calAnchor;
+    if (calMode === 'day') return [a, a];
+    if (calMode === '3day') return [a, isoAdd(a, 2)];
+    if (calMode === 'week') { var m = mondayOf(a); return [m, isoAdd(m, 6)]; }
+    var p = parseIso(a), g = mondayOf(isoOf(p.y, p.m, 1));
+    return [g, isoAdd(g, 41)];
+  }
+  function calStep(dir) {
+    if (calMode === 'day') return isoAdd(calAnchor, dir);
+    if (calMode === '3day') return isoAdd(calAnchor, 3 * dir);
+    if (calMode === 'week') return isoAdd(calAnchor, 7 * dir);
+    var p = parseIso(calAnchor), d = new Date(Date.UTC(p.y, p.m - 1 + dir, 1));
+    return isoOf(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
+  }
+  function calLabel() {
+    var L = state.lang, mon = MONTHS[L];
+    if (calMode === 'month') { var p = parseIso(calAnchor); return mon[p.m - 1] + ' ' + p.y; }
+    if (calMode === 'day') return dayLabel(calAnchor.replace(/-/g, ''));
+    var r = calRange(), a = parseIso(r[0]), b = parseIso(r[1]);
+    if (a.m === b.m && a.y === b.y) return a.d + ' – ' + b.d + ' ' + mon[a.m - 1] + ' ' + a.y;
+    return a.d + ' ' + mon[a.m - 1].slice(0, 3) + (a.y !== b.y ? ' ' + a.y : '') + ' – ' + b.d + ' ' + mon[b.m - 1].slice(0, 3) + ' ' + b.y;
+  }
+
+  function setViewUi() {
+    document.querySelectorAll('.vb').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-view') === calMode); });
+    $('j-listview').hidden = calMode !== 'list';
+    $('j-calview').hidden = calMode === 'list';
+  }
+  function setView(v) {
+    calMode = CAL_VIEWS.indexOf(v) >= 0 ? v : 'week';
+    lsSet('ottley.view', calMode);
+    setViewUi();
+    reloadJadwalView();
+  }
+  function reloadJadwalView() { if (calMode === 'list') loadJadwal(); else loadCal(); }
+
+  function loadCal() {
+    if (!calAnchor) calAnchor = todayIso();
+    var r = calRange(), seq = ++calSeq;
+    $('cal-label').textContent = calLabel();
+    if (!calData) say('j-msg', t('loading'));
+    api('jadwalRange', { from: r[0], to: r[1] })
+      .then(function (d) {
+        if (seq !== calSeq) return;
+        calData = d;
+        if ($('j-msg').textContent === t('loading')) say('j-msg', '');
+        renderCal();
+      })
+      .catch(function (e) { if (seq !== calSeq) return; if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-msg', errText(e), 'err'); });
+  }
+
+  function spanOf(it) {
+    var s = toM(it.start), e = it.end ? toM(it.end) : null;
+    if (e == null || e <= s) e = s + 60;
+    return [s, Math.min(e, 1440)];
+  }
+
+  // Susun acara yang berimpit: tiap kelompok dibagi kolom berdampingan; tandai yang bentrok
+  function layoutDay(list) {
+    list.sort(function (a, b) { return a._s - b._s || a._e - b._e; });
+    var clusters = [], cur = [], end = 0;
+    list.forEach(function (it) {
+      if (cur.length && it._s >= end) { clusters.push(cur); cur = []; end = 0; }
+      cur.push(it); end = Math.max(end, it._e);
+    });
+    if (cur.length) clusters.push(cur);
+    clusters.forEach(function (cl) {
+      var cols = [];
+      cl.forEach(function (it) {
+        var placed = false;
+        for (var i = 0; i < cols.length; i++) { if (cols[i] <= it._s) { cols[i] = it._e; it._c = i; placed = true; break; } }
+        if (!placed) { it._c = cols.length; cols.push(it._e); }
+      });
+      cl.forEach(function (it) {
+        it._n = cols.length;
+        it._clash = cl.some(function (o) { return o !== it && o._s < it._e && it._s < o._e; });
+      });
+    });
+  }
+
+  function evText(it) { return (it.allDay ? '' : it.start + ' ') + it.title; }
+  function chipBtn(it) {
+    var b = el('button', 'cal-chip' + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : ''), evText(it));
+    b.type = 'button'; b.title = it.title;
+    b.addEventListener('click', function (e) { e.stopPropagation(); openDetail(it); });
+    return b;
+  }
+  function shortDay(wd) { return DAYS[state.lang][wd].slice(0, 3); }
+
+  function renderCal() {
+    var box = $('cal');
+    if (!box) return;
+    box.innerHTML = '';
+    if (calMode === 'list') return;
+    $('cal-label').textContent = calLabel();
+    $('cal-prev').setAttribute('aria-label', t('cal_prev')); $('cal-next').setAttribute('aria-label', t('cal_next'));
+    if (!calData) return;
+    if (calMode === 'month') renderMonth(box); else renderGrid(box);
+  }
+
+  function groupByDay() {
+    var by = {};
+    calData.items.forEach(function (it) { (by[it.date] = by[it.date] || []).push(it); });
+    return by;
+  }
+
+  function renderGrid(box) {
+    var r = calRange(), n = calMode === 'day' ? 1 : calMode === '3day' ? 3 : 7;
+    var days = []; for (var i = 0; i < n; i++) days.push(isoAdd(r[0], i));
+    var by = groupByDay(), today = todayIso();
+    var minH = 7, maxH = 21, anyAllDay = false, timed = {};
+    days.forEach(function (d) {
+      timed[d] = [];
+      (by[d] || []).forEach(function (it) {
+        if (it.allDay) { anyAllDay = true; return; }
+        var sp = spanOf(it); it._s = sp[0]; it._e = sp[1]; it._clash = false;
+        timed[d].push(it);
+        minH = Math.min(minH, Math.floor(sp[0] / 60)); maxH = Math.max(maxH, Math.ceil(sp[1] / 60));
+      });
+      layoutDay(timed[d]);
+    });
+    var PX = isNarrow() ? 46 : 54, H = (maxH - minH) * PX;
+    var wrap = el('div', 'cal-wrap'), grid = el('div', 'cal-grid' + (n > 3 && isNarrow() ? ' scroll' : ''));
+    grid.style.setProperty('--n', n);
+
+    var head = el('div', 'cal-row');
+    head.appendChild(el('div', 'cal-corner', ''));
+    days.forEach(function (d) {
+      var b = el('button', 'cal-dh' + (d === today ? ' today' : '')); b.type = 'button';
+      b.appendChild(el('span', 'dw', shortDay(wdOf(d)))); b.appendChild(el('span', 'dn', String(parseIso(d).d)));
+      b.addEventListener('click', function () { if (calMode !== 'day') { calAnchor = d; setView('day'); } });
+      head.appendChild(b);
+    });
+    grid.appendChild(head);
+
+    if (anyAllDay) {
+      var ad = el('div', 'cal-row');
+      ad.appendChild(el('div', 'cal-corner', t('allday')));
+      days.forEach(function (d) {
+        var cell = el('div', 'cal-ad');
+        (by[d] || []).filter(function (it) { return it.allDay; }).forEach(function (it) { cell.appendChild(chipBtn(it)); });
+        ad.appendChild(cell);
+      });
+      grid.appendChild(ad);
+    }
+
+    var body = el('div', 'cal-row');
+    var tc = el('div', 'cal-tcol'); tc.style.height = H + 'px';
+    for (var h = minH; h < maxH; h++) { var l = el('span', 'hl', pad2(h) + ':00'); l.style.top = ((h - minH) * PX + (h === minH ? 8 : 0)) + 'px'; tc.appendChild(l); }
+    body.appendChild(tc);
+    var nowM = (function () { var w = wibNow(); return w.getHours() * 60 + w.getMinutes(); })();
+    days.forEach(function (d) {
+      var col = el('div', 'cal-col'); col.style.height = H + 'px'; col.style.backgroundSize = '100% ' + PX + 'px';
+      col.addEventListener('click', function (e) {
+        if (e.target !== col) return;
+        var m = minH * 60 + Math.floor((e.offsetY / PX) * 2) * 30;
+        ensureJData(function () { openForm(null, { date: d, start: pad2(Math.floor(m / 60)) + ':' + pad2(m % 60) }); });
+      });
+      timed[d].forEach(function (it) {
+        var b = el('button', 'cal-ev' + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : '')); b.type = 'button';
+        b.appendChild(el('b', '', it.start + (it.end ? '–' + it.end : '')));
+        b.appendChild(document.createTextNode(it.title));
+        b.title = it.title + (it._clash ? ' (' + t('f_clash', { x: '' }).replace(/:\s*$/, '') + ')' : '');
+        b.style.top = ((it._s - minH * 60) / 60 * PX) + 'px';
+        b.style.height = Math.max(22, (it._e - it._s) / 60 * PX - 2) + 'px';
+        b.style.left = 'calc(' + (it._c / it._n * 100) + '% + 1px)';
+        b.style.width = 'calc(' + (100 / it._n) + '% - 3px)';
+        b.addEventListener('click', function (e) { e.stopPropagation(); openDetail(it); });
+        col.appendChild(b);
+      });
+      if (d === today && nowM >= minH * 60 && nowM <= maxH * 60) { var nl = el('div', 'cal-now'); nl.style.top = ((nowM - minH * 60) / 60 * PX) + 'px'; col.appendChild(nl); }
+      body.appendChild(col);
+    });
+    grid.appendChild(body);
+    wrap.appendChild(grid); box.appendChild(wrap);
+    if (!calData.items.length) box.appendChild(el('p', 'tiny', t('cal_empty_hint')));
+  }
+
+  function renderMonth(box) {
+    var r = calRange(), cur = parseIso(calAnchor), by = groupByDay(), today = todayIso();
+    var m = el('div', 'cal-month'), hd = el('div', 'cal-mh');
+    [1, 2, 3, 4, 5, 6, 0].forEach(function (w) { hd.appendChild(el('div', '', shortDay(w))); });
+    m.appendChild(hd);
+    for (var wk = 0; wk < 6; wk++) {
+      var row = el('div', 'cal-mrow');
+      for (var k = 0; k < 7; k++) {
+        (function (d) {
+          var p = parseIso(d), list = (by[d] || []).slice();
+          var tm = list.filter(function (it) { return !it.allDay; });
+          tm.forEach(function (it) { var sp = spanOf(it); it._s = sp[0]; it._e = sp[1]; it._clash = false; });
+          layoutDay(tm);
+          var cell = el('div', 'cal-mc' + (p.m !== cur.m ? ' other' : '') + (d === today ? ' today' : ''));
+          var nb = el('button', 'mn', String(p.d)); nb.type = 'button';
+          cell.appendChild(nb);
+          cell.addEventListener('click', function () { calAnchor = d; setView('day'); });
+          var max = isNarrow() ? 2 : 3;
+          list.slice(0, max).forEach(function (it) { cell.appendChild(chipBtn(it)); });
+          if (list.length > max) { var mb = el('span', 'cal-more', t('cal_more', { n: list.length - max })); cell.appendChild(mb); }
+          row.appendChild(cell);
+        })(isoAdd(r[0], wk * 7 + k));
+      }
+      m.appendChild(row);
+    }
+    box.appendChild(m);
+  }
+
+  // ---------- cek bentrok saat mengisi form ----------
+  function schedClash() { clearTimeout(clashTimer); clashTimer = setTimeout(doClash, 400); }
+  function doClash() {
+    var d = $('f-date').value, s = $('f-start').value, e = $('f-end').value;
+    if (!d || !s || !formState) { say('f-clash', ''); return; }
+    var seq = ++clashSeq;
+    api('jadwalCheck', { date: d, start: s, end: e, id: formState.id || '' })
+      .then(function (r) {
+        if (seq !== clashSeq) return;
+        if (!r.conflicts.length) { say('f-clash', ''); return; }
+        say('f-clash', t('f_clash', { x: r.conflicts.map(function (c) { return c.title + ' (' + c.start + (c.end ? '–' + c.end : '') + ')'; }).join('; ') }), 'warn');
+      })
+      .catch(function () { /* peringatan saja, abaikan */ });
   }
 
   // ---------- form jadwal ----------
@@ -580,9 +824,10 @@
 
   function newKey() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
 
-  function openForm(it) {
+  function openForm(it, preset) {
+    preset = preset || {};
     formState = it ? JSON.parse(JSON.stringify(it)) : {
-      id: '', title: '', date: jData ? jData.today : '', start: '', end: '', location: '', maps: '', notes: '', guests: [],
+      id: '', title: '', date: preset.date || (jData ? jData.today : ''), start: preset.start || '', end: '', location: '', maps: '', notes: '', guests: [],
       reminders: jData ? jData.defaults.slice() : [], status: 'Aktif'
     };
     formState._key = newKey();
@@ -602,6 +847,7 @@
     var sh = $('sheet');
     if (sh) sh.hidden = true;
     formState = null;
+    clashSeq++; say('f-clash', '');
     syncScroll();
   }
 
@@ -610,6 +856,7 @@
     var editing = !!f.id;
     $('jf-title').textContent = editing ? t('j_edit_title') : t('j_new');
     $('f-title').value = f.title; $('f-date').value = f.date; $('f-start').value = f.start; $('f-end').value = f.end;
+    schedClash();
     $('f-loc').value = f.location; $('f-maps').value = f.maps; $('f-notes').value = f.notes; $('f-guests').value = f.guests.join(', ');
     var st = $('f-status'); st.innerHTML = '';
     (editing ? ['Aktif', 'Draf', 'Batal'] : ['Aktif', 'Draf']).forEach(function (v) {
@@ -654,6 +901,7 @@
         homeStale = true;
         if (tab === 'home') { homeStale = false; refresh(); }
         say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('j_saved'), r.syncError ? 'err' : 'ok');
+        if (calMode !== 'list') { loadCal(); return; }
         // lompat ke daftar yang memuat jadwal ini
         var today = jData ? jData.today : '';
         if (r.item.status === 'Batal') jScope = 'cancelled'; else if (r.item.date && r.item.date < today) jScope = 'past'; else jScope = 'upcoming';
@@ -811,7 +1059,7 @@
       api('jadwalStatus', { id: it.id, status: cancelled ? 'Aktif' : 'Batal' })
         .then(function (r) {
           closeDetail(); homeStale = true;
-          if (tab === 'jadwal') loadJadwal(); else if (tab === 'home') { homeStale = false; refresh(); }
+          if (tab === 'jadwal') reloadJadwalView(); else if (tab === 'home') { homeStale = false; refresh(); }
           if (r.syncError) say(tab === 'jadwal' ? 'j-msg' : 'app-msg', t('j_sync_err') + r.syncError, 'err');
         })
         .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('d-msg', errText(e), 'err'); })
@@ -1245,7 +1493,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') loadJadwal(); else if (tab === 'catatan') loadCatatan(); else refresh(); });
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(); else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
     document.querySelectorAll('.seg-b').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -1274,6 +1522,12 @@
     $('s-test').addEventListener('click', function () { doSend(true); });
     $('s-new').addEventListener('click', function () { resetSurat(false); });
     $('s-write').addEventListener('click', showCompose);
+    document.querySelectorAll('.vb').forEach(function (b) { b.addEventListener('click', function () { setView(b.getAttribute('data-view')); }); });
+    $('cal-prev').addEventListener('click', function () { calAnchor = calStep(-1); loadCal(); });
+    $('cal-next').addEventListener('click', function () { calAnchor = calStep(1); loadCal(); });
+    $('cal-today').addEventListener('click', function () { calAnchor = todayIso(); loadCal(); });
+    ['f-date', 'f-start', 'f-end'].forEach(function (id) { $(id).addEventListener('input', schedClash); $(id).addEventListener('change', schedClash); });
+    window.addEventListener('resize', function () { clearTimeout(window.__rz); window.__rz = setTimeout(renderCal, 200); });
     $('s-pick').addEventListener('click', function () { $('s-file').click(); });
     $('s-file').addEventListener('change', function () { addFiles($('s-file').files); $('s-file').value = ''; });
     ['dragenter', 'dragover'].forEach(function (n) { $('s-drop').addEventListener(n, function (e) { e.preventDefault(); $('s-drop').classList.add('over'); }); });
