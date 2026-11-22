@@ -33,6 +33,7 @@
     <button class="tab on" type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 10v9h4v-5h4v5h4v-9"/></svg><span data-i18n="tab_home"></span></button>
     <button class="tab" type="button" data-tab="jadwal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span data-i18n="tab_jadwal"></span></button>
     <button class="tab" type="button" data-tab="kelas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5zM7 11.5V16c0 1.2 2.2 3 5 3s5-1.8 5-3v-4.5"/></svg><span data-i18n="tab_kelas"></span></button>
+    <button class="tab" type="button" data-tab="amb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6M17 5l2-2M19 9h2"/></svg><span data-i18n="tab_amb"></span></button>
     <button class="tab" type="button" data-tab="surat"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="1"/><path d="M3 7l9 7 9-7"/></svg><span data-i18n="tab_surat"></span></button>
     <button class="tab" type="button" data-tab="catatan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5"/></svg><span data-i18n="tab_catatan"></span></button>
   </nav>
@@ -143,11 +144,27 @@
         <div class="hero">
           <div class="head-row">
             <div class="grow"><h1 class="hello" data-i18n="kelas_title"></h1><p class="lede" data-i18n="kelas_sub"></p></div>
-            <button id="k-add" class="btn primary" type="button" data-i18n="k_add"></button>
+            <div class="bar tight"><button id="k-add" class="btn primary" type="button" data-i18n="k_add"></button><button id="k-libur" class="btn ghost" type="button" data-i18n="k_libur"></button></div>
           </div>
         </div>
         <p id="k-msg" class="msg" role="status"></p>
         <div id="k-list"></div>
+      </div>
+
+      <div id="tab-amb" hidden>
+        <div class="hero">
+          <div class="head-row">
+            <div class="grow"><h1 class="hello" data-i18n="amb_title"></h1><p class="lede" data-i18n="amb_sub"></p></div>
+            <button id="a-add" class="btn primary" type="button" data-i18n="a_add"></button>
+          </div>
+        </div>
+        <div class="seg" role="tablist">
+          <button class="seg-a on" type="button" data-ascope="upcoming" data-i18n="scope_upcoming"></button>
+          <button class="seg-a" type="button" data-ascope="past" data-i18n="scope_past"></button>
+          <button class="seg-a" type="button" data-ascope="cancelled" data-i18n="scope_cancelled"></button>
+        </div>
+        <p id="a-msg" class="msg" role="status"></p>
+        <div id="a-list"></div>
       </div>
 
       <div id="tab-surat" hidden>
@@ -305,6 +322,86 @@
       <div class="bar">
         <button id="mf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
         <button id="mf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </form>
+  </div>
+
+  <div id="lsheet" class="sheet" hidden>
+    <div class="sheet-card wide" role="dialog" aria-modal="true">
+      <h2 data-i18n="k_libur_t"></h2>
+      <p class="lede" data-i18n="k_libur_sub"></p>
+      <div id="l-list"></div>
+      <form id="lf" novalidate autocomplete="off">
+        <h3 class="mini" id="lf-title"></h3>
+        <label class="fl"><span data-i18n="k_l_label"></span><input id="lf-label" type="text" maxlength="120"></label>
+        <div class="grid2">
+          <label class="fl"><span data-i18n="k_f_from"></span><input id="lf-from" type="date"></label>
+          <label class="fl"><span data-i18n="k_l_to"></span><input id="lf-to" type="date"></label>
+        </div>
+        <div class="grid2">
+          <label class="fl"><span data-i18n="k_l_kind"></span><select id="lf-kind"><option value="Libur" data-i18n="kind_libur"></option><option value="Ujian" data-i18n="kind_ujian"></option><option value="Libur semester" data-i18n="kind_sem_break"></option><option value="Semester" data-i18n="kind_semester"></option></select></label>
+          <label class="chip-c lf-skip"><input id="lf-skip" type="checkbox" checked> <span data-i18n="k_l_skip"></span></label>
+        </div>
+        <div class="bar"><button id="lf-save" class="btn primary" type="submit" data-i18n="btn_save"></button><button id="lf-reset" class="btn ghost" type="button" data-i18n="k_l_new"></button></div>
+      </form>
+      <h3 class="mini" data-i18n="k_clash_t"></h3>
+      <p class="tiny tight" data-i18n="k_clash_sub"></p>
+      <div class="bar"><button id="l-check" class="btn ghost" type="button" data-i18n="k_clash_btn"></button></div>
+      <div id="l-clash"></div>
+      <p id="l-msg" class="msg" role="status"></p>
+      <div class="bar"><button id="l-close" class="btn ghost" type="button" data-i18n="btn_close"></button></div>
+    </div>
+  </div>
+
+  <div id="atsheet" class="sheet" hidden>
+    <form id="atf" class="sheet-card" novalidate autocomplete="off">
+      <h2 data-i18n="k_att_t"></h2>
+      <p id="atf-info" class="lede"></p>
+      <label class="fl"><span data-i18n="k_att_status"></span><select id="atf-status"><option value="Absent" data-i18n="att_absent"></option><option value="Sakit" data-i18n="att_sakit"></option><option value="Izin" data-i18n="att_izin"></option></select></label>
+      <label class="fl"><span data-i18n="k_att_reason"></span><input id="atf-reason" type="text" maxlength="200"></label>
+      <p id="atf-msg" class="msg" role="alert"></p>
+      <div class="bar">
+        <button id="atf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
+        <button id="atf-clear" class="btn ghost" type="button" data-i18n="k_att_present"></button>
+        <button id="atf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </form>
+  </div>
+
+  <div id="bsheet" class="sheet" hidden>
+    <form id="bf" class="sheet-card wide" novalidate autocomplete="off">
+      <h2 id="bf-title"></h2>
+      <label class="fl"><span data-i18n="a_f_school"></span><input id="bf-school" type="text" maxlength="150"></label>
+      <div class="grid2">
+        <label class="fl"><span data-i18n="a_f_city"></span><input id="bf-city" type="text" maxlength="100" placeholder="Jakarta Selatan"></label>
+        <label class="fl"><span data-i18n="a_f_type"></span><select id="bf-type"><option value="Dalam kota" data-i18n="a_in"></option><option value="Luar kota" data-i18n="a_out"></option></select></label>
+      </div>
+      <p id="bf-typehint" class="tiny tight"></p>
+      <label class="fl"><span data-i18n="a_f_maps"></span><input id="bf-maps" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/..."></label>
+      <div class="grid2">
+        <label class="fl"><span data-i18n="a_f_purpose"></span><input id="bf-purpose" type="text" maxlength="120"></label>
+        <label class="fl"><span data-i18n="a_f_assign"></span><input id="bf-assign" type="text" maxlength="150" list="b-staff" placeholder="47006 Nama -- Staff Marketing"><datalist id="b-staff"></datalist></label>
+      </div>
+      <div class="grid3">
+        <label class="fl"><span data-i18n="a_f_from"></span><input id="bf-from" type="date"></label>
+        <label class="fl" id="bf-to-wrap"><span data-i18n="a_f_to"></span><input id="bf-to" type="date"></label>
+        <label class="fl"><span data-i18n="f_start"></span><input id="bf-start" type="time"></label>
+      </div>
+      <label class="fl" style="max-width:220px"><span data-i18n="f_end"></span><input id="bf-end" type="time"></label>
+      <div class="fl"><span data-i18n="a_f_partners"></span><div id="bf-partners"></div>
+        <button id="bf-addp" class="btn ghost sm" type="button" data-i18n="a_addp"></button></div>
+      <div id="bf-lodge" hidden>
+        <div class="fl"><span data-i18n="a_f_lodge"></span></div>
+        <label class="fl"><span data-i18n="a_l_name"></span><input id="bf-lname" type="text" maxlength="150"></label>
+        <label class="fl"><span data-i18n="a_l_addr"></span><input id="bf-laddr" type="text" maxlength="300"></label>
+        <label class="fl"><span data-i18n="a_l_maps"></span><input id="bf-lmaps" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/..."></label>
+      </div>
+      <label class="fl"><span data-i18n="k_f_notes"></span><input id="bf-notes" type="text" maxlength="500"></label>
+      <p id="bf-info" class="tiny tight"></p>
+      <p id="bf-msg" class="msg" role="alert"></p>
+      <div class="bar">
+        <button id="bf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
+        <button id="bf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
       </div>
     </form>
   </div>
