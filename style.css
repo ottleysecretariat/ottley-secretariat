@@ -365,3 +365,29 @@ body.in-app .chip:hover { background: var(--paper-2); }
 .skipbar .chip-c { font-size: 14px; }
 .cal-ev.kelas { border-left: 3px solid #1d5d4f; }
 .cal-ev.makeup { border-left: 3px solid #8a3b12; }
+
+.seg-a { background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 6px 0 9px; font-size: 15px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.seg-a.on { color: var(--ink); border-bottom-color: var(--gold); }
+.bar.tight { margin-top: 0; }
+h3.mini { font-family: var(--serif); font-size: 18px; margin: 22px 0 6px; color: var(--ink); }
+.lf-skip { align-self: end; margin-bottom: 12px; }
+.lrow { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.lrow .w { flex: 1 1 200px; font-size: 15px; }
+.lrow .w small { display: block; color: var(--muted); font-size: 13px; }
+#l-list { max-height: 260px; overflow: auto; border-top: 1px solid var(--line); margin-bottom: 8px; }
+.prow { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; margin-bottom: 8px; }
+.prow .fl { margin: 0; }
+@media (max-width: 460px) { .prow { grid-template-columns: 1fr 1fr; } }
+#a-list { display: grid; gap: 16px; margin-top: 14px; }
+@media (min-width: 900px) { #a-list { grid-template-columns: 1fr 1fr; align-items: start; } }
+.ac { background: var(--sheet); border: 1px solid var(--line); border-left: 3px solid #5b3a8a; padding: 16px 18px; }
+.ac.cx { opacity: .7; border-left-color: var(--muted); }
+.ac h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 2px; color: var(--ink); }
+.ac .meta { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
+.ac .line { font-size: 15px; margin: 4px 0; }
+.ac .plist { margin: 8px 0 4px; border-top: 1px solid var(--line); }
+.ac .pr { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.ac .bar { margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+.wa { display: inline-block; font-size: 14px; font-weight: 600; color: #fff; background: #1d7a46; padding: 4px 12px; border-radius: 3px; text-decoration: none; }
+.badge.cx { color: #9b2c1f; border-color: #9b2c1f; }
+.cal-ev.amb { border-left: 3px solid #5b3a8a; }
