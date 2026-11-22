@@ -97,13 +97,31 @@
             <button id="j-add" class="btn primary" type="button" data-i18n="j_add"></button>
           </div>
         </div>
-        <div class="seg" role="tablist">
-          <button class="seg-b on" type="button" data-scope="upcoming" data-i18n="scope_upcoming"></button>
-          <button class="seg-b" type="button" data-scope="past" data-i18n="scope_past"></button>
-          <button class="seg-b" type="button" data-scope="cancelled" data-i18n="scope_cancelled"></button>
+        <div class="viewbar" role="tablist">
+          <button class="vb" type="button" data-view="list" data-i18n="view_list"></button>
+          <button class="vb" type="button" data-view="day" data-i18n="view_day"></button>
+          <button class="vb" type="button" data-view="3day" data-i18n="view_3day"></button>
+          <button class="vb" type="button" data-view="week" data-i18n="view_week"></button>
+          <button class="vb" type="button" data-view="month" data-i18n="view_month"></button>
         </div>
         <p id="j-msg" class="msg" role="status"></p>
-        <div id="j-list"></div>
+        <div id="j-listview">
+          <div class="seg" role="tablist">
+            <button class="seg-b on" type="button" data-scope="upcoming" data-i18n="scope_upcoming"></button>
+            <button class="seg-b" type="button" data-scope="past" data-i18n="scope_past"></button>
+            <button class="seg-b" type="button" data-scope="cancelled" data-i18n="scope_cancelled"></button>
+          </div>
+          <div id="j-list"></div>
+        </div>
+        <div id="j-calview" hidden>
+          <div class="cal-nav">
+            <button id="cal-prev" class="btn ghost sm" type="button" aria-label="Sebelumnya">‹</button>
+            <button id="cal-next" class="btn ghost sm" type="button" aria-label="Berikutnya">›</button>
+            <button id="cal-today" class="btn ghost sm" type="button" data-i18n="cal_today"></button>
+            <div id="cal-label" class="cal-label"></div>
+          </div>
+          <div id="cal"></div>
+        </div>
       </div>
 
 
@@ -193,6 +211,7 @@
         <label class="fl"><span data-i18n="f_end"></span><input id="f-end" type="time"></label>
       </div>
       <p class="tiny tight" data-i18n="f_time_hint"></p>
+      <p id="f-clash" class="msg warn" role="status"></p>
       <label class="fl"><span data-i18n="f_loc"></span><input id="f-loc" type="text" maxlength="300"></label>
       <label class="fl"><span data-i18n="f_maps"></span><input id="f-maps" type="url" inputmode="url" placeholder="https://maps.app.goo.gl/..."></label>
       <label class="fl"><span data-i18n="f_guests"></span><textarea id="f-guests" rows="2" placeholder="nama@email.com, ..."></textarea></label>
