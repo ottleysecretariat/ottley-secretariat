@@ -332,3 +332,9 @@ body.in-app .chip:hover { background: var(--paper-2); }
 .cal-mc .cal-chip { margin-top: 2px; }
 .cal-more { display: block; width: 100%; background: none; border: 0; text-align: left; font-size: 12px; font-weight: 600; color: var(--gold-d); padding: 2px 4px; cursor: pointer; }
 @media (max-width: 520px) { .cal-mc { min-height: 70px; padding: 2px; } .cal-mc .cal-chip { font-size: 10px; padding: 1px 3px; } .cal-mh div { letter-spacing: 0; font-size: 10px; } }
+
+.cal-wrap, #cal { transition: opacity .15s; }
+#cal.busy { opacity: .45; pointer-events: none; min-height: 220px; position: relative; }
+#cal.busy::after { content: ''; position: absolute; left: 50%; top: 90px; width: 26px; height: 26px; margin-left: -13px; border: 3px solid var(--gold); border-top-color: transparent; border-radius: 50%; animation: calspin .8s linear infinite; }
+.cal-label.busy { opacity: .55; }
+@keyframes calspin { to { transform: rotate(360deg); } }
