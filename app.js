@@ -64,18 +64,20 @@
       k_where_on: 'secara online', k_where_room: 'di ruang {r}', k_where_off: 'secara offline',
       k_msg_move: 'Halo, info perubahan jadwal: kelas {n} yang semula {a} dipindah (Make-up Class) menjadi {b}, {w}. Terima kasih.',
       k_msg_mode: 'Halo, info perubahan: kelas {n} pada {a} dilaksanakan {w}. Terima kasih.',
-      tab_amb: 'Ambass', amb_title: 'Student Ambassador', amb_sub: 'Penugasan ke sekolah: packing H-1, jadwal kegiatan, dan pengingat PUIS jam 18:00 dibuat otomatis.', a_add: 'Tambah penugasan',
+      tab_amb: 'Student Ambassador', amb_title: 'Student Ambassador', amb_sub: 'Penugasan ke sekolah: packing H-1, jadwal kegiatan, dan pengingat PUIS jam 18:00 dibuat otomatis.', a_add: 'Tambah penugasan',
       a_new: 'Penugasan baru', a_edit: 'Ubah penugasan', a_f_school: 'Nama sekolah', a_f_city: 'Kota / daerah', a_f_type: 'Jenis tujuan', a_in: 'Dalam kota (Jabodetabek)', a_out: 'Luar kota', a_in_s: 'Dalam kota', a_out_s: 'Luar kota',
       a_type_hint: 'Otomatis dari kota. Jabodetabek = dalam kota, selain itu luar kota (bisa lebih dari 1 hari).', a_f_maps: 'Link Google Maps sekolah (opsional)', a_f_purpose: 'Kegiatan (Purpose)', a_f_assign: 'Ditugaskan oleh (Assign By)',
       a_f_from: 'Tanggal', a_f_to: 'Sampai tanggal', a_f_partners: 'Partner', a_addp: '+ Tambah partner', a_pname: 'Nama', a_pphone: 'No. WhatsApp', a_f_lodge: 'Penginapan', a_l_name: 'Nama penginapan', a_l_addr: 'Alamat penginapan', a_l_maps: 'Link Google Maps penginapan',
       a_info: 'Akan dibuat {n} jadwal: packing H-1 di Ruang Marketing, kegiatan {d} hari, dan pengingat PUIS jam 18:00 tiap hari kegiatan.', a_none: 'Belum ada penugasan di sini.', a_puis: 'Salin isian PUIS', a_cancel: 'Batalkan',
       a_cancel_ask: 'Batalkan penugasan ke {x}? Tulis alasan (boleh kosong):', a_saved: '{n} jadwal dibuat.', a_cancelled: 'Penugasan dibatalkan.', a_lodging: 'Penginapan', a_maps: 'Buka Maps', a_by: 'Ditugaskan oleh', a_copied: 'Isian PUIS disalin.',
       a_badge_cx: 'Dibatalkan', a_reason: 'Alasan', a_v_school: 'Nama sekolah belum diisi.', a_v_date: 'Pilih tanggal kegiatan.', a_v_start: 'Isi jam mulai (dipakai untuk isian PUIS).', a_v_to: 'Tanggal selesai harus sama atau setelah tanggal mulai.', t_sync_warn: 'Tersimpan di Sheet, tapi sinkron ke Google Calendar belum selesai. Akan dilanjutkan otomatis.',
+      k_l_ranges: 'Tanggal (bisa lebih dari satu rentang)', k_l_addr: '+ Tambah rentang tanggal', k_l_v_order: 'Tanggal akhir harus sama atau setelah tanggal mulai.',
       k_libur: 'Kelola libur', k_libur_t: 'Libur & semester', k_libur_sub: 'Dipakai saat membuat jadwal kelas. Ganti semester: tambahkan tanggal baru di sini.', k_l_label: 'Keterangan', k_l_to: 'Sampai tanggal', k_l_kind: 'Jenis',
       kind_libur: 'Libur', kind_ujian: 'Ujian', kind_sem_break: 'Libur semester', kind_semester: 'Periode semester', k_l_skip: 'Kelas dilewati', k_l_new: 'Baru', k_l_add_t: 'Tambah', k_l_edit_t: 'Ubah',
       k_l_skip_yes: 'dilewati', k_l_skip_no: 'tetap masuk', k_clash_t: 'Cek jadwal yang bentrok libur', k_clash_sub: 'Mencari pertemuan kelas mendatang yang jatuh di tanggal libur.', k_clash_btn: 'Cek sekarang', k_clash_none: 'Tidak ada pertemuan yang bentrok libur.',
       k_clash_cancel: 'Batalkan {n} pertemuan ini', k_clash_done: '{n} pertemuan dibatalkan.', k_l_saved: 'Tersimpan.', k_l_deleted: 'Dihapus.', k_l_del_confirm: 'Hapus "{x}"?', k_l_v: 'Isi keterangan dan tanggal mulai.', k_edit: 'Ubah', k_del: 'Hapus',
       k_att_t: 'Kehadiran', k_att_status: 'Status', k_att_reason: 'Keterangan (opsional)', k_att_present: 'Tandai hadir', att_absent: 'Absent', att_sakit: 'Sakit', att_izin: 'Izin', k_att_btn: 'Tidak hadir', k_att_edit: 'Ubah kehadiran', k_att_saved: 'Kehadiran disimpan.',
+      k_l_ranges: 'Rentang tanggal', k_l_addr: '+ Tambah rentang tanggal', k_edit_t: 'Ubah mata kuliah', k_edit_hint: 'Perubahan berlaku untuk pertemuan dari hari ini ke depan. Pertemuan yang sudah dipindah atau diubah mode-nya tetap.', k_updated: '{n} pertemuan diperbarui.',
       k_noclass: 'Tidak ada kelas', k_noclass_ok: 'Pertemuan dibatalkan (tidak ada kelas).', k_reopen: 'Aktifkan lagi', k_reopened: 'Pertemuan diaktifkan lagi.',
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
@@ -178,18 +180,20 @@
       k_where_on: 'online', k_where_room: 'in room {r}', k_where_off: 'offline',
       k_msg_move: 'Hi, schedule change: the {n} class originally on {a} is moved (Make-up Class) to {b}, {w}. Thank you.',
       k_msg_mode: 'Hi, update: the {n} class on {a} will be held {w}. Thank you.',
-      tab_amb: 'Ambass', amb_title: 'Student Ambassador', amb_sub: 'School assignments: the day-before packing, the event itself and a 6 PM PUIS reminder are created automatically.', a_add: 'Add assignment',
+      tab_amb: 'Student Ambassador', amb_title: 'Student Ambassador', amb_sub: 'School assignments: the day-before packing, the event itself and a 6 PM PUIS reminder are created automatically.', a_add: 'Add assignment',
       a_new: 'New assignment', a_edit: 'Edit assignment', a_f_school: 'School name', a_f_city: 'City / area', a_f_type: 'Destination type', a_in: 'In town (Greater Jakarta)', a_out: 'Out of town', a_in_s: 'In town', a_out_s: 'Out of town',
       a_type_hint: 'Detected from the city. Greater Jakarta = in town, anywhere else = out of town (can span several days).', a_f_maps: 'School Google Maps link (optional)', a_f_purpose: 'Purpose', a_f_assign: 'Assigned by (Assign By)',
       a_f_from: 'Date', a_f_to: 'Until', a_f_partners: 'Partners', a_addp: '+ Add partner', a_pname: 'Name', a_pphone: 'WhatsApp no.', a_f_lodge: 'Accommodation', a_l_name: 'Accommodation name', a_l_addr: 'Accommodation address', a_l_maps: 'Accommodation Google Maps link',
       a_info: '{n} items will be created: packing the day before at the Marketing Room, {d} event day(s), and a 6 PM PUIS reminder each event day.', a_none: 'No assignments here yet.', a_puis: 'Copy PUIS entries', a_cancel: 'Cancel',
       a_cancel_ask: 'Cancel the assignment to {x}? Enter a reason (optional):', a_saved: '{n} items created.', a_cancelled: 'Assignment cancelled.', a_lodging: 'Accommodation', a_maps: 'Open Maps', a_by: 'Assigned by', a_copied: 'PUIS entries copied.',
       a_badge_cx: 'Cancelled', a_reason: 'Reason', a_v_school: 'School name is empty.', a_v_date: 'Pick the event date.', a_v_start: 'Set a start time (used for the PUIS entry).', a_v_to: 'End date must be on or after the start date.', t_sync_warn: 'Saved to the Sheet, but the Google Calendar sync is not finished. It will continue automatically.',
+      k_l_ranges: 'Dates (you can add several ranges)', k_l_addr: '+ Add another date range', k_l_v_order: 'End date must be on or after the start date.',
       k_libur: 'Manage holidays', k_libur_t: 'Holidays & semesters', k_libur_sub: 'Used when creating class schedules. New semester: add the new dates here.', k_l_label: 'Label', k_l_to: 'Until', k_l_kind: 'Type',
       kind_libur: 'Holiday', kind_ujian: 'Exam', kind_sem_break: 'Semester break', kind_semester: 'Semester period', k_l_skip: 'Skip classes', k_l_new: 'New', k_l_add_t: 'Add', k_l_edit_t: 'Edit',
       k_l_skip_yes: 'skipped', k_l_skip_no: 'classes still run', k_clash_t: 'Check classes on holidays', k_clash_sub: 'Finds upcoming class sessions that fall on a holiday.', k_clash_btn: 'Check now', k_clash_none: 'No sessions clash with a holiday.',
       k_clash_cancel: 'Cancel these {n} sessions', k_clash_done: '{n} sessions cancelled.', k_l_saved: 'Saved.', k_l_deleted: 'Deleted.', k_l_del_confirm: 'Delete "{x}"?', k_l_v: 'Fill in the label and start date.', k_edit: 'Edit', k_del: 'Delete',
       k_att_t: 'Attendance', k_att_status: 'Status', k_att_reason: 'Reason (optional)', k_att_present: 'Mark present', att_absent: 'Absent', att_sakit: 'Sick', att_izin: 'Excused', k_att_btn: 'Not attending', k_att_edit: 'Edit attendance', k_att_saved: 'Attendance saved.',
+      k_l_ranges: 'Date ranges', k_l_addr: '+ Add date range', k_edit_t: 'Edit course', k_edit_hint: 'Changes apply to sessions from today onward. Sessions that were moved or switched online/offline keep their settings.', k_updated: '{n} sessions updated.',
       k_noclass: 'No class', k_noclass_ok: 'Session cancelled (no class).', k_reopen: 'Reactivate', k_reopened: 'Session reactivated.',
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
@@ -669,9 +673,11 @@
       var open = !!kOpen[c.id];
       var b1 = el('button', 'btn ghost sm', t(open ? 'k_hide' : 'k_sessions')); b1.type = 'button';
       b1.addEventListener('click', function () { kOpen[c.id] = !kOpen[c.id]; renderKelas(); });
+      var bu = el('button', 'btn ghost sm', t('k_edit')); bu.type = 'button';
+      bu.addEventListener('click', function () { openUc(c); });
       var b2 = el('button', 'btn ghost sm', t('k_stop')); b2.type = 'button';
       b2.addEventListener('click', function () { stopKelas(c, b2); });
-      bar.appendChild(b1); bar.appendChild(b2);
+      bar.appendChild(b1); bar.appendChild(bu); bar.appendChild(b2);
       card.appendChild(bar);
       if (open) {
         var list = el('div', 'ks'); card.appendChild(list);
@@ -746,6 +752,26 @@
       .catch(function (e) { atForm.busy = false; lockUi(form, false, '.msg'); say('atf-msg', errText(e), 'err'); });
   }
 
+  // ----- ubah mata kuliah -----
+  var ucForm = null;
+  function openUc(c) {
+    ucForm = { c: c };
+    $('ucf-name').value = c.name; $('ucf-lect').value = c.lecturer; $('ucf-room').value = c.room; $('ucf-mode').value = c.mode;
+    say('ucf-msg', ''); $('ucsheet').hidden = false; document.body.style.overflow = 'hidden';
+  }
+  function closeUc() { $('ucsheet').hidden = true; ucForm = null; syncScroll(); }
+  function submitUc(ev) {
+    ev.preventDefault();
+    if (!ucForm || ucForm.busy) return;
+    var name = $('ucf-name').value.trim();
+    if (!name) { say('ucf-msg', t('k_v_name'), 'err'); return; }
+    ucForm.busy = true; var form = $('ucf'), c = ucForm.c;
+    lockUi(form, true, '.msg'); say('ucf-msg', t('k_saving_long'));
+    api('kelasUpdate', { series: c.id, name: name, lecturer: $('ucf-lect').value.trim(), room: $('ucf-room').value.trim(), mode: $('ucf-mode').value })
+      .then(function (r) { lockUi(form, false, '.msg'); closeUc(); kChanged(); say('k-msg', r.syncError ? t('k_sync_err') : t('k_updated', { n: r.count }), r.syncError ? 'warn' : 'ok'); loadKelas(); })
+      .catch(function (e) { ucForm.busy = false; lockUi(form, false, '.msg'); say('ucf-msg', errText(e), 'err'); });
+  }
+
   // ----- kelola libur -----
   var lEditId = '';
   function openLibur() {
@@ -768,22 +794,41 @@
     });
   }
   function kindKey(k) { return k === 'Ujian' ? 'kind_ujian' : k === 'Libur semester' ? 'kind_sem_break' : k === 'Semester' ? 'kind_semester' : 'kind_libur'; }
+  function lfRanges() {
+    return Array.prototype.map.call($('lf-ranges').querySelectorAll('.rrow'), function (r) { return { from: r.querySelector('[data-r=f]').value, to: r.querySelector('[data-r=t]').value }; });
+  }
+  function renderLfRanges(list) {
+    var box = $('lf-ranges'); box.innerHTML = '';
+    list.forEach(function (rg, i) {
+      var row = el('div', 'rrow');
+      var f1 = el('label', 'fl'); f1.appendChild(el('span', '', t('k_f_from'))); var i1 = el('input'); i1.type = 'date'; i1.value = rg.from; i1.setAttribute('data-r', 'f'); f1.appendChild(i1);
+      var f2 = el('label', 'fl'); f2.appendChild(el('span', '', t('k_l_to'))); var i2 = el('input'); i2.type = 'date'; i2.value = rg.to; i2.setAttribute('data-r', 't'); f2.appendChild(i2);
+      row.appendChild(f1); row.appendChild(f2);
+      if (list.length > 1) {
+        var x = el('button', 'btn ghost sm', '✕'); x.type = 'button'; x.setAttribute('aria-label', t('k_rm'));
+        x.addEventListener('click', function () { var l = lfRanges(); l.splice(i, 1); renderLfRanges(l); });
+        row.appendChild(x);
+      }
+      box.appendChild(row);
+    });
+  }
   function resetLf() {
     lEditId = ''; $('lf-title').textContent = t('k_l_add_t');
-    ['lf-label', 'lf-from', 'lf-to'].forEach(function (id) { $(id).value = ''; });
+    $('lf-label').value = ''; renderLfRanges([{ from: '', to: '' }]);
     $('lf-kind').value = 'Libur'; $('lf-skip').checked = true;
   }
   function editLf(h) {
     lEditId = h.id; $('lf-title').textContent = t('k_l_edit_t');
-    $('lf-label').value = h.label; $('lf-from').value = h.from; $('lf-to').value = h.to; $('lf-kind').value = h.kind; $('lf-skip').checked = h.skip;
+    $('lf-label').value = h.label; renderLfRanges([{ from: h.from, to: h.to }]); $('lf-kind').value = h.kind; $('lf-skip').checked = h.skip;
     $('lf-label').focus();
   }
   function saveLibur(ev) {
     ev.preventDefault();
-    var label = $('lf-label').value.trim(), from = $('lf-from').value;
-    if (!label || !from) { say('l-msg', t('k_l_v'), 'err'); return; }
+    var label = $('lf-label').value.trim(), ranges = lfRanges().filter(function (r) { return r.from; });
+    if (!label || !ranges.length) { say('l-msg', t('k_l_v'), 'err'); return; }
+    ranges = ranges.map(function (r) { return { from: r.from, to: r.to || r.from }; });
     var form = $('lf'); lockUi(form, true); say('l-msg', t('k_saving'));
-    api('liburSave', { id: lEditId || undefined, label: label, from: from, to: $('lf-to').value || from, kind: $('lf-kind').value, skip: $('lf-skip').checked })
+    api('liburSave', { id: lEditId || undefined, label: label, ranges: ranges, kind: $('lf-kind').value, skip: $('lf-skip').checked })
       .then(function (d) { lockUi(form, false); kLibur = d.items; renderLiburList(); resetLf(); say('l-msg', t('k_l_saved'), 'ok'); })
       .catch(function (e) { lockUi(form, false); say('l-msg', errText(e), 'err'); });
   }
@@ -2144,6 +2189,9 @@
     $('s-write').addEventListener('click', showCompose);
     $('k-add').addEventListener('click', openKForm);
     $('k-libur').addEventListener('click', openLibur);
+    $('ucf').addEventListener('submit', submitUc);
+    $('ucf-cancel').addEventListener('click', closeUc);
+    $('lf-addr').addEventListener('click', function () { var l = lfRanges(); l.push({ from: '', to: '' }); renderLfRanges(l); });
     $('l-close').addEventListener('click', closeLibur);
     $('lf').addEventListener('submit', saveLibur);
     $('lf-reset').addEventListener('click', resetLf);
