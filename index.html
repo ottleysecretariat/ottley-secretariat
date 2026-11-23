@@ -35,6 +35,7 @@
     <button class="tab" type="button" data-tab="kelas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5zM7 11.5V16c0 1.2 2.2 3 5 3s5-1.8 5-3v-4.5"/></svg><span data-i18n="tab_kelas"></span></button>
     <button class="tab" type="button" data-tab="amb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6M17 5l2-2M19 9h2"/></svg><span data-i18n="tab_amb"></span></button>
     <button class="tab" type="button" data-tab="surat"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="1"/><path d="M3 7l9 7 9-7"/></svg><span data-i18n="tab_surat"></span></button>
+    <button class="tab" type="button" data-tab="kontak"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h14a2 2 0 012 2v12H6a2 2 0 01-2-2zM20 8h1M20 12h1M20 16h1M12 11.5a2 2 0 100-4 2 2 0 000 4zM8.5 16c.5-2 2-3 3.5-3s3 1 3.5 3"/></svg><span data-i18n="tab_kontak"></span></button>
     <button class="tab" type="button" data-tab="catatan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5"/></svg><span data-i18n="tab_catatan"></span></button>
   </nav>
 
@@ -167,6 +168,18 @@
         <div id="a-list"></div>
       </div>
 
+      <div id="tab-kontak" hidden>
+        <div class="hero">
+          <div class="head-row">
+            <div class="grow"><h1 class="hello" data-i18n="tab_kontak"></h1><p class="lede" data-i18n="kontak_sub"></p></div>
+            <button id="c-add" class="btn primary" type="button" data-i18n="c_add"></button>
+          </div>
+        </div>
+        <label class="fl"><span data-i18n="c_search"></span><input id="c-q" type="search" autocomplete="off"></label>
+        <p id="c-msg" class="msg" role="status"></p>
+        <div id="c-list"></div>
+      </div>
+
       <div id="tab-surat" hidden>
         <div id="s-list-view">
           <div class="hero">
@@ -174,6 +187,10 @@
               <div class="grow"><h1 class="hello" data-i18n="tab_surat"></h1><p class="lede" data-i18n="surat_page_sub"></p></div>
               <button id="s-write" class="btn primary" type="button" data-i18n="s_write"></button>
             </div>
+          </div>
+          <div id="sq-box" hidden>
+            <h3 class="mini" data-i18n="sq_title"></h3>
+            <div id="sq-list"></div>
           </div>
           <p id="sh-msg" class="msg" role="status"></p>
           <div id="sh-list"></div>
@@ -187,6 +204,7 @@
           <form id="sf" novalidate autocomplete="off">
             <label class="fl"><span data-i18n="s_to"></span><input id="s-to" type="text" inputmode="email" placeholder="nama@contoh.com"></label>
             <label class="fl"><span data-i18n="s_cc"></span><input id="s-cc" type="text" inputmode="email"></label>
+            <div class="bar tight"><button id="s-contacts" class="btn ghost sm" type="button" data-i18n="s_contacts"></button></div>
             <label class="fl"><span data-i18n="s_nama"></span><input id="s-nama" type="text" maxlength="150"></label>
             <div class="grid2">
               <label class="fl"><span data-i18n="s_lang"></span><select id="s-lang"><option value="ID">Bahasa Indonesia</option><option value="EN">English</option></select></label>
@@ -218,6 +236,14 @@
             <div class="subj"><span data-i18n="s_subj_prev"></span> <b id="s-subj">-</b></div>
             <iframe id="s-prev" class="prev" sandbox="" title="Preview"></iframe>
             <p id="s-msg" class="msg" role="status"></p>
+            <label class="chip-c"><input id="s-sched" type="checkbox"> <span data-i18n="s_sched"></span></label>
+            <div id="s-sched-box" hidden>
+              <div class="grid2">
+                <label class="fl"><span data-i18n="s_sd"></span><input id="s-sd" type="date"></label>
+                <label class="fl"><span data-i18n="s_st"></span><input id="s-st" type="time"></label>
+              </div>
+              <p class="tiny tight" data-i18n="s_sched_hint"></p>
+            </div>
             <div class="bar">
               <button id="s-test" class="btn ghost" type="button" data-i18n="s_test"></button>
               <button id="s-send" class="btn primary" type="button" data-i18n="s_send"></button>
@@ -420,6 +446,45 @@
         <button id="bf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
       </div>
     </form>
+  </div>
+
+  <div id="ctsheet" class="sheet" hidden>
+    <form id="ctf" class="sheet-card wide" novalidate autocomplete="off">
+      <h2 id="ctf-title"></h2>
+      <label class="fl"><span data-i18n="c_f_name"></span><input id="ctf-name" type="text" maxlength="150"></label>
+      <div class="grid3">
+        <label class="fl"><span data-i18n="c_f_title"></span><select id="ctf-title-sel"><option value=""></option><option>Bapak</option><option>Ibu</option><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></label>
+        <label class="fl"><span data-i18n="c_f_front"></span><input id="ctf-front" type="text" maxlength="60" placeholder="Prof. Dr."></label>
+        <label class="fl"><span data-i18n="c_f_back"></span><input id="ctf-back" type="text" maxlength="80" placeholder="M.M., Ph.D."></label>
+      </div>
+      <p class="tiny tight"><span data-i18n="c_full"></span> <b id="ctf-full">-</b></p>
+      <label class="fl"><span data-i18n="c_f_email"></span><input id="ctf-email" type="email" maxlength="200"></label>
+      <div class="grid2">
+        <label class="fl"><span data-i18n="c_f_org"></span><input id="ctf-org" type="text" maxlength="150"></label>
+        <label class="fl"><span data-i18n="c_f_role"></span><input id="ctf-role" type="text" maxlength="150"></label>
+      </div>
+      <label class="fl"><span data-i18n="c_f_phone"></span><input id="ctf-phone" type="tel" maxlength="30"></label>
+      <label class="fl"><span data-i18n="k_f_notes"></span><input id="ctf-notes" type="text" maxlength="500"></label>
+      <p id="ctf-msg" class="msg" role="alert"></p>
+      <div class="bar">
+        <button id="ctf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
+        <button id="ctf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </form>
+  </div>
+
+  <div id="pksheet" class="sheet" hidden>
+    <div class="sheet-card wide" role="dialog" aria-modal="true">
+      <h2 data-i18n="pk_title"></h2>
+      <label class="fl"><span data-i18n="c_search"></span><input id="pk-q" type="search" autocomplete="off"></label>
+      <div id="pk-list"></div>
+      <p id="pk-msg" class="msg" role="status"></p>
+      <div class="bar">
+        <button id="pk-to" class="btn primary" type="button" data-i18n="pk_to"></button>
+        <button id="pk-cc" class="btn ghost" type="button" data-i18n="pk_cc"></button>
+        <button id="pk-close" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </div>
   </div>
 
   <div id="dsheet" class="sheet" hidden>
