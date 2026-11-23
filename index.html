@@ -326,6 +326,24 @@
     </form>
   </div>
 
+  <div id="ucsheet" class="sheet" hidden>
+    <form id="ucf" class="sheet-card" novalidate autocomplete="off">
+      <h2 data-i18n="k_edit_t"></h2>
+      <p class="tiny tight" data-i18n="k_edit_hint"></p>
+      <label class="fl"><span data-i18n="k_f_name"></span><input id="ucf-name" type="text" maxlength="120"></label>
+      <label class="fl"><span data-i18n="k_f_lect"></span><input id="ucf-lect" type="text" maxlength="120"></label>
+      <div class="grid2">
+        <label class="fl"><span data-i18n="k_f_room"></span><input id="ucf-room" type="text" maxlength="100"></label>
+        <label class="fl"><span data-i18n="k_f_mode"></span><select id="ucf-mode"><option value="Offline" data-i18n="k_offline"></option><option value="Online" data-i18n="k_online"></option></select></label>
+      </div>
+      <p id="ucf-msg" class="msg" role="alert"></p>
+      <div class="bar">
+        <button id="ucf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
+        <button id="ucf-cancel" class="btn ghost" type="button" data-i18n="btn_close"></button>
+      </div>
+    </form>
+  </div>
+
   <div id="lsheet" class="sheet" hidden>
     <div class="sheet-card wide" role="dialog" aria-modal="true">
       <h2 data-i18n="k_libur_t"></h2>
@@ -334,10 +352,8 @@
       <form id="lf" novalidate autocomplete="off">
         <h3 class="mini" id="lf-title"></h3>
         <label class="fl"><span data-i18n="k_l_label"></span><input id="lf-label" type="text" maxlength="120"></label>
-        <div class="grid2">
-          <label class="fl"><span data-i18n="k_f_from"></span><input id="lf-from" type="date"></label>
-          <label class="fl"><span data-i18n="k_l_to"></span><input id="lf-to" type="date"></label>
-        </div>
+        <div class="fl"><span data-i18n="k_l_ranges"></span><div id="lf-ranges"></div>
+          <button id="lf-addr" class="btn ghost sm" type="button" data-i18n="k_l_addr"></button></div>
         <div class="grid2">
           <label class="fl"><span data-i18n="k_l_kind"></span><select id="lf-kind"><option value="Libur" data-i18n="kind_libur"></option><option value="Ujian" data-i18n="kind_ujian"></option><option value="Libur semester" data-i18n="kind_sem_break"></option><option value="Semester" data-i18n="kind_semester"></option></select></label>
           <label class="chip-c lf-skip"><input id="lf-skip" type="checkbox" checked> <span data-i18n="k_l_skip"></span></label>
