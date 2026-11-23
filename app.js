@@ -79,6 +79,14 @@
       k_att_t: 'Kehadiran', k_att_status: 'Status', k_att_reason: 'Keterangan (opsional)', k_att_present: 'Tandai hadir', att_absent: 'Absent', att_sakit: 'Sakit', att_izin: 'Izin', k_att_btn: 'Tidak hadir', k_att_edit: 'Ubah kehadiran', k_att_saved: 'Kehadiran disimpan.',
       k_l_ranges: 'Rentang tanggal', k_l_addr: '+ Tambah rentang tanggal', k_edit_t: 'Ubah mata kuliah', k_edit_hint: 'Perubahan berlaku untuk pertemuan dari hari ini ke depan. Pertemuan yang sudah dipindah atau diubah mode-nya tetap.', k_updated: '{n} pertemuan diperbarui.',
       k_noclass: 'Tidak ada kelas', k_noclass_ok: 'Pertemuan dibatalkan (tidak ada kelas).', k_reopen: 'Aktifkan lagi', k_reopened: 'Pertemuan diaktifkan lagi.',
+      tab_kontak: 'Kontak', kontak_sub: 'Buku kontak dengan gelar. Dipakai untuk mengisi penerima dan salam pembuka surat.', c_add: 'Tambah kontak', c_search: 'Cari kontak', c_new: 'Kontak baru', c_edit: 'Ubah kontak',
+      c_f_name: 'Nama (tanpa gelar)', c_f_title: 'Sapaan', c_f_front: 'Gelar depan', c_f_back: 'Gelar belakang', c_full: 'Ditulis di surat:', c_f_email: 'Email', c_f_org: 'Organisasi', c_f_role: 'Jabatan', c_f_phone: 'No. HP / WhatsApp',
+      c_none: 'Belum ada kontak. Ketuk "Tambah kontak".', c_nomatch: 'Tidak ada kontak yang cocok.', c_none_pk: 'Belum ada kontak. Tambahkan dulu di tab Kontak.', c_no_email: '(tanpa email)', c_write: 'Tulis surat',
+      c_saved: 'Kontak tersimpan.', c_deleted: 'Kontak dihapus.', c_del_confirm: 'Hapus kontak {x}?', c_v_name: 'Nama belum diisi.',
+      s_contacts: 'Pilih dari kontak', pk_title: 'Pilih kontak', pk_to: 'Masukkan ke Kepada', pk_cc: 'Masukkan ke Cc', pk_none: 'Centang minimal satu kontak yang punya email.',
+      s_sched: 'Jadwalkan pengiriman', s_sd: 'Tanggal kirim', s_st: 'Jam kirim (WIB)', s_sched_hint: 'Dikirim otomatis sekitar 0\u201310 menit setelah jam ini. Salam pembuka mengikuti waktu kirim.',
+      s_schedule: 'Jadwalkan', s_sched_confirm: 'Klik lagi untuk menjadwalkan ke {to}', s_ok_sched: 'Terjadwal. Surat ke {to} akan dikirim sekitar {at} WIB.', s_e_sched: 'Pilih tanggal dan jam kirim.', s_e_sched_past: 'Waktu kirim harus di masa depan.',
+      sq_title: 'Terjadwal', sq_at: 'dikirim sekitar {at}', sq_sending: 'sedang dikirim', sq_failed: 'gagal', sq_cancel: 'Batalkan', sq_dismiss: 'Buang',
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -195,6 +203,14 @@
       k_att_t: 'Attendance', k_att_status: 'Status', k_att_reason: 'Reason (optional)', k_att_present: 'Mark present', att_absent: 'Absent', att_sakit: 'Sick', att_izin: 'Excused', k_att_btn: 'Not attending', k_att_edit: 'Edit attendance', k_att_saved: 'Attendance saved.',
       k_l_ranges: 'Date ranges', k_l_addr: '+ Add date range', k_edit_t: 'Edit course', k_edit_hint: 'Changes apply to sessions from today onward. Sessions that were moved or switched online/offline keep their settings.', k_updated: '{n} sessions updated.',
       k_noclass: 'No class', k_noclass_ok: 'Session cancelled (no class).', k_reopen: 'Reactivate', k_reopened: 'Session reactivated.',
+      tab_kontak: 'Contacts', kontak_sub: 'Address book with titles. Used to fill recipients and the greeting of letters.', c_add: 'Add contact', c_search: 'Search contacts', c_new: 'New contact', c_edit: 'Edit contact',
+      c_f_name: 'Name (no titles)', c_f_title: 'Salutation', c_f_front: 'Prefix title', c_f_back: 'Suffix title', c_full: 'Written in letters as:', c_f_email: 'Email', c_f_org: 'Organization', c_f_role: 'Position', c_f_phone: 'Phone / WhatsApp',
+      c_none: 'No contacts yet. Tap "Add contact".', c_nomatch: 'No matching contacts.', c_none_pk: 'No contacts yet. Add some in the Contacts tab first.', c_no_email: '(no email)', c_write: 'Write letter',
+      c_saved: 'Contact saved.', c_deleted: 'Contact deleted.', c_del_confirm: 'Delete contact {x}?', c_v_name: 'Name is empty.',
+      s_contacts: 'Pick from contacts', pk_title: 'Pick contacts', pk_to: 'Add to To', pk_cc: 'Add to Cc', pk_none: 'Tick at least one contact that has an email.',
+      s_sched: 'Schedule sending', s_sd: 'Send date', s_st: 'Send time (WIB)', s_sched_hint: 'Sent automatically about 0\u201310 minutes after this time. The greeting follows the send time.',
+      s_schedule: 'Schedule', s_sched_confirm: 'Click again to schedule to {to}', s_ok_sched: 'Scheduled. The letter to {to} will be sent around {at} WIB.', s_e_sched: 'Pick a send date and time.', s_e_sched_past: 'Send time must be in the future.',
+      sq_title: 'Scheduled', sq_at: 'sends around {at}', sq_sending: 'sending now', sq_failed: 'failed', sq_cancel: 'Cancel', sq_dismiss: 'Dismiss',
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -261,7 +277,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderKontak(); renderPk(); renderQueue(); }
   }
 
   function setLang(l) {
@@ -322,7 +338,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; cData = null; sQ = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -536,6 +552,8 @@
     $('tab-catatan').hidden = name !== 'catatan';
     $('tab-kelas').hidden = name !== 'kelas';
     $('tab-amb').hidden = name !== 'amb';
+    $('tab-kontak').hidden = name !== 'kontak';
+    if (name === 'kontak') loadKontak();
     if (name === 'amb') loadAmb();
     if (name === 'kelas') loadKelas();
     if (name === 'jadwal') reloadJadwalView();
@@ -1211,6 +1229,174 @@
     }).catch(function (e) { bSaving = false; lockUi(form, false, '.msg'); say('bf-msg', errText(e), 'err'); });
   }
 
+  // ---------- kontak ----------
+  var cData = null, cForm = null, cSaving = false, pkSel = {}, pendingContact = null;
+
+  function waNum(phone) {
+    var d = String(phone || '').replace(/\D/g, '');
+    if (!d) return '';
+    if (d.charAt(0) === '0') d = '62' + d.slice(1); else if (d.charAt(0) === '8') d = '62' + d;
+    return d;
+  }
+  function fullName(c) {
+    var back = String(c.back || '').replace(/^[\s,]+/, '').trim(), front = [c.title, c.front].filter(Boolean).join(' ');
+    return (front ? front + ' ' : '') + c.name + (back ? ', ' + back : '');
+  }
+  function contactMatch(c, q) {
+    q = String(q || '').trim().toLowerCase();
+    if (!q) return true;
+    return [c.name, c.email, c.org, c.role, c.full].join(' ').toLowerCase().indexOf(q) >= 0;
+  }
+  function loadKontak(force) {
+    if (cData && !force) { renderKontak(); return; }
+    if (!cData) say('c-msg', t('loading'));
+    api('kontakList', {})
+      .then(function (d) { cData = d.items; if ($('c-msg').textContent === t('loading')) say('c-msg', ''); renderKontak(); renderPk(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('c-msg', errText(e), 'err'); });
+  }
+  function renderKontak() {
+    var box = $('c-list');
+    if (!box) return;
+    box.innerHTML = '';
+    if (!cData) return;
+    var list = cData.filter(function (c) { return contactMatch(c, $('c-q').value); });
+    if (!list.length) { box.appendChild(el('p', 'tiny', t(cData.length ? 'c_nomatch' : 'c_none'))); return; }
+    list.forEach(function (c) {
+      var card = el('div', 'cc');
+      card.appendChild(el('h3', '', c.full));
+      var meta = [c.role, c.org].filter(Boolean).join(' · ');
+      if (meta) card.appendChild(el('p', 'meta', meta));
+      if (c.email) { var p1 = el('p', 'line'); var a = el('a', 'lnk', c.email); a.href = 'mailto:' + c.email; p1.appendChild(a); card.appendChild(p1); }
+      if (c.phone) {
+        var p2 = el('p', 'line', c.phone + ' '); var n = waNum(c.phone);
+        if (n) { var w = el('a', 'wa', 'WhatsApp'); w.href = 'https://wa.me/' + n; w.target = '_blank'; w.rel = 'noopener'; p2.appendChild(w); }
+        card.appendChild(p2);
+      }
+      if (c.notes) card.appendChild(el('p', 'line', c.notes));
+      var bar = el('div', 'bar');
+      var mk = function (label, fn) { var b = el('button', 'btn ghost sm', label); b.type = 'button'; b.addEventListener('click', function () { fn(b); }); bar.appendChild(b); };
+      if (c.email) mk(t('c_write'), function () { pendingContact = c; switchTab('surat'); showCompose(); });
+      mk(t('k_edit'), function () { openCt(c); });
+      mk(t('k_del'), function (b) { delCt(c, b); });
+      card.appendChild(bar);
+      box.appendChild(card);
+    });
+  }
+  function ctPreview() {
+    $('ctf-full').textContent = fullName({ name: $('ctf-name').value.trim() || '…', title: $('ctf-title-sel').value, front: $('ctf-front').value.trim(), back: $('ctf-back').value.trim() });
+  }
+  function openCt(c) {
+    cForm = { id: c ? c.id : '' };
+    $('ctf-title').textContent = t(c ? 'c_edit' : 'c_new');
+    $('ctf-name').value = c ? c.name : ''; $('ctf-title-sel').value = c ? c.title : ''; $('ctf-front').value = c ? c.front : ''; $('ctf-back').value = c ? c.back : '';
+    $('ctf-email').value = c ? c.email : ''; $('ctf-org').value = c ? c.org : ''; $('ctf-role').value = c ? c.role : ''; $('ctf-phone').value = c ? c.phone : ''; $('ctf-notes').value = c ? c.notes : '';
+    say('ctf-msg', ''); ctPreview();
+    $('ctsheet').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(function () { $('ctf-name').focus(); }, 50);
+  }
+  function closeCt() { $('ctsheet').hidden = true; cForm = null; syncScroll(); }
+  function submitCt(ev) {
+    ev.preventDefault();
+    if (cSaving || !cForm) return;
+    if (!$('ctf-name').value.trim()) { say('ctf-msg', t('c_v_name'), 'err'); return; }
+    var form = $('ctf'); cSaving = true; lockUi(form, true, '.msg'); say('ctf-msg', t('k_saving'));
+    api('kontakSave', {
+      id: cForm.id || undefined, name: $('ctf-name').value.trim(), title: $('ctf-title-sel').value, front: $('ctf-front').value.trim(), back: $('ctf-back').value.trim(),
+      email: $('ctf-email').value.trim(), org: $('ctf-org').value.trim(), role: $('ctf-role').value.trim(), phone: $('ctf-phone').value.trim(), notes: $('ctf-notes').value.trim()
+    }).then(function (d) { cSaving = false; lockUi(form, false, '.msg'); cData = d.items; closeCt(); renderKontak(); renderPk(); say('c-msg', t('c_saved'), 'ok'); })
+      .catch(function (e) { cSaving = false; lockUi(form, false, '.msg'); say('ctf-msg', errText(e), 'err'); });
+  }
+  function delCt(c, btn) {
+    if (!window.confirm(t('c_del_confirm', { x: c.full }))) return;
+    btn.disabled = true;
+    api('kontakDelete', { id: c.id })
+      .then(function (d) { cData = d.items; renderKontak(); renderPk(); say('c-msg', t('c_deleted'), 'ok'); })
+      .catch(function (e) { btn.disabled = false; say('c-msg', errText(e), 'err'); });
+  }
+  function applyPendingContact() {
+    if (!pendingContact || !sCtx) return;
+    var c = pendingContact; pendingContact = null;
+    $('s-to').value = c.email; $('s-nama').value = c.full;
+    ['s-to', 's-nama'].forEach(function (id) { $(id).dispatchEvent(new Event('input')); });
+  }
+
+  // ----- pilih kontak di surat -----
+  function openPk() {
+    pkSel = {}; $('pk-q').value = ''; say('pk-msg', '');
+    $('pksheet').hidden = false; document.body.style.overflow = 'hidden';
+    if (!cData) { say('pk-msg', t('loading')); loadKontak(); } else renderPk();
+  }
+  function closePk() { $('pksheet').hidden = true; syncScroll(); }
+  function renderPk() {
+    var box = $('pk-list');
+    if (!box || $('pksheet').hidden) return;
+    if (cData && $('pk-msg').textContent === t('loading')) say('pk-msg', '');
+    box.innerHTML = '';
+    if (!cData) return;
+    var list = cData.filter(function (c) { return contactMatch(c, $('pk-q').value); });
+    if (!list.length) { box.appendChild(el('p', 'tiny', t(cData.length ? 'c_nomatch' : 'c_none_pk'))); return; }
+    list.forEach(function (c) {
+      var row = el('label', 'pkrow'), cb = el('input'); cb.type = 'checkbox'; cb.disabled = !c.email; cb.checked = !!pkSel[c.id];
+      cb.addEventListener('change', function () { if (cb.checked) pkSel[c.id] = true; else delete pkSel[c.id]; });
+      var w = el('div', '', c.full); w.appendChild(el('small', '', c.email || t('c_no_email')));
+      row.appendChild(cb); row.appendChild(w); box.appendChild(row);
+    });
+  }
+  function usePk(field) {
+    var chosen = (cData || []).filter(function (c) { return pkSel[c.id] && c.email; });
+    if (!chosen.length) { say('pk-msg', t('pk_none'), 'err'); return; }
+    var input = $(field), have = String(input.value).split(/[,;\s]+/).filter(Boolean).map(function (x) { return x.toLowerCase(); });
+    chosen.forEach(function (c) { if (have.indexOf(c.email.toLowerCase()) < 0) have.push(c.email); });
+    input.value = have.join(', ');
+    if (field === 's-to' && chosen.length === 1 && !$('s-nama').value.trim()) $('s-nama').value = chosen[0].full;
+    ['s-to', 's-cc', 's-nama'].forEach(function (id) { $(id).dispatchEvent(new Event('input')); });
+    closePk();
+  }
+
+  // ----- surat terjadwal -----
+  var sQ = null;
+  function schedOn() { return $('s-sched') && $('s-sched').checked; }
+  function sendLabel() { return t(schedOn() ? 's_schedule' : 's_send'); }
+  function loadQueue() {
+    api('suratQueueList', {})
+      .then(function (d) { sQ = d; renderQueue(); })
+      .catch(function () { /* daftar antrean opsional */ });
+  }
+  function renderQueue() {
+    var box = $('sq-list'), wrap = $('sq-box');
+    if (!box) return;
+    box.innerHTML = '';
+    wrap.hidden = !(sQ && sQ.items.length);
+    if (!sQ) return;
+    sQ.items.forEach(function (x) {
+      var row = el('div', 'sqrow' + (x.status === 'Gagal' ? ' bad' : '')), w = el('div', 'w');
+      w.appendChild(el('b', '', x.subject || '-'));
+      var when = x.at.slice(0, 10) + ' ' + x.at.slice(11, 16);
+      w.appendChild(el('small', '', t('to_') + ' ' + x.to + ' · ' + (x.status === 'Menunggu' ? t('sq_at', { at: when }) : x.status === 'Mengirim' ? t('sq_sending') : t('sq_failed') + ': ' + x.result)));
+      row.appendChild(w);
+      if (x.status !== 'Mengirim') {
+        var b = el('button', 'btn ghost sm', t(x.status === 'Gagal' ? 'sq_dismiss' : 'sq_cancel')); b.type = 'button';
+        b.addEventListener('click', function () {
+          b.disabled = true;
+          api('suratQueueCancel', { id: x.id }).then(function (d) { sQ = d; renderQueue(); })
+            .catch(function (e) { b.disabled = false; say('sh-msg', errText(e), 'err'); });
+        });
+        row.appendChild(b);
+      }
+      box.appendChild(row);
+    });
+  }
+  function onSchedToggle() {
+    var on = schedOn();
+    $('s-sched-box').hidden = !on;
+    if (on) {
+      var w = wibNow(), tm = new Date(w.getTime() + 86400000);
+      if (!$('s-sd').value) $('s-sd').value = isoOf(tm.getFullYear(), tm.getMonth() + 1, tm.getDate());
+      if (!$('s-st').value) $('s-st').value = '09:00';
+    }
+    disarm();
+  }
+
   // ---------- kalender ----------
   var CAL_VIEWS = ['list', 'day', '3day', 'week', 'month'];
   var calMode = 'week', calAnchor = '', calData = null, calSeq = 0, clashTimer = null, clashSeq = 0;
@@ -1741,6 +1927,7 @@
     sMode = 'list';
     $('s-list-view').hidden = false; $('s-compose-view').hidden = true;
     if (sHistStale || !sHist) loadSuratHist(); else renderHist();
+    loadQueue();
   }
   function showCompose() {
     sMode = 'compose';
@@ -1750,6 +1937,7 @@
     window.scrollTo(0, 0);
   }
   function applyPendingEvent() {
+    applyPendingContact();
     if (!pendingEvent || !sCtx) return;
     var sel = $('s-ev'), want = pendingEvent;
     pendingEvent = '';
@@ -2072,10 +2260,10 @@
 
   function arm() {
     sArmed = true;
-    $('s-send').textContent = t('s_send_confirm', { to: $('s-to').value.trim() });
+    $('s-send').textContent = t(schedOn() ? 's_sched_confirm' : 's_send_confirm', { to: $('s-to').value.trim() });
     clearTimeout(sArmTimer); sArmTimer = setTimeout(disarm, 5000);
   }
-  function disarm() { sArmed = false; clearTimeout(sArmTimer); $('s-send').textContent = t('s_send'); }
+  function disarm() { sArmed = false; clearTimeout(sArmTimer); $('s-send').textContent = sendLabel(); }
   function setBusy(b) { sBusy = b; $('s-send').disabled = b || sDone; $('s-test').disabled = b || sDone; lockUi($('sf'), b || sDone, '.msg, .bar'); }
 
   function doSend(test) {
@@ -2090,13 +2278,20 @@
     if (sUps.some(function (u) { return u.status === 'busy'; })) { say('s-msg', t('s_e_uploading'), 'err'); return; }
     var lm = limitMsg();
     if (lm) { say('s-msg', lm, 'err'); return; }
+    if (!test && schedOn()) {
+      if (!$('s-sd').value || !$('s-st').value) { say('s-msg', t('s_e_sched'), 'err'); return; }
+      var w = wibNow(), nowS = isoOf(w.getFullYear(), w.getMonth() + 1, w.getDate()) + ' ' + pad2(w.getHours()) + ':' + pad2(w.getMinutes());
+      if ($('s-sd').value + ' ' + $('s-st').value <= nowS) { say('s-msg', t('s_e_sched_past'), 'err'); return; }
+    }
     if (!test && !sArmed) { arm(); return; }
     disarm();
     setBusy(true);
     say('s-msg', t(test ? 's_sending_test' : 's_sending'));
-    api('suratSend', { mail: collectMail(), test: test, key: test ? undefined : sKey })
+    var schedAt = !test && schedOn() ? $('s-sd').value + ' ' + $('s-st').value : '';
+    (schedAt ? api('suratSchedule', { mail: collectMail(), at: schedAt, key: sKey }) : api('suratSend', { mail: collectMail(), test: test, key: test ? undefined : sKey }))
       .then(function (r) {
         var att = r.attachments && r.attachments.length ? t('s_att', { n: r.attachments.length, names: r.attachments.join(', ') }) : t('s_noatt');
+        if (schedAt) { sDone = true; sQ = null; setBusy(false); $('s-new').hidden = false; say('s-msg', t('s_ok_sched', { to: r.to, at: r.at }), 'ok'); return; }
         if (test) { setBusy(false); say('s-msg', t('s_ok_test', { to: r.to }) + att, 'ok'); return; }
         sDone = true;
         homeStale = true;
@@ -2122,6 +2317,7 @@
     if ($('s-fields')) $('s-fields').innerHTML = '';
     if ($('s-filelist')) $('s-filelist').innerHTML = '';
     if ($('s-new')) $('s-new').hidden = true;
+    if ($('s-sched')) { $('s-sched').checked = false; $('s-sched-box').hidden = true; $('s-sd').value = ''; $('s-st').value = ''; }
     if ($('sf')) lockUi($('sf'), false);
     if (!silent) { say('s-msg', ''); setBusy(false); disarm(); doPreview(); }
   }
@@ -2158,7 +2354,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'kelas') { kData = null; loadKelas(); } else if (tab === 'amb') { aData = null; loadAmb(); } else if (tab === 'catatan') loadCatatan(); else refresh(); });
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'kelas') { kData = null; loadKelas(); } else if (tab === 'amb') { aData = null; loadAmb(); } else if (tab === 'kontak') { loadKontak(true); } else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
     document.querySelectorAll('.seg-b').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -2188,6 +2384,17 @@
     $('s-new').addEventListener('click', function () { resetSurat(false); });
     $('s-write').addEventListener('click', showCompose);
     $('k-add').addEventListener('click', openKForm);
+    $('c-add').addEventListener('click', function () { openCt(null); });
+    $('c-q').addEventListener('input', renderKontak);
+    $('ctf').addEventListener('submit', submitCt);
+    $('ctf-cancel').addEventListener('click', closeCt);
+    ['ctf-name', 'ctf-title-sel', 'ctf-front', 'ctf-back'].forEach(function (id) { $(id).addEventListener('input', ctPreview); $(id).addEventListener('change', ctPreview); });
+    $('s-contacts').addEventListener('click', openPk);
+    $('pk-close').addEventListener('click', closePk);
+    $('pk-q').addEventListener('input', renderPk);
+    $('pk-to').addEventListener('click', function () { usePk('s-to'); });
+    $('pk-cc').addEventListener('click', function () { usePk('s-cc'); });
+    $('s-sched').addEventListener('change', onSchedToggle);
     $('k-libur').addEventListener('click', openLibur);
     $('ucf').addEventListener('submit', submitUc);
     $('ucf-cancel').addEventListener('click', closeUc);
