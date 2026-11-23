@@ -396,3 +396,21 @@ h3.mini { font-family: var(--serif); font-size: 18px; margin: 22px 0 6px; color:
 .rrow .fl { margin: 0; }
 @media (max-width: 460px) { .rrow { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 899px) { .tab[data-tab="amb"] span { font-size: 9.5px; letter-spacing: -0.01em; text-align: center; line-height: 1.05; } }
+
+#c-list { display: grid; gap: 14px; margin-top: 8px; }
+@media (min-width: 900px) { #c-list { grid-template-columns: 1fr 1fr; align-items: start; } }
+.cc { background: var(--sheet); border: 1px solid var(--line); border-left: 3px solid var(--ink); padding: 14px 18px; }
+.cc h3 { font-family: var(--serif); font-size: 19px; margin: 0 0 2px; color: var(--ink); }
+.cc .meta { font-size: 14px; color: var(--muted); margin: 0 0 4px; }
+.cc .line { font-size: 15px; margin: 3px 0; word-break: break-word; }
+.cc .bar { margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+.pkrow { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.pkrow input { width: 18px; height: 18px; flex: none; }
+.pkrow small { display: block; color: var(--muted); font-size: 13px; }
+#pk-list { max-height: 320px; overflow: auto; border-top: 1px solid var(--line); margin-bottom: 8px; }
+#sq-box { margin-bottom: 10px; }
+.sqrow { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.sqrow .w { flex: 1 1 220px; font-size: 15px; }
+.sqrow .w small { display: block; color: var(--muted); font-size: 13px; }
+.sqrow.bad .w b { color: #9b2c1f; }
+@media (max-width: 899px) { .nav .tab { min-width: 0; } .tab[data-tab="kontak"] span { font-size: 10px; } }
