@@ -391,3 +391,8 @@ h3.mini { font-family: var(--serif); font-size: 18px; margin: 22px 0 6px; color:
 .wa { display: inline-block; font-size: 14px; font-weight: 600; color: #fff; background: #1d7a46; padding: 4px 12px; border-radius: 3px; text-decoration: none; }
 .badge.cx { color: #9b2c1f; border-color: #9b2c1f; }
 .cal-ev.amb { border-left: 3px solid #5b3a8a; }
+
+.rrow { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; margin-bottom: 8px; }
+.rrow .fl { margin: 0; }
+@media (max-width: 460px) { .rrow { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 899px) { .tab[data-tab="amb"] span { font-size: 9.5px; letter-spacing: -0.01em; text-align: center; line-height: 1.05; } }
