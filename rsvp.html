@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14263a">
+  <title>Ottley Secretariat — RSVP</title>
+  <link rel="icon" href="logo-square.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#14263a; --gold:#b08d4a; --gold-d:#85652a; --text:#2a3340; --muted:#6c6a63; --paper:#f4efe4; --sheet:#fffdf8; --line:#dcd2bb; --ok:#2f6b3f; --err:#a3322a; }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--paper); color: var(--text); font: 16px/1.55 'Source Sans 3', 'Segoe UI', system-ui, Arial, sans-serif; min-height: 100vh; }
+    header { background: var(--ink); color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    header b { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: .3px; }
+    header button { background: none; border: 1px solid rgba(255,255,255,.4); color: #fff; border-radius: 999px; padding: 3px 12px; cursor: pointer; }
+    main { max-width: 560px; margin: 0 auto; padding: 22px 16px 48px; }
+    .card { background: var(--sheet); border: 1px solid var(--line); border-top: 3px solid var(--gold); padding: 22px 20px; }
+    h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 24px; line-height: 1.25; margin: 0 0 6px; color: var(--ink); }
+    .lbl { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-d); margin: 0 0 4px; }
+    .info { margin: 14px 0 18px; padding: 12px 14px; background: #f8f3e6; border-left: 3px solid var(--gold); }
+    .info p { margin: 2px 0; }
+    .info a { color: var(--gold-d); }
+    .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 14px; }
+    .opt { border: 1.5px solid var(--line); background: #fff; padding: 12px 6px; cursor: pointer; text-align: center; font-weight: 600; color: var(--ink); min-height: 48px; }
+    .opt[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .fl { display: block; margin: 0 0 12px; font-size: 14px; color: var(--muted); }
+    .fl input, .fl textarea { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border: 1px solid var(--line); background: #fff; font-size: 16px; color: var(--text); }
+    .fl input[type=number] { max-width: 110px; }
+    .go { width: 100%; background: var(--ink); color: #fff; border: 0; padding: 14px; font-weight: 600; font-size: 16px; cursor: pointer; }
+    .go:disabled, .opt:disabled { opacity: .55; cursor: default; }
+    .msg { margin: 12px 0 0; font-size: 15px; }
+    .msg.ok { color: var(--ok); } .msg.err { color: var(--err); }
+    .tiny { font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header><b>Ottley Secretariat</b><button id="lang" type="button" aria-label="Language">EN</button></header>
+  <main>
+    <div class="card">
+      <p id="load" class="tiny"></p>
+      <div id="box" hidden>
+        <p class="lbl" id="t-lbl"></p>
+        <h1 id="title"></h1>
+        <p id="hello" class="tiny"></p>
+        <div class="info" id="info"></div>
+        <form id="f">
+          <p class="lbl" id="t-ask"></p>
+          <div class="opts" id="opts"></div>
+          <label class="fl" id="cnt-w" hidden><span id="t-cnt"></span><input id="cnt" type="number" min="1" max="20" value="1" inputmode="numeric"></label>
+          <label class="fl"><span id="t-note"></span><textarea id="note" rows="2" maxlength="300"></textarea></label>
+          <button id="go" class="go" type="submit"></button>
+          <p id="msg" class="msg" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script>
+  (function () {
+    var Q = new URLSearchParams(location.search), TOKEN = Q.get('t') || '';
+    var lang = Q.get('l') === 'en' ? 'en' : 'id', data = null, pick = '', busy = false;
+    var T = {
+      id: { lbl: 'Konfirmasi kehadiran', ask: 'Apakah Anda hadir?', yes: 'Hadir', no: 'Tidak hadir', maybe: 'Mungkin', cnt: 'Jumlah orang yang hadir (termasuk Anda)', note: 'Catatan (opsional)',
+        go: 'Kirim jawaban', change: 'Ubah jawaban', loading: 'Memuat…', hello: 'Yth. {n}', when: 'Waktu', place: 'Tempat', by: 'Mohon dijawab paling lambat {d}', closed: 'Batas konfirmasi sudah lewat. Hubungi pengundang bila perlu mengubah jawaban.',
+        pickfirst: 'Pilih salah satu jawaban dulu.', saved: 'Terima kasih, jawaban Anda tersimpan: {s}.', cur: 'Jawaban Anda saat ini: {s}. Anda masih bisa mengubahnya.', demo: 'Ini halaman contoh dari surat tes. Jawaban tidak disimpan.',
+        bad: 'Tautan tidak valid atau sudah tidak berlaku.', net: 'Tidak bisa terhubung. Periksa koneksi lalu coba lagi.', sending: 'Menyimpan…', maps: 'Lihat di Google Maps' },
+      en: { lbl: 'RSVP', ask: 'Will you attend?', yes: 'Attending', no: 'Not attending', maybe: 'Maybe', cnt: 'Number of guests attending (including you)', note: 'Note (optional)',
+        go: 'Send reply', change: 'Change reply', loading: 'Loading…', hello: 'Dear {n}', when: 'When', place: 'Where', by: 'Please reply by {d}', closed: 'The reply deadline has passed. Contact the host if you need to change your answer.',
+        pickfirst: 'Please choose an answer first.', saved: 'Thank you, your reply is saved: {s}.', cur: 'Your current reply: {s}. You can still change it.', demo: 'This is a sample page from a test email. Replies are not saved.',
+        bad: 'This link is invalid or no longer active.', net: 'Cannot connect. Check your connection and try again.', sending: 'Saving…', maps: 'View on Google Maps' }
+    };
+    var ST = { Hadir: 'yes', 'Tidak hadir': 'no', Mungkin: 'maybe' };
+    function $(id) { return document.getElementById(id); }
+    function t(k, v) { var s = T[lang][k] || k; Object.keys(v || {}).forEach(function (x) { s = s.replace('{' + x + '}', v[x]); }); return s; }
+    function say(s, kind) { $('msg').textContent = s || ''; $('msg').className = 'msg' + (kind ? ' ' + kind : ''); }
+    function api(action, extra) {
+      var body = Object.assign({ action: action, t: TOKEN }, extra || {});
+      return fetch(window.OTTLEY_CONFIG.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+        .then(function (r) { return r.json(); });
+    }
+    function label(s) { return t(ST[s] || 'yes'); }
+    function render() {
+      document.documentElement.lang = lang; $('lang').textContent = lang === 'id' ? 'EN' : 'ID';
+      $('t-lbl').textContent = t('lbl'); $('t-ask').textContent = t('ask'); $('t-cnt').textContent = t('cnt'); $('t-note').textContent = t('note');
+      if (!data) { $('load').textContent = t('loading'); return; }
+      $('title').textContent = data.title || '';
+      $('hello').textContent = t('hello', { n: data.name || (lang === 'en' ? 'Sir/Madam' : 'Bapak/Ibu') });
+      var info = $('info'); info.innerHTML = '';
+      function row(l, node) { var p = document.createElement('p'), b = document.createElement('b'); b.textContent = l + ': '; p.appendChild(b); p.appendChild(node); info.appendChild(p); }
+      if (data.when) row(t('when'), document.createTextNode(data.when));
+      if (data.place) {
+        if (data.maps) { var a = document.createElement('a'); a.href = data.maps; a.target = '_blank'; a.rel = 'noopener'; a.textContent = data.place; row(t('place'), a); }
+        else row(t('place'), document.createTextNode(data.place));
+      }
+      if (data.by) { var p2 = document.createElement('p'); p2.className = 'tiny'; p2.textContent = t('by', { d: data.by }); info.appendChild(p2); }
+      info.hidden = !info.children.length;
+      var o = $('opts'); o.innerHTML = '';
+      [['Hadir', 'yes'], ['Tidak hadir', 'no'], ['Mungkin', 'maybe']].forEach(function (x) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = t(x[1]); b.disabled = busy || data.closed;
+        b.setAttribute('aria-pressed', pick === x[0] ? 'true' : 'false');
+        b.addEventListener('click', function () { pick = x[0]; render(); });
+        o.appendChild(b);
+      });
+      $('cnt-w').hidden = !pick || pick === 'Tidak hadir';
+      $('go').textContent = t(data.status ? 'change' : 'go'); $('go').disabled = busy || data.closed;
+      if (data.closed) say(t('closed'), 'err');
+      else if (data.demo && !$('msg').textContent) say(t('demo'));
+      else if (data.status && !$('msg').textContent) say(t('cur', { s: label(data.status) }));
+    }
+    $('lang').addEventListener('click', function () { lang = lang === 'id' ? 'en' : 'id'; $('msg').textContent = ''; render(); });
+    $('f').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (busy || !data || data.closed) return;
+      if (!pick) { say(t('pickfirst'), 'err'); return; }
+      busy = true; say(t('sending')); render();
+      api('rsvpReply', { status: pick, count: parseInt($('cnt').value, 10) || 1, note: $('note').value })
+        .then(function (r) {
+          busy = false;
+          if (!r.ok) { say(r.message || t('bad'), 'err'); render(); return; }
+          data = r.data; say(t('saved', { s: label(data.status) }), 'ok'); render();
+        })
+        .catch(function () { busy = false; say(t('net'), 'err'); render(); });
+    });
+    render();
+    if (!TOKEN || !window.OTTLEY_CONFIG) { $('load').textContent = t('bad'); return; }
+    api('rsvpGet').then(function (r) {
+      if (!r.ok) { $('load').textContent = t('bad'); return; }
+      data = r.data; if (!Q.get('l')) lang = data.lang === 'en' ? 'en' : 'id';
+      pick = data.status || ''; if (data.count) $('cnt').value = data.count; $('note').value = data.note || '';
+      $('load').hidden = true; $('box').hidden = false; render();
+    }).catch(function () { $('load').textContent = t('net'); });
+  })();
+  </script>
+</body>
+</html>
