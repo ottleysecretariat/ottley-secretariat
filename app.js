@@ -87,6 +87,8 @@
       s_sched: 'Jadwalkan pengiriman', s_sd: 'Tanggal kirim', s_st: 'Jam kirim (WIB)', s_sched_hint: 'Dikirim otomatis sekitar 0\u201310 menit setelah jam ini. Salam pembuka mengikuti waktu kirim.',
       s_schedule: 'Jadwalkan', s_sched_confirm: 'Klik lagi untuk menjadwalkan ke {to}', s_ok_sched: 'Terjadwal. Surat ke {to} akan dikirim sekitar {at} WIB.', s_e_sched: 'Pilih tanggal dan jam kirim.', s_e_sched_past: 'Waktu kirim harus di masa depan.',
       sq_title: 'Terjadwal', sq_at: 'dikirim sekitar {at}', sq_sending: 'sedang dikirim', sq_failed: 'gagal', sq_cancel: 'Batalkan', sq_dismiss: 'Buang',
+      s_rsvp: 'Minta konfirmasi kehadiran (RSVP)', s_rsvp_by: 'Batas menjawab (opsional)', s_rsvp_hint: 'Tiap penerima dapat email sendiri dengan tautan unik. Cc tidak bisa dipakai bersama RSVP. Surat tes memakai tautan contoh.',
+      rv_title: 'Balasan RSVP', rv_yes: 'Hadir', rv_no: 'Tidak hadir', rv_maybe: 'Mungkin', rv_wait: 'Menunggu',
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -211,6 +213,8 @@
       s_sched: 'Schedule sending', s_sd: 'Send date', s_st: 'Send time (WIB)', s_sched_hint: 'Sent automatically about 0\u201310 minutes after this time. The greeting follows the send time.',
       s_schedule: 'Schedule', s_sched_confirm: 'Click again to schedule to {to}', s_ok_sched: 'Scheduled. The letter to {to} will be sent around {at} WIB.', s_e_sched: 'Pick a send date and time.', s_e_sched_past: 'Send time must be in the future.',
       sq_title: 'Scheduled', sq_at: 'sends around {at}', sq_sending: 'sending now', sq_failed: 'failed', sq_cancel: 'Cancel', sq_dismiss: 'Dismiss',
+      s_rsvp: 'Request attendance confirmation (RSVP)', s_rsvp_by: 'Reply by (optional)', s_rsvp_hint: 'Each recipient gets their own email with a unique link. Cc cannot be combined with RSVP. Test emails use a sample link.',
+      rv_title: 'RSVP replies', rv_yes: 'Attending', rv_no: 'Not attending', rv_maybe: 'Maybe', rv_wait: 'Waiting',
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -277,7 +281,7 @@
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderKontak(); renderPk(); renderQueue(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
   }
 
   function setLang(l) {
@@ -338,7 +342,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; cData = null; sQ = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; cData = null; sQ = null; rvData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -1353,6 +1357,48 @@
     closePk();
   }
 
+  // ----- RSVP -----
+  var rvData = null, rvOpen = {};
+  var RV_L = { Hadir: 'rv_yes', 'Tidak hadir': 'rv_no', Mungkin: 'rv_maybe', Menunggu: 'rv_wait' };
+  function rsvpBase() { return location.href.split(/[?#]/)[0]; }
+  function onRsvpToggle() {
+    $('s-rsvp-box').hidden = !$('s-rsvp').checked;
+    disarm();
+  }
+  function loadRsvp() {
+    api('rsvpList', {}).then(function (d) { rvData = d; renderRsvp(); }).catch(function () { /* opsional */ });
+  }
+  function renderRsvp() {
+    var box = $('rv-list'), wrap = $('rv-box');
+    if (!box) return;
+    box.innerHTML = '';
+    wrap.hidden = !(rvData && rvData.items.length);
+    if (!rvData) return;
+    rvData.items.forEach(function (g) {
+      var row = el('div', 'rvg'), head = el('button'), w = el('span');
+      head.type = 'button';
+      w.appendChild(el('b', '', g.title || g.subject || '-'));
+      w.appendChild(el('small', '', ' ' + (g.when ? g.when + ' \u00b7 ' : '') + g.at.slice(0, 10)));
+      head.appendChild(w);
+      var c = g.counts, cn = el('span', 'cnts');
+      [['y', t('rv_yes') + ' ' + c.yes + (c.people ? ' (' + c.people + ')' : '')], ['n', t('rv_no') + ' ' + c.no], ['', t('rv_maybe') + ' ' + c.maybe], ['', t('rv_wait') + ' ' + c.wait]].forEach(function (x) { cn.appendChild(el('span', 'cnt ' + x[0], x[1])); });
+      head.appendChild(cn);
+      head.addEventListener('click', function () { rvOpen[g.batch] = !rvOpen[g.batch]; renderRsvp(); });
+      row.appendChild(head);
+      if (rvOpen[g.batch]) {
+        var ul = el('ul');
+        g.items.forEach(function (x) {
+          var li = el('li'); li.appendChild(el('span', '', (x.name || x.email) + (x.name ? ' \u00b7 ' + x.email : '')));
+          li.appendChild(el('b', '', t(RV_L[x.status] || 'rv_wait') + (x.count ? ' (' + x.count + ')' : '')));
+          if (x.note) li.appendChild(el('small', '', x.note));
+          ul.appendChild(li);
+        });
+        row.appendChild(ul);
+      }
+      box.appendChild(row);
+    });
+  }
+
   // ----- surat terjadwal -----
   var sQ = null;
   function schedOn() { return $('s-sched') && $('s-sched').checked; }
@@ -1927,7 +1973,7 @@
     sMode = 'list';
     $('s-list-view').hidden = false; $('s-compose-view').hidden = true;
     if (sHistStale || !sHist) loadSuratHist(); else renderHist();
-    loadQueue();
+    loadQueue(); loadRsvp();
   }
   function showCompose() {
     sMode = 'compose';
@@ -2147,7 +2193,8 @@
       to: $('s-to').value, cc: $('s-cc').value, nama: $('s-nama').value, lang: sl(), part: $('s-part').value,
       eventId: $('s-ev').value, templateId: $('s-tpl').value, subject: $('s-subject').value, body: $('s-body').value,
       title: $('s-card').value, maps: $('s-maps').value, fields: fields, files: $('s-files').value,
-      uploads: sUps.filter(function (u) { return u.status === 'ok'; }).map(function (u) { return u.id; })
+      uploads: sUps.filter(function (u) { return u.status === 'ok'; }).map(function (u) { return u.id; }),
+      rsvp: $('s-rsvp').checked, rsvpBy: $('s-rsvp').checked ? $('s-rsvp-by').value : '', rsvpBase: $('s-rsvp').checked ? rsvpBase() : ''
     };
   }
 
@@ -2295,7 +2342,7 @@
         if (test) { setBusy(false); say('s-msg', t('s_ok_test', { to: r.to }) + att, 'ok'); return; }
         sDone = true;
         homeStale = true;
-        sHistStale = true;
+        sHistStale = true; rvData = null;
         setBusy(false);
         $('s-new').hidden = false;
         say('s-msg', t('s_ok_sent', { to: r.to }) + att + (r.logError ? t('s_log_err') + r.logError : ''), r.logError ? 'err' : 'ok');
@@ -2317,6 +2364,7 @@
     if ($('s-fields')) $('s-fields').innerHTML = '';
     if ($('s-filelist')) $('s-filelist').innerHTML = '';
     if ($('s-new')) $('s-new').hidden = true;
+    if ($('s-rsvp')) { $('s-rsvp').checked = false; $('s-rsvp-box').hidden = true; $('s-rsvp-by').value = ''; }
     if ($('s-sched')) { $('s-sched').checked = false; $('s-sched-box').hidden = true; $('s-sd').value = ''; $('s-st').value = ''; }
     if ($('sf')) lockUi($('sf'), false);
     if (!silent) { say('s-msg', ''); setBusy(false); disarm(); doPreview(); }
@@ -2395,6 +2443,7 @@
     $('pk-to').addEventListener('click', function () { usePk('s-to'); });
     $('pk-cc').addEventListener('click', function () { usePk('s-cc'); });
     $('s-sched').addEventListener('change', onSchedToggle);
+    $('s-rsvp').addEventListener('change', onRsvpToggle);
     $('k-libur').addEventListener('click', openLibur);
     $('ucf').addEventListener('submit', submitUc);
     $('ucf-cancel').addEventListener('click', closeUc);
