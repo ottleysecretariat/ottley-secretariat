@@ -414,3 +414,14 @@ h3.mini { font-family: var(--serif); font-size: 18px; margin: 22px 0 6px; color:
 .sqrow .w small { display: block; color: var(--muted); font-size: 13px; }
 .sqrow.bad .w b { color: #9b2c1f; }
 @media (max-width: 899px) { .nav .tab { min-width: 0; } .tab[data-tab="kontak"] span { font-size: 10px; } }
+
+/* RSVP */
+.rvg { border-bottom: 1px solid var(--line); padding: 9px 0; }
+.rvg > button { display: flex; width: 100%; justify-content: space-between; gap: 10px; align-items: baseline; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; font-size: 15px; color: var(--text); flex-wrap: wrap; }
+.rvg small { color: var(--muted); font-size: 13px; }
+.rvg .cnts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.rvg .cnt { font-size: 12px; padding: 1px 8px; border: 1px solid var(--line); background: var(--sheet); }
+.rvg .cnt.y { color: var(--ok); border-color: var(--ok); } .rvg .cnt.n { color: var(--err); border-color: var(--err); }
+.rvg ul { list-style: none; margin: 8px 0 0; padding: 0; font-size: 14px; }
+.rvg li { padding: 4px 0; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.rvg li small { flex-basis: 100%; }
