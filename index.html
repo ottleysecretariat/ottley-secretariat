@@ -192,6 +192,10 @@
             <h3 class="mini" data-i18n="sq_title"></h3>
             <div id="sq-list"></div>
           </div>
+          <div id="rv-box" hidden>
+            <h3 class="mini" data-i18n="rv_title"></h3>
+            <div id="rv-list"></div>
+          </div>
           <p id="sh-msg" class="msg" role="status"></p>
           <div id="sh-list"></div>
         </div>
@@ -243,6 +247,11 @@
                 <label class="fl"><span data-i18n="s_st"></span><input id="s-st" type="time"></label>
               </div>
               <p class="tiny tight" data-i18n="s_sched_hint"></p>
+            </div>
+            <label class="chip-c"><input id="s-rsvp" type="checkbox"> <span data-i18n="s_rsvp"></span></label>
+            <div id="s-rsvp-box" hidden>
+              <label class="fl"><span data-i18n="s_rsvp_by"></span><input id="s-rsvp-by" type="date"></label>
+              <p class="tiny tight" data-i18n="s_rsvp_hint"></p>
             </div>
             <div class="bar">
               <button id="s-test" class="btn ghost" type="button" data-i18n="s_test"></button>
