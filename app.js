@@ -89,6 +89,8 @@
       sq_title: 'Terjadwal', sq_at: 'dikirim sekitar {at}', sq_sending: 'sedang dikirim', sq_failed: 'gagal', sq_cancel: 'Batalkan', sq_dismiss: 'Buang',
       s_rsvp: 'Minta konfirmasi kehadiran (RSVP)', s_rsvp_by: 'Batas menjawab (opsional)', s_rsvp_hint: 'Tiap penerima dapat email sendiri dengan tautan unik. Cc tidak bisa dipakai bersama RSVP. Surat tes memakai tautan contoh.',
       rv_title: 'Balasan RSVP', rv_yes: 'Hadir', rv_no: 'Tidak hadir', rv_maybe: 'Mungkin', rv_wait: 'Menunggu',
+      qa_ph: 'Tambah cepat: "Rapat dengan Pak Budi besok jam 3 sore di Kantor"', qa_go: 'Isi form', qa_empty: 'Tulis dulu kalimatnya.', qa_read: 'Terbaca: {x}. Cek dulu lalu simpan.', qa_nodate: 'tanggal tidak terbaca (diisi hari ini)', qa_notime: 'jam tidak terbaca', qa_date: 'tanggal', qa_time: 'jam', qa_loc: 'tempat',
+      s_ics: 'Lampirkan undangan kalender (.ics) dari jadwal terkait', s_e_ics: 'Pilih jadwal terkait dulu untuk melampirkan undangan kalender.',
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -215,6 +217,8 @@
       sq_title: 'Scheduled', sq_at: 'sends around {at}', sq_sending: 'sending now', sq_failed: 'failed', sq_cancel: 'Cancel', sq_dismiss: 'Dismiss',
       s_rsvp: 'Request attendance confirmation (RSVP)', s_rsvp_by: 'Reply by (optional)', s_rsvp_hint: 'Each recipient gets their own email with a unique link. Cc cannot be combined with RSVP. Test emails use a sample link.',
       rv_title: 'RSVP replies', rv_yes: 'Attending', rv_no: 'Not attending', rv_maybe: 'Maybe', rv_wait: 'Waiting',
+      qa_ph: 'Quick add: "Meeting with Mr. Budi tomorrow at 3pm at the office"', qa_go: 'Fill form', qa_empty: 'Type a sentence first.', qa_read: 'Read: {x}. Check it, then save.', qa_nodate: 'date not found (set to today)', qa_notime: 'time not found', qa_date: 'date', qa_time: 'time', qa_loc: 'place',
+      s_ics: 'Attach calendar invite (.ics) from the linked schedule', s_e_ics: 'Pick a linked schedule first to attach a calendar invite.',
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -279,6 +283,7 @@
   function applyLang() {
     document.documentElement.lang = state.lang;
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function (e) { e.placeholder = t(e.getAttribute('data-i18n-ph')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
     if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
@@ -1719,10 +1724,110 @@
 
   function newKey() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
 
+  // QUICK-BEGIN
+  var Q_MONTHS = { jan: 1, januari: 1, january: 1, feb: 2, februari: 2, february: 2, mar: 3, maret: 3, march: 3, apr: 4, april: 4, mei: 5, may: 5, jun: 6, juni: 6, june: 6, jul: 7, juli: 7, july: 7, agu: 8, agt: 8, agustus: 8, aug: 8, august: 8, sep: 9, sept: 9, september: 9, okt: 10, oktober: 10, oct: 10, october: 10, nov: 11, november: 11, des: 12, desember: 12, dec: 12, december: 12 };
+  var Q_DAYS = { minggu: 0, ahad: 0, sunday: 0, sun: 0, senin: 1, monday: 1, mon: 1, selasa: 2, tuesday: 2, tue: 2, rabu: 3, wednesday: 3, wed: 3, kamis: 4, thursday: 4, thu: 4, jumat: 5, "jum'at": 5, jumaat: 5, friday: 5, fri: 5, sabtu: 6, saturday: 6, sat: 6 };
+  function qp2(n) { return ('0' + n).slice(-2); }
+  function qIso(d) { return d.getUTCFullYear() + '-' + qp2(d.getUTCMonth() + 1) + '-' + qp2(d.getUTCDate()); }
+  function qDate(iso) { var p = iso.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function qAdd(iso, n) { var d = qDate(iso); d.setUTCDate(d.getUTCDate() + n); return qIso(d); }
+  function qValid(y, m, d) { var x = new Date(Date.UTC(y, m - 1, d)); return x.getUTCFullYear() === y && x.getUTCMonth() === m - 1 && x.getUTCDate() === d; }
+  function qHour(h, period) {
+    if (period === 'pm' || period === 'sore' || period === 'malam') { if (h < 12) h += 12; if (period === 'malam' && h === 12) h = 24; }
+    else if (period === 'siang') { if (h < 11) h += 12; }
+    else if (period === 'am' || period === 'pagi') { if (h === 12) h = 0; }
+    return h;
+  }
+  function qClock(h, m) { return h > 23 || m > 59 ? '' : qp2(h) + ':' + qp2(m); }
+  // Membaca kalimat bebas (ID/EN) menjadi {title, date, start, end, location, hasDate, hasTime}
+  function parseQuick(text, today) {
+    var s = ' ' + String(text || '').replace(/\s+/g, ' ').trim() + ' ', low = s.toLowerCase(), out = { title: '', date: '', start: '', end: '', location: '', hasDate: false, hasTime: false };
+    var ty = +today.slice(0, 4), tm = +today.slice(5, 7), td = +today.slice(8, 10);
+    function cut(re, fn) {
+      var m = re.exec(low);
+      if (!m) return false;
+      if (fn(m) === false) return false;
+      s = s.slice(0, m.index) + ' ' + s.slice(m.index + m[0].length); low = low.slice(0, m.index) + ' ' + low.slice(m.index + m[0].length);
+      return true;
+    }
+    // ---- tanggal ----
+    var done = cut(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/, function (m) { if (!qValid(+m[1], +m[2], +m[3])) return false; out.date = m[1] + '-' + qp2(+m[2]) + '-' + qp2(+m[3]); });
+    if (!done) done = cut(/\b(hari ini|today)\b/, function () { out.date = today; });
+    if (!done) done = cut(/\b(lusa|day after tomorrow)\b/, function () { out.date = qAdd(today, 2); });
+    if (!done) done = cut(/\b(besok|tomorrow)\b/, function () { out.date = qAdd(today, 1); });
+    if (!done) done = cut(/\b(\d{1,2})\s+(januari|january|jan|februari|february|feb|maret|march|mar|april|apr|mei|may|juni|june|jun|juli|july|jul|agustus|august|agu|agt|aug|september|sept|sep|oktober|october|okt|oct|desember|december|des|dec|november|nov)\b(?:\s+(\d{4}))?/, function (m) {
+      var mo = Q_MONTHS[m[2]], d = +m[1], y = m[3] ? +m[3] : ty;
+      if (!qValid(y, mo, d)) return false;
+      if (!m[3] && qIso(new Date(Date.UTC(y, mo - 1, d))) < today) y++;
+      out.date = y + '-' + qp2(mo) + '-' + qp2(d);
+    });
+    if (!done) done = cut(/\b(\d{1,2})[\/](\d{1,2})(?:[\/](\d{4}))?\b/, function (m) {
+      var d = +m[1], mo = +m[2], y = m[3] ? +m[3] : ty;
+      if (!qValid(y, mo, d)) return false;
+      if (!m[3] && qIso(new Date(Date.UTC(y, mo - 1, d))) < today) y++;
+      out.date = y + '-' + qp2(mo) + '-' + qp2(d);
+    });
+    if (!done) done = cut(/\b(?:tanggal|tgl\.?)\s*(\d{1,2})\b/, function (m) {
+      var d = +m[1], y = ty, mo = tm;
+      if (d < td) { mo++; if (mo > 12) { mo = 1; y++; } }
+      if (!qValid(y, mo, d)) return false;
+      out.date = y + '-' + qp2(mo) + '-' + qp2(d);
+    });
+    if (!done) done = cut(/\b(?:(next|depan)\s+)?(senin|selasa|rabu|kamis|jum'at|jumaat|jumat|sabtu|minggu|ahad|monday|tuesday|wednesday|thursday|friday|saturday|sunday)(?:\s+(depan|ini|lalu))?\b/, function (m) {
+      var wd = Q_DAYS[m[2]], cur = qDate(today).getUTCDay(), diff = (wd - cur + 7) % 7;
+      if (m[1] === 'next' || m[3] === 'depan') { var toMon = (8 - cur) % 7 || 7; diff = toMon + ((wd + 6) % 7); }
+      else if (diff === 0) diff = 7;
+      out.date = qAdd(today, diff);
+    });
+    out.hasDate = !!out.date;
+    // ---- jam ----
+    var P = '(pagi|siang|sore|malam|am|pm|a\\.m\\.|p\\.m\\.)';
+    var T = '(\\d{1,2})(?:[.:](\\d{2}))?';
+    function per(x) { return x ? x.replace(/\./g, '') : ''; }
+    var got = cut(new RegExp('\\b(?:jam|pukul|at|from|dari|@)\\s*' + T + '\\s*' + P + '?\\s*(?:-|–|sampai|sd|s\\/d|hingga|to|until)\\s*' + T + '\\s*' + P + '?', 'i'), function (m) {
+      var p2 = per(m[6]), p1 = per(m[3]) || p2, h1 = qHour(+m[1], p1), h2 = qHour(+m[4], p2 || p1);
+      if (h2 <= h1 && !p2 && h2 < 12) h2 += 12;
+      var a = qClock(h1, m[2] ? +m[2] : 0), b = qClock(h2, m[5] ? +m[5] : 0);
+      if (!a || !b) return false;
+      out.start = a; out.end = b;
+    });
+    if (!got) got = cut(new RegExp('\\b(\\d{1,2})[.:](\\d{2})\\s*(?:-|–|sampai|sd|s\\/d|hingga|to|until)\\s*(\\d{1,2})[.:](\\d{2})\\b'), function (m) {
+      var a = qClock(+m[1], +m[2]), b = qClock(+m[3], +m[4]);
+      if (!a || !b) return false;
+      out.start = a; out.end = b;
+    });
+    if (!got) got = cut(new RegExp('\\b(?:jam|pukul|at|@)\\s*' + T + '\\s*' + P + '?', 'i'), function (m) {
+      var a = qClock(qHour(+m[1], per(m[3])), m[2] ? +m[2] : 0);
+      if (!a) return false;
+      out.start = a;
+    });
+    if (!got) got = cut(/\b(\d{1,2}):(\d{2})\b/, function (m) { var a = qClock(+m[1], +m[2]); if (!a) return false; out.start = a; });
+    if (!got) got = cut(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/, function (m) { var a = qClock(qHour(+m[1], m[3]), m[2] ? +m[2] : 0); if (!a) return false; out.start = a; });
+    out.hasTime = !!out.start;
+    // ---- durasi ----
+    if (out.start && !out.end) {
+      var mins = 0;
+      cut(/\b(?:selama|for)?\s*(\d+(?:[.,]5)?)\s*(jam|hours?|hrs?|menit|minutes?|mins?)\b/, function (m) {
+        var n = parseFloat(m[1].replace(',', '.')); mins = /^(jam|h)/.test(m[2]) ? Math.round(n * 60) : Math.round(n);
+      });
+      var sp = out.start.split(':'), tot = +sp[0] * 60 + +sp[1] + (mins || 60);
+      out.end = tot >= 24 * 60 ? '23:59' : qp2(Math.floor(tot / 60)) + ':' + qp2(tot % 60);
+    }
+    // ---- lokasi ----
+    var lm = /\s(?:di|at|@)\s+([^]+?)\s*$/i.exec(s);
+    if (lm) { out.location = lm[1].replace(/[.,;]+$/, '').trim(); s = s.slice(0, lm.index) + ' '; }
+    // ---- judul ----
+    var title = s.replace(/^\s*(?:tolong\s+)?(?:(?:jadwalkan|jadwal|tambahkan|tambah|buatkan|buat|ingatkan(?:\s+(?:gw|saya|aku))?|schedule|add|remind me to|set up|set)\s+)+/i, ' ')
+      .replace(/\b(pada|on|pukul|jam|pada hari)\b\s*$/i, ' ').replace(/\s+(pada|on|untuk|for|hari|pukul|jam)\s*$/i, ' ').replace(/[\s,.\-–]+$/, '').replace(/^[\s,.\-–]+/, '').replace(/\s+/g, ' ').trim();
+    out.title = title ? title.charAt(0).toUpperCase() + title.slice(1) : '';
+    return out;
+  }
+  // QUICK-END
+
   function openForm(it, preset) {
     preset = preset || {};
     formState = it ? JSON.parse(JSON.stringify(it)) : {
-      id: '', title: '', date: preset.date || (jData ? jData.today : ''), start: preset.start || '', end: '', location: '', maps: '', notes: '', guests: [],
+      id: '', title: preset.title || '', date: preset.date || (jData ? jData.today : todayIso()), start: preset.start || '', end: preset.end || '', location: preset.location || '', maps: '', notes: '', guests: [],
       reminders: jData ? jData.defaults.slice() : [], status: 'Aktif'
     };
     formState._key = newKey();
@@ -2194,6 +2299,7 @@
       eventId: $('s-ev').value, templateId: $('s-tpl').value, subject: $('s-subject').value, body: $('s-body').value,
       title: $('s-card').value, maps: $('s-maps').value, fields: fields, files: $('s-files').value,
       uploads: sUps.filter(function (u) { return u.status === 'ok'; }).map(function (u) { return u.id; }),
+      ics: $('s-ics').checked && !!$('s-ev').value,
       rsvp: $('s-rsvp').checked, rsvpBy: $('s-rsvp').checked ? $('s-rsvp-by').value : '', rsvpBase: $('s-rsvp').checked ? rsvpBase() : ''
     };
   }
@@ -2325,6 +2431,7 @@
     if (sUps.some(function (u) { return u.status === 'busy'; })) { say('s-msg', t('s_e_uploading'), 'err'); return; }
     var lm = limitMsg();
     if (lm) { say('s-msg', lm, 'err'); return; }
+    if ($('s-ics').checked && !$('s-ev').value) { say('s-msg', t('s_e_ics'), 'err'); return; }
     if (!test && schedOn()) {
       if (!$('s-sd').value || !$('s-st').value) { say('s-msg', t('s_e_sched'), 'err'); return; }
       var w = wibNow(), nowS = isoOf(w.getFullYear(), w.getMonth() + 1, w.getDate()) + ' ' + pad2(w.getHours()) + ':' + pad2(w.getMinutes());
@@ -2364,6 +2471,7 @@
     if ($('s-fields')) $('s-fields').innerHTML = '';
     if ($('s-filelist')) $('s-filelist').innerHTML = '';
     if ($('s-new')) $('s-new').hidden = true;
+    if ($('s-ics')) $('s-ics').checked = false;
     if ($('s-rsvp')) { $('s-rsvp').checked = false; $('s-rsvp-box').hidden = true; $('s-rsvp-by').value = ''; }
     if ($('s-sched')) { $('s-sched').checked = false; $('s-sched-box').hidden = true; $('s-sd').value = ''; $('s-st').value = ''; }
     if ($('sf')) lockUi($('sf'), false);
@@ -2443,6 +2551,21 @@
     $('pk-to').addEventListener('click', function () { usePk('s-to'); });
     $('pk-cc').addEventListener('click', function () { usePk('s-cc'); });
     $('s-sched').addEventListener('change', onSchedToggle);
+    $('qa').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var txt = $('qa-in').value.trim();
+      if (!txt) { say('qa-msg', t('qa_empty'), 'err'); return; }
+      var today = jData ? jData.today : todayIso(), r = parseQuick(txt, today), got = [];
+      if (r.hasDate) got.push(t('qa_date') + ' ' + r.date);
+      if (r.hasTime) got.push(t('qa_time') + ' ' + r.start + '\u2013' + r.end);
+      if (r.location) got.push(t('qa_loc') + ' ' + r.location);
+      var warn = [];
+      if (!r.hasDate) warn.push(t('qa_nodate'));
+      if (!r.hasTime) warn.push(t('qa_notime'));
+      say('qa-msg', warn.length ? warn.join('; ') : t('qa_read', { x: got.join(', ') }), warn.length ? 'warn' : '');
+      openForm(null, { title: r.title || txt, date: r.date, start: r.start, end: r.end, location: r.location });
+      $('qa-in').value = '';
+    });
     $('s-rsvp').addEventListener('change', onRsvpToggle);
     $('k-libur').addEventListener('click', openLibur);
     $('ucf').addEventListener('submit', submitUc);
