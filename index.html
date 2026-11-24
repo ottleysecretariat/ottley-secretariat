@@ -99,6 +99,11 @@
             <div class="grow"><h1 class="hello" data-i18n="jadwal_title"></h1><p class="lede" data-i18n="jadwal_sub"></p></div>
             <button id="j-add" class="btn primary" type="button" data-i18n="j_add"></button>
           </div>
+          <form id="qa" class="qa" autocomplete="off">
+            <input id="qa-in" type="text" maxlength="300" data-i18n-ph="qa_ph" aria-label="Quick add">
+            <button id="qa-go" class="btn ghost" type="submit" data-i18n="qa_go"></button>
+          </form>
+          <p id="qa-msg" class="tiny tight" role="status"></p>
         </div>
         <div class="viewbar" role="tablist">
           <button class="vb" type="button" data-view="list" data-i18n="view_list"></button>
@@ -248,6 +253,7 @@
               </div>
               <p class="tiny tight" data-i18n="s_sched_hint"></p>
             </div>
+            <label class="chip-c"><input id="s-ics" type="checkbox"> <span data-i18n="s_ics"></span></label>
             <label class="chip-c"><input id="s-rsvp" type="checkbox"> <span data-i18n="s_rsvp"></span></label>
             <div id="s-rsvp-box" hidden>
               <label class="fl"><span data-i18n="s_rsvp_by"></span><input id="s-rsvp-by" type="date"></label>
