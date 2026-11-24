@@ -1,7 +1,7 @@
 // Service worker sederhana: jaringan dulu, cadangan dari cache (supaya app tetap terbuka saat offline).
 // Permintaan ke Apps Script (lintas domain) tidak disentuh sama sekali.
-var CACHE = 'ottley-v15';
-var SHELL = ['./', 'index.html', 'style.css', 'app.js', 'config.js', 'logo-square.png', 'logo-wide.png'];
+var CACHE = 'ottley-v16';
+var SHELL = ['./', 'index.html', 'style.css', 'app.js', 'rsvp.html', 'config.js', 'logo-square.png', 'logo-wide.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));
