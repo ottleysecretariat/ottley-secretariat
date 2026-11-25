@@ -100,6 +100,8 @@
       td_today: 'Hari ini', td_all: 'Semua', td_done: 'Selesai', td_g_late: 'Terlambat', td_g_today: 'Hari ini', td_g_next: 'Mendatang', td_g_none: 'Tanpa tanggal', td_none: 'Belum ada tugas.', td_none_today: 'Tidak ada tugas untuk hari ini.', td_none_done: 'Belum ada tugas selesai.',
       td_new: 'Tugas baru', td_edit: 'Ubah tugas', td_f_title: 'Tugas', td_f_plan: 'Mau dikerjakan (opsional)', td_f_due: 'Deadline sebenarnya (opsional)', td_f_hint: 'Tugas muncul di Hari ini mulai tanggal "mau dikerjakan", atau saat deadline tiba. Keduanya juga masuk ke email briefing pagi.',
       td_plan: 'Dikerjakan', td_due: 'Deadline', td_mark: 'Tandai selesai', td_del_confirm: 'Hapus tugas "{x}"?', td_v_title: 'Tugas belum ditulis.', td_v_order: 'Tanggal mau dikerjakan tidak boleh setelah deadline.',
+      p_pattern: 'Pola', p_one: 'Satu hari', p_multi: 'Beberapa hari', p_repeat: 'Berulang', p_wd: 'Hari dalam seminggu', p_from: 'Mulai tanggal', p_to: 'Sampai tanggal', p_make: 'Buat daftar hari', p_add: '+ Tambah hari', p_loc_day: 'Tempat hari ini (opsional)', p_count: '{n} hari akan dibuat. Tiap hari bisa diubah jam dan tempatnya.', p_count0: 'Belum ada hari.', p_need2: 'Isi minimal 2 hari.', p_need1: 'Belum ada hari. Pilih hari lalu ketuk Buat daftar hari.', p_nodate: 'Ada hari yang tanggalnya kosong.', p_dup: 'Ada dua entri di tanggal dan jam yang sama.', p_saved: '{n} entri jadwal dibuat.', p_cancel_series: 'Batalkan seri', p_confirm_series: 'Batalkan semua entri seri ini (mulai hari ini)?', p_series_done: '{n} entri dibatalkan.', p_rm: 'Hapus hari', menu: 'Menu',
+
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -237,6 +239,8 @@
       td_today: 'Today', td_all: 'All', td_done: 'Done', td_g_late: 'Overdue', td_g_today: 'Today', td_g_next: 'Upcoming', td_g_none: 'No date', td_none: 'No tasks yet.', td_none_today: 'Nothing to do today.', td_none_done: 'No completed tasks yet.',
       td_new: 'New task', td_edit: 'Edit task', td_f_title: 'Task', td_f_plan: 'Plan to do on (optional)', td_f_due: 'Actual deadline (optional)', td_f_hint: 'A task shows under Today from its "plan" date, or when the deadline arrives. Both also go into the morning briefing email.',
       td_plan: 'Plan', td_due: 'Deadline', td_mark: 'Mark done', td_del_confirm: 'Delete task "{x}"?', td_v_title: 'Task is empty.', td_v_order: 'The plan date cannot be after the deadline.',
+      p_pattern: 'Pattern', p_one: 'One day', p_multi: 'Several days', p_repeat: 'Repeating', p_wd: 'Days of the week', p_from: 'From date', p_to: 'Until date', p_make: 'Generate days', p_add: '+ Add day', p_loc_day: 'Place for this day (optional)', p_count: '{n} days will be created. You can change each day\'s time and place.', p_count0: 'No days yet.', p_need2: 'Add at least 2 days.', p_need1: 'No days yet. Pick weekdays, then tap Generate days.', p_nodate: 'A day has no date.', p_dup: 'Two entries share the same date and time.', p_saved: '{n} schedule entries created.', p_cancel_series: 'Cancel series', p_confirm_series: 'Cancel every entry of this series (from today)?', p_series_done: '{n} entries cancelled.', p_rm: 'Remove day', menu: 'Menu',
+
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -304,7 +308,7 @@
     document.querySelectorAll('[data-i18n-ph]').forEach(function (e) { e.placeholder = t(e.getAttribute('data-i18n-ph')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderMeeting(); renderTodo(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderMeeting(); renderTodo(); (function () { var tl = document.querySelector('.tab[data-tab="' + tab + '"] span'); if (tl) $('top-tab').textContent = tl.textContent; })(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
   }
 
   function setLang(l) {
@@ -334,6 +338,7 @@
   function show(view) {
     ['view-boot', 'view-login', 'view-app'].forEach(function (v) { $(v).hidden = (v !== view); });
     $('nav').hidden = view !== 'view-app';
+    $('btn-menu').hidden = view !== 'view-app'; if (view !== 'view-app') setMenu(false);
     document.body.classList.toggle('in-app', view === 'view-app');
   }
 
@@ -570,9 +575,20 @@
   // ---------- tab ----------
   var tab = 'home', jScope = 'upcoming', jData = null, homeStale = false, formState = null;
 
+  function setMenu(open) {
+    var nav = $('nav'), mb = $('btn-menu');
+    document.body.classList.toggle('menu-open', !!open);
+    $('nav-ov').hidden = !open;
+    mb.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { var on = nav.querySelector('.tab.on'); if (on) on.focus(); } 
+    syncScroll();
+    if (open) document.body.style.overflow = 'hidden';
+  }
   function switchTab(name) {
     var prevTab = tab;
     tab = name;
+    setMenu(false);
+    var tl = document.querySelector('.tab[data-tab="' + name + '"] span'); if (tl) $('top-tab').textContent = tl.textContent;
     document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-tab') === name); });
     $('tab-home').hidden = name !== 'home';
     $('tab-jadwal').hidden = name !== 'jadwal';
@@ -1919,7 +1935,7 @@
         ensureJData(function () { openForm(null, { date: d, start: pad2(Math.floor(m / 60)) + ':' + pad2(m % 60) }); });
       });
       timed[d].forEach(function (it) {
-        var b = el('button', 'cal-ev' + (it.series ? (it.kind === 'Make-up' ? ' makeup' : it.kind === 'Kelas' ? ' kelas' : it.kind === 'Meeting' ? ' meet' : ' amb') : '') + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : '')); b.type = 'button';
+        var b = el('button', 'cal-ev' + (it.series ? (it.kind === 'Make-up' ? ' makeup' : it.kind === 'Kelas' ? ' kelas' : it.kind === 'Meeting' ? ' meet' : (it.kind === 'Multi' || it.kind === 'Rutinitas') ? ' multi' : ' amb') : '') + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : '')); b.type = 'button';
         b.appendChild(el('b', '', it.start + (it.end ? '–' + it.end : '')));
         b.appendChild(document.createTextNode(it.title));
         b.title = it.title + (it._clash ? ' (' + t('f_clash', { x: '' }).replace(/:\s*$/, '') + ')' : '');
@@ -2095,6 +2111,107 @@
   }
   // QUICK-END
 
+  // ---------- pola: beberapa hari / berulang ----------
+  var fPat = 'one', fDays = [];
+  function syncDays() {
+    var rows = $('f-days').querySelectorAll('.dayrow');
+    if (!rows.length) return;
+    fDays = [].map.call(rows, function (r) {
+      return { date: r.querySelector('.dd').value, start: r.querySelector('.ds').value, end: r.querySelector('.de').value, location: r.querySelector('.dl').value };
+    });
+  }
+  function renderDays() {
+    var box = $('f-days'); box.innerHTML = '';
+    fDays.forEach(function (d, i) {
+      var r = el('div', 'dayrow');
+      var di = el('input', 'dd'); di.type = 'date'; di.value = d.date || ''; di.setAttribute('aria-label', t('f_date'));
+      var si = el('input', 'ds'); si.type = 'time'; si.value = d.start || ''; si.setAttribute('aria-label', t('f_start'));
+      var ei = el('input', 'de'); ei.type = 'time'; ei.value = d.end || ''; ei.setAttribute('aria-label', t('f_end'));
+      var li = el('input', 'dl'); li.type = 'text'; li.maxLength = 300; li.value = d.location || ''; li.placeholder = t('p_loc_day');
+      var x = el('button', 'btn ghost sm x', '✕'); x.type = 'button'; x.setAttribute('aria-label', t('p_rm'));
+      x.addEventListener('click', function () { syncDays(); fDays.splice(i, 1); renderDays(); });
+      [di, si, ei, x, li].forEach(function (n) { r.appendChild(n); });
+      box.appendChild(r);
+    });
+    $('f-mcount').textContent = fDays.length ? t('p_count', { n: fDays.length }) : t('p_count0');
+  }
+  function applyPat(editing) {
+    $('f-patw').hidden = !!editing;
+    if (editing) fPat = 'one';
+    document.querySelectorAll('.seg-pat .seg-a').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-pat') === fPat); });
+    var one = fPat === 'one';
+    $('f-single').hidden = !one; $('f-multi').hidden = one; $('f-statw').hidden = !one;
+    $('f-gen').hidden = fPat !== 'repeat';
+    if (!one) {
+      if (fPat === 'repeat' && !$('g-wd').children.length) {
+        [1, 2, 3, 4, 5, 6, 0].forEach(function (w) {
+          var lb = el('label', 'chip-c'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = String(w);
+          lb.appendChild(cb); lb.appendChild(document.createTextNode(DAYS[state.lang][w].slice(0, 3))); $('g-wd').appendChild(lb);
+        });
+      } else if (fPat === 'repeat') {
+        [].forEach.call($('g-wd').children, function (lb) { var w = Number(lb.firstChild.value); lb.lastChild.nodeValue = DAYS[state.lang][w].slice(0, 3); });
+      }
+      if (!$('g-from').value) $('g-from').value = $('f-date').value || todayIso();
+      if (!$('g-to').value) $('g-to').value = isoAdd($('g-from').value, 55);
+      if (!fDays.length && fPat === 'multi') {
+        var d0 = $('f-date').value || todayIso(), s = $('f-start').value, e = $('f-end').value;
+        fDays = [{ date: d0, start: s, end: e, location: '' }, { date: isoAdd(d0, 1), start: s, end: e, location: '' }];
+      }
+      renderDays();
+    }
+  }
+  function setPat(p) {
+    if (fPat !== 'one') syncDays();
+    fPat = p;
+    if (p === 'multi' && fDays.length < 2) fDays = [];
+    if (p === 'repeat') fDays = [];
+    applyPat(false);
+  }
+  function genDays() {
+    var wds = [].filter.call($('g-wd').querySelectorAll('input:checked'), function () { return true; }).map(function (c) { return Number(c.value); });
+    var from = $('g-from').value, to = $('g-to').value;
+    if (!wds.length || !from || !to || to < from) { say('jf-msg', t('p_need1'), 'err'); return; }
+    var s = $('g-start').value, e = $('g-end').value, out = [], d = from, guard = 0;
+    while (d <= to && out.length < 60 && guard++ < 400) {
+      if (wds.indexOf(wdOf(d)) >= 0) out.push({ date: d, start: s, end: e, location: '' });
+      d = isoAdd(d, 1);
+    }
+    say('jf-msg', '');
+    fDays = out; renderDays();
+  }
+  function addDay() {
+    syncDays();
+    var last = fDays[fDays.length - 1] || { date: todayIso(), start: '', end: '' };
+    fDays.push({ date: last.date ? isoAdd(last.date, fPat === 'repeat' ? 7 : 1) : '', start: last.start, end: last.end, location: '' });
+    if (fDays.length > 60) fDays.length = 60;
+    renderDays();
+  }
+  function submitMulti() {
+    syncDays();
+    var f = readForm();
+    if (!f.title) { say('jf-msg', t('v_title'), 'err'); $('f-title').focus(); return; }
+    if (fPat === 'multi' && fDays.length < 2) { say('jf-msg', t('p_need2'), 'err'); return; }
+    if (!fDays.length) { say('jf-msg', t('p_need1'), 'err'); return; }
+    if (fDays.some(function (d) { return !d.date; })) { say('jf-msg', t('p_nodate'), 'err'); return; }
+    var seen = {};
+    for (var i = 0; i < fDays.length; i++) { var k = fDays[i].date + ' ' + fDays[i].start; if (seen[k]) { say('jf-msg', t('p_dup'), 'err'); return; } seen[k] = 1; }
+    if (f.reminders.length > 5) { say('jf-msg', t('f_rem'), 'err'); return; }
+    state.saving = true; $('jf-save').disabled = true; lockUi($('jf'), true, '.msg'); say('jf-msg', t('saving'));
+    api('jadwalMulti', {
+      key: formState._key,
+      base: { title: f.title, location: f.location, maps: f.maps, guests: f.guests, reminders: f.reminders, notes: f.notes, kind: fPat === 'multi' ? 'Multi' : 'Rutinitas' },
+      days: fDays
+    }).then(function (r) {
+      closeForm(); homeStale = true;
+      if (tab === 'home') { homeStale = false; refresh(); }
+      if (calMode !== 'list') loadCal(true); else reloadJadwalView(true);
+      say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('p_saved', { n: r.count }), r.syncError ? 'err' : 'ok');
+    }).catch(function (e) {
+      if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; }
+      say('jf-msg', errText(e), 'err');
+    }).then(function () { state.saving = false; $('jf-save').disabled = false; lockUi($('jf'), false); });
+  }
+
   function openForm(it, preset) {
     preset = preset || {};
     formState = it ? JSON.parse(JSON.stringify(it)) : {
@@ -2102,6 +2219,7 @@
       reminders: jData ? jData.defaults.slice() : [], status: 'Aktif'
     };
     formState._key = newKey();
+    fPat = 'one'; fDays = [];
     buildForm(formState);
     $('sheet').hidden = false;
     document.body.style.overflow = 'hidden';
@@ -2133,6 +2251,7 @@
     (editing ? ['Aktif', 'Draf', 'Batal'] : ['Aktif', 'Draf']).forEach(function (v) {
       var o = el('option', '', t('st_' + v)); o.value = v; if (v === f.status) o.selected = true; st.appendChild(o);
     });
+    applyPat(editing);
     var box = $('f-rem'); box.innerHTML = '';
     var mins = (jData ? jData.presets : []).map(function (p) { return p.m; });
     f.reminders.forEach(function (m) { if (mins.indexOf(m) < 0) mins.push(m); });
@@ -2158,6 +2277,7 @@
   function submitForm(ev) {
     ev.preventDefault();
     if (state.saving || !formState) return;
+    if (fPat !== 'one' && !formState.id) { submitMulti(); return; }
     var item = readForm();
     if (!item.title) { say('jf-msg', t('v_title'), 'err'); $('f-title').focus(); return; }
     if (!item.date) { say('jf-msg', t('v_date'), 'err'); $('f-date').focus(); return; }
@@ -2324,6 +2444,21 @@
     $('d-mail').hidden = !(it.status === 'Aktif' && !it.error && it.ymd >= todayYmd);
     $('d-makeup').hidden = !(it.series && (it.kind === 'Kelas' || it.kind === 'Make-up'));
     $('d-makeup').onclick = function () { closeDetail(); openMakeup(it, null); };
+    var isMulti = !!(it.series && (it.kind === 'Multi' || it.kind === 'Rutinitas'));
+    $('d-series').hidden = !(isMulti && it.status !== 'Batal');
+    $('d-series').onclick = function () {
+      if (!window.confirm(t('p_confirm_series'))) return;
+      var card = $('dsheet').firstElementChild;
+      lockUi(card, true, '.msg'); say('d-msg', t('saving'));
+      api('jadwalSeriesCancel', { series: it.series })
+        .then(function (r) {
+          closeDetail(); homeStale = true;
+          if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'home') { homeStale = false; refresh(); }
+          say(tab === 'jadwal' ? 'j-msg' : 'app-msg', r.syncError ? t('j_sync_err') + r.syncError : t('p_series_done', { n: r.count }), r.syncError ? 'err' : 'ok');
+        })
+        .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('d-msg', errText(e), 'err'); })
+        .then(function () { lockUi(card, false); });
+    };
     $('d-edit').onclick = function () { closeDetail(); if (it.kind === 'Meeting') { openMt(parseMeetItem(it)); return; } ensureJData(function () { openForm(it); }); };
     $('d-mail').onclick = function () { closeDetail(); pendingEvent = it.id; switchTab('surat'); showCompose(); };
     $('d-cancel').onclick = function () {
@@ -2913,6 +3048,13 @@
     $('j-add').addEventListener('click', function () { openForm(null); });
     $('jf').addEventListener('submit', submitForm);
     $('jf-cancel').addEventListener('click', closeForm);
+    $('btn-menu').addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open')); });
+    $('nav-ov').addEventListener('click', function () { setMenu(false); });
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && document.body.classList.contains('menu-open')) { setMenu(false); $('btn-menu').focus(); } });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 900 && document.body.classList.contains('menu-open')) setMenu(false); });
+    document.querySelectorAll('.seg-pat .seg-a').forEach(function (b) { b.addEventListener('click', function () { setPat(b.getAttribute('data-pat')); }); });
+    $('g-make').addEventListener('click', genDays);
+    $('f-addday').addEventListener('click', addDay);
     $('sheet').addEventListener('click', function (e) { if (e.target === $('sheet')) closeForm(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!$('sheet').hidden) closeForm(); else if (!$('nsheet').hidden) closeNote(); else if (!$('dsheet').hidden) closeDetail(); else if (!$('vsheet').hidden) closeMail(); } });
     $('btn-logout').addEventListener('click', function () { logout(''); });
