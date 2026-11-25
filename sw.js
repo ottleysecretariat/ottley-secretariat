@@ -1,6 +1,6 @@
 // Service worker sederhana: jaringan dulu, cadangan dari cache (supaya app tetap terbuka saat offline).
 // Permintaan ke Apps Script (lintas domain) tidak disentuh sama sekali.
-var CACHE = 'ottley-v19';
+var CACHE = 'ottley-v20';
 var SHELL = ['./', 'index.html', 'style.css', 'app.js', 'rsvp.html', 'config.js', 'logo-square.png', 'logo-wide.png'];
 
 self.addEventListener('install', function (e) {
@@ -14,9 +14,13 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   var req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
-  e.respondWith(fetch(req).then(function (res) {
+  // Jaringan dulu; kalau lebih dari 4 detik tidak menjawab, pakai cadangan dari cache supaya tidak menunggu lama.
+  var net = fetch(req).then(function (res) {
     var copy = res.clone();
     caches.open(CACHE).then(function (c) { c.put(req, copy); });
     return res;
-  }).catch(function () { return caches.match(req).then(function (r) { return r || caches.match('index.html'); }); }));
+  });
+  var fallback = function () { return caches.match(req).then(function (r) { return r || caches.match('index.html'); }); };
+  var timer = new Promise(function (resolve) { setTimeout(function () { fallback().then(resolve); }, 4000); });
+  e.respondWith(Promise.race([net.catch(fallback), timer]).then(function (r) { return r || net; }));
 });
