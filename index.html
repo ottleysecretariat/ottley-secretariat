@@ -2,10 +2,11 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
+  <script>try{var __t=localStorage.getItem("ottley.theme");if(__t==="light"||__t==="dark")document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#1f6f5c">
-  <meta name="app-v" content="21">
+  <meta name="app-v" content="22">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="logo-square.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -66,6 +67,7 @@
           <div id="who-name" class="who-name"></div>
           <div id="who-email" class="who-email"></div>
         </div>
+        <button id="btn-theme" class="theme-btn" type="button" aria-label="Tema"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
         <button id="btn-refresh" class="lnk" type="button" data-i18n="btn_refresh"></button>
         <button id="btn-logout" class="lnk" type="button" data-i18n="btn_logout"></button>
       </div>
@@ -327,6 +329,7 @@
           <label class="fl"><span data-i18n="f_end"></span><input id="f-end" type="time"></label>
         </div>
         <p class="tiny tight" data-i18n="f_time_hint"></p>
+        <p id="f-sernote" class="msg warn" hidden></p>
         <p id="f-clash" class="msg warn" role="status"></p>
       </div>
       <div id="f-multi" hidden>
@@ -498,6 +501,11 @@
         <label class="fl"><span data-i18n="td_f_due"></span><input id="tdf-due" type="date"></label>
       </div>
       <p class="tiny tight" data-i18n="td_f_hint"></p>
+      <div class="grid2">
+        <label class="fl"><span data-i18n="td_f_time"></span><input id="tdf-time" type="time"></label>
+        <label class="fl" id="tdf-forw" hidden><span data-i18n="td_f_for"></span><select id="tdf-for"></select></label>
+      </div>
+      <div class="fl" id="tdf-remw" hidden><span data-i18n="td_f_rem"></span><div id="tdf-rem" class="chips"></div><p class="tiny tight" data-i18n="td_rem_hint"></p></div>
       <label class="fl"><span data-i18n="k_f_notes"></span><textarea id="tdf-notes" rows="2" maxlength="1000"></textarea></label>
       <p id="tdf-msg" class="msg" role="alert"></p>
       <div class="bar">
@@ -540,7 +548,7 @@
   <div id="bsheet" class="sheet" hidden>
     <form id="bf" class="sheet-card wide" novalidate autocomplete="off">
       <h2 id="bf-title"></h2>
-      <label class="fl"><span data-i18n="a_f_school"></span><input id="bf-school" type="text" maxlength="150"></label>
+      <label class="fl"><span id="bf-school-lbl" data-i18n="a_f_school"></span><input id="bf-school" type="text" maxlength="150"></label>
       <div class="grid2">
         <label class="fl"><span data-i18n="a_f_city"></span><input id="bf-city" type="text" maxlength="100" placeholder="Jakarta Selatan"></label>
         <label class="fl"><span data-i18n="a_f_type"></span><select id="bf-type"><option value="Dalam kota" data-i18n="a_in"></option><option value="Luar kota" data-i18n="a_out"></option></select></label>
@@ -549,7 +557,7 @@
       <label class="fl"><span data-i18n="a_f_maps"></span><input id="bf-maps" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/..."></label>
       <div class="grid2">
         <div class="fl"><span data-i18n="a_f_purpose"></span>
-          <select id="bf-purpose-sel"><option value="Edufair">Edufair</option><option value="Presentasi" data-i18n="a_p_pres"></option><option value="Edufair & Presentasi" data-i18n="a_p_both"></option><option value="Open House">Open House</option><option value="__other" data-i18n="a_p_other"></option></select>
+          <select id="bf-purpose-sel"><option value="Edufair">Edufair</option><option value="Presentasi" data-i18n="a_p_pres"></option><option value="Edufair & Presentasi" data-i18n="a_p_both"></option><option value="Open House">Open House</option><option value="Terima tamu" data-i18n="a_p_guest"></option><option value="Photoshoot">Photoshoot</option><option value="__other" data-i18n="a_p_other"></option></select>
           <input id="bf-purpose" type="text" maxlength="120" hidden></div>
         <label class="fl"><span data-i18n="a_f_assign"></span><input id="bf-assign" type="text" maxlength="150" list="b-staff" placeholder="47006 Nama -- Staff Marketing"><datalist id="b-staff"></datalist></label>
       </div>
@@ -567,6 +575,7 @@
         <label class="fl"><span data-i18n="a_l_addr"></span><input id="bf-laddr" type="text" maxlength="300"></label>
         <label class="fl"><span data-i18n="a_l_maps"></span><input id="bf-lmaps" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/..."></label>
       </div>
+      <label class="chip-c" id="bf-pack-w" style="margin-top:16px"><input id="bf-pack" type="checkbox" checked><span data-i18n="a_f_pack"></span></label>
       <label class="fl"><span data-i18n="k_f_notes"></span><input id="bf-notes" type="text" maxlength="500"></label>
       <p id="bf-info" class="tiny tight"></p>
       <p id="bf-msg" class="msg" role="alert"></p>
@@ -624,7 +633,10 @@
       <dl id="d-rows" class="rows"></dl>
       <div class="bar">
         <button id="d-edit" class="btn primary" type="button" data-i18n="j_edit"></button>
+        <button id="d-series-edit" class="btn ghost" type="button" data-i18n="p_edit_all" hidden></button>
+        <button id="d-series-restore" class="btn ghost" type="button" data-i18n="p_restore_series" hidden></button>
         <button id="d-series" class="btn ghost" type="button" data-i18n="p_cancel_series" hidden></button>
+        <button id="d-copy" class="btn ghost" type="button" data-i18n="p_copy" hidden></button>
         <button id="d-makeup" class="btn ghost" type="button" data-i18n="k_makeup" hidden></button>
         <button id="d-mail" class="btn ghost" type="button" data-i18n="d_mail"></button>
         <button id="d-cancel" class="btn ghost" type="button"></button>
