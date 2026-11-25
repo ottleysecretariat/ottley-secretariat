@@ -429,3 +429,26 @@ h3.mini { font-family: var(--serif); font-size: 18px; margin: 22px 0 6px; color:
 /* tambah cepat */
 .qa { display: flex; gap: 8px; margin: 12px 0 2px; }
 .qa input { flex: 1 1 auto; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); background: var(--sheet); font-size: 16px; }
+
+/* judul tidak menabrak tombol di HP */
+.head-row .grow { min-width: 0; }
+@media (max-width: 640px) { .head-row { flex-wrap: wrap; } .head-row > .grow { flex: 1 1 100%; } .head-row > .btn, .head-row > .bar { margin-top: 2px; } }
+
+/* meeting */
+.cal-ev.meet { border-left: 3px solid #0b6a8f; }
+.seg-m { padding: 8px 16px; background: var(--sheet); border: 1px solid var(--line); cursor: pointer; font-weight: 600; color: var(--muted); }
+.seg-m.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.seg.tight { margin: 4px 0 0; }
+/* bar bawah di HP bisa digeser kalau tab banyak */
+@media (max-width: 899px) { .nav { overflow-x: auto; scrollbar-width: none; } .nav::-webkit-scrollbar { display: none; } .nav .tab { flex: 1 0 auto; min-width: 68px; padding-left: 6px; padding-right: 6px; } }
+.prow input { width: 100%; padding: 9px 10px; border: 1px solid var(--line); background: #fff; font-size: 16px; min-width: 0; }
+
+/* to-do */
+.tdrow { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.tdrow input[type=checkbox] { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--ink); }
+.tdrow .w { flex: 1 1 auto; min-width: 0; font-size: 16px; }
+.tdrow .w small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.tdrow.done .w b { text-decoration: line-through; color: var(--muted); font-weight: 500; }
+.tdrow .chips2 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.tdbar { display: flex; gap: 6px; flex: none; }
+@media (max-width: 520px) { .tdrow { flex-wrap: wrap; } .tdbar { margin-left: 34px; } }
