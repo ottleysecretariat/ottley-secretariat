@@ -102,6 +102,8 @@
       td_plan: 'Dikerjakan', td_due: 'Deadline', td_mark: 'Tandai selesai', td_del_confirm: 'Hapus tugas "{x}"?', td_v_title: 'Tugas belum ditulis.', td_v_order: 'Tanggal mau dikerjakan tidak boleh setelah deadline.',
       p_pattern: 'Pola', p_one: 'Satu hari', p_multi: 'Beberapa hari', p_repeat: 'Berulang', p_wd: 'Hari dalam seminggu', p_from: 'Mulai tanggal', p_to: 'Sampai tanggal', p_make: 'Buat daftar hari', p_add: '+ Tambah hari', p_loc_day: 'Tempat hari ini (opsional)', p_count: '{n} hari akan dibuat. Tiap hari bisa diubah jam dan tempatnya.', p_count0: 'Belum ada hari.', p_need2: 'Isi minimal 2 hari.', p_need1: 'Belum ada hari. Pilih hari lalu ketuk Buat daftar hari.', p_nodate: 'Ada hari yang tanggalnya kosong.', p_dup: 'Ada dua entri di tanggal dan jam yang sama.', p_saved: '{n} entri jadwal dibuat.', p_cancel_series: 'Batalkan seri', p_confirm_series: 'Batalkan semua entri seri ini (mulai hari ini)?', p_series_done: '{n} entri dibatalkan.', p_rm: 'Hapus hari', menu: 'Menu',
 
+      next_up: 'Berikutnya',
+
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -241,6 +243,8 @@
       td_plan: 'Plan', td_due: 'Deadline', td_mark: 'Mark done', td_del_confirm: 'Delete task "{x}"?', td_v_title: 'Task is empty.', td_v_order: 'The plan date cannot be after the deadline.',
       p_pattern: 'Pattern', p_one: 'One day', p_multi: 'Several days', p_repeat: 'Repeating', p_wd: 'Days of the week', p_from: 'From date', p_to: 'Until date', p_make: 'Generate days', p_add: '+ Add day', p_loc_day: 'Place for this day (optional)', p_count: '{n} days will be created. You can change each day\'s time and place.', p_count0: 'No days yet.', p_need2: 'Add at least 2 days.', p_need1: 'No days yet. Pick weekdays, then tap Generate days.', p_nodate: 'A day has no date.', p_dup: 'Two entries share the same date and time.', p_saved: '{n} schedule entries created.', p_cancel_series: 'Cancel series', p_confirm_series: 'Cancel every entry of this series (from today)?', p_series_done: '{n} entries cancelled.', p_rm: 'Remove day', menu: 'Menu',
 
+      next_up: 'Up next',
+
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -288,7 +292,7 @@
 
   var state = { lang: 'id', session: null, busy: false };
 
-  var APP_V = '19', missingIds = [];
+  var APP_V = '21', missingIds = [];
   // Kalau ada elemen yang tidak ketemu (mis. index.html belum versi terbaru), jangan sampai seluruh aplikasi macet: pakai elemen kosong.
   function $(id) {
     var e = document.getElementById(id);
@@ -521,12 +525,36 @@
     $('hero-sum').textContent = sum;
   }
 
+  function renderNext(data) {
+    var box = $('next-card'); box.hidden = true; box.innerHTML = '';
+    if (!data || !data.agenda) return;
+    var w = wibNow(), nowHm = ('0' + w.getHours()).slice(-2) + ':' + ('0' + w.getMinutes()).slice(-2), ty = data.today.replace(/-/g, '');
+    var it = null;
+    for (var i = 0; i < data.agenda.length; i++) {
+      var x = data.agenda[i];
+      if (x.status !== 'Aktif') continue;
+      if (x.ymd > ty || (x.ymd === ty && (x.allDay || (x.end || x.start) >= nowHm))) { it = x; break; }
+    }
+    if (!it) return;
+    var when = it.ymd === ty ? (it.allDay ? t('allday') : it.start) : dayLabel(it.ymd) + (it.allDay ? '' : ' · ' + it.start);
+    box.appendChild(el('small', '', t('next_up') + ' · ' + when));
+    box.appendChild(el('b', '', it.title));
+    var sub = [];
+    if (it.kind === 'Meeting') sub.push(/Online\s*$/.test(it.title) ? 'Online' : 'Offline');
+    if (it.meet) sub.push(it.meet.replace(/^https?:\/\//, ''));
+    else if (it.location && !safeUrl(it.location)) sub.push(it.location);
+    if (sub.length) box.appendChild(el('span', '', sub.join(' · ')));
+    box.onclick = function () { openDetail(it); };
+    box.hidden = false;
+  }
+
   function renderDash(data) {
     renderHero(data);
     var ag = $('agenda'), su = $('surat');
     ag.innerHTML = ''; su.innerHTML = '';
     if (!data) return;
 
+    renderNext(data);
     if (!data.agenda.length) ag.appendChild(el('p', 'empty', t('agenda_empty')));
     var todayYmd = data.today.replace(/-/g, ''), tomorrowYmd = addDaysYmd(data.today, 1);
     var cur = null, blk = null;
