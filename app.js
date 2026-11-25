@@ -66,7 +66,7 @@
       k_msg_mode: 'Halo, info perubahan: kelas {n} pada {a} dilaksanakan {w}. Terima kasih.',
       tab_amb: 'Student Ambassador', amb_title: 'Student Ambassador', amb_sub: 'Penugasan ke sekolah: packing H-1, jadwal kegiatan, dan pengingat PUIS jam 18:00 dibuat otomatis.', a_add: 'Tambah penugasan',
       a_new: 'Penugasan baru', a_edit: 'Ubah penugasan', a_f_school: 'Nama sekolah', a_f_city: 'Kota / daerah', a_f_type: 'Jenis tujuan', a_in: 'Dalam kota (Jabodetabek)', a_out: 'Luar kota', a_in_s: 'Dalam kota', a_out_s: 'Luar kota',
-      a_type_hint: 'Otomatis dari kota. Jabodetabek = dalam kota, selain itu luar kota (bisa lebih dari 1 hari).', a_f_maps: 'Link Google Maps sekolah (opsional)', a_f_purpose: 'Kegiatan (Purpose)', a_f_assign: 'Ditugaskan oleh (Assign By)',
+      a_type_hint: 'Otomatis dari kota. Jabodetabek = dalam kota, selain itu luar kota (bisa lebih dari 1 hari).', a_f_maps: 'Link Google Maps sekolah (opsional)', a_f_purpose: 'Kegiatan (Purpose)', a_p_pres: 'Presentasi', a_p_both: 'Edufair & Presentasi', a_p_other: 'Lainnya (isi sendiri)', a_f_assign: 'Ditugaskan oleh (Assign By)',
       a_f_from: 'Tanggal', a_f_to: 'Sampai tanggal', a_f_partners: 'Partner', a_addp: '+ Tambah partner', a_pname: 'Nama', a_pphone: 'No. WhatsApp', a_f_lodge: 'Penginapan', a_l_name: 'Nama penginapan', a_l_addr: 'Alamat penginapan', a_l_maps: 'Link Google Maps penginapan',
       a_info: 'Akan dibuat {n} jadwal: packing H-1 di Ruang Marketing, kegiatan {d} hari, dan pengingat PUIS jam 18:00 tiap hari kegiatan.', a_none: 'Belum ada penugasan di sini.', a_puis: 'Salin isian PUIS', a_cancel: 'Batalkan',
       a_cancel_ask: 'Batalkan penugasan ke {x}? Tulis alasan (boleh kosong):', a_saved: '{n} jadwal dibuat.', a_cancelled: 'Penugasan dibatalkan.', a_lodging: 'Penginapan', a_maps: 'Buka Maps', a_by: 'Ditugaskan oleh', a_copied: 'Isian PUIS disalin.',
@@ -91,6 +91,15 @@
       rv_title: 'Balasan RSVP', rv_yes: 'Hadir', rv_no: 'Tidak hadir', rv_maybe: 'Mungkin', rv_wait: 'Menunggu',
       qa_ph: 'Tambah cepat: "Rapat dengan Pak Budi besok jam 3 sore di Kantor"', qa_go: 'Isi form', qa_empty: 'Tulis dulu kalimatnya.', qa_read: 'Terbaca: {x}. Cek dulu lalu simpan.', qa_nodate: 'tanggal tidak terbaca (diisi hari ini)', qa_notime: 'jam tidak terbaca', qa_date: 'tanggal', qa_time: 'jam', qa_loc: 'tempat',
       s_ics: 'Lampirkan undangan kalender (.ics) dari jadwal terkait', s_e_ics: 'Pilih jadwal terkait dulu untuk melampirkan undangan kalender.',
+      tab_meeting: 'Meeting', meet_title: 'Meeting', meet_sub: 'Meeting online atau offline. Yang online otomatis dapat link Google Meet sesuai jamnya.', m_add: 'Tambah meeting', m_new: 'Meeting baru', m_edit: 'Ubah meeting',
+      m_f_event: 'Nama acara', m_f_mode: 'Jenis', m_online: 'Online', m_offline: 'Offline', m_online_hint: 'Link Google Meet dibuat otomatis setelah disimpan.', m_f_people: 'Peserta', m_addp: 'Tambah peserta', m_pname: 'Nama', m_pemail: 'Email (opsional)',
+      m_invite: 'Kirim undangan Google Calendar ke peserta yang punya email', m_title_prev: 'Judul di kalender:', m_none: 'Belum ada meeting di sini.', m_with: 'Peserta', m_nolink: 'Link Meet belum ada', m_join: 'Gabung', m_copy: 'Salin link', m_copied: 'Link Meet disalin.',
+      m_mklink: 'Buat link Meet', m_making: 'Membuat link Meet\u2026', m_made: 'Link Meet dibuat.', m_invite_mail: 'Tulis undangan', m_saving: 'Menyimpan dan membuat link Meet\u2026', m_saved: 'Meeting tersimpan.', m_v_event: 'Nama acara belum diisi.', m_meet_err: 'Meeting tersimpan, tapi link Meet belum jadi: ', btn_remove: 'Hapus',
+      todo_placeholder: '',
+      tab_todo: 'To-do', todo_title: 'To-do', todo_sub: 'Yang harus dikerjakan. Dua tanggal, keduanya opsional: kapan mau dikerjakan dan deadline sebenarnya.', td_add: 'Tambah detail', td_ph: 'Tulis tugas lalu Enter (di tab Hari ini otomatis untuk hari ini)', td_quick: 'Tambah',
+      td_today: 'Hari ini', td_all: 'Semua', td_done: 'Selesai', td_g_late: 'Terlambat', td_g_today: 'Hari ini', td_g_next: 'Mendatang', td_g_none: 'Tanpa tanggal', td_none: 'Belum ada tugas.', td_none_today: 'Tidak ada tugas untuk hari ini.', td_none_done: 'Belum ada tugas selesai.',
+      td_new: 'Tugas baru', td_edit: 'Ubah tugas', td_f_title: 'Tugas', td_f_plan: 'Mau dikerjakan (opsional)', td_f_due: 'Deadline sebenarnya (opsional)', td_f_hint: 'Tugas muncul di Hari ini mulai tanggal "mau dikerjakan", atau saat deadline tiba. Keduanya juga masuk ke email briefing pagi.',
+      td_plan: 'Dikerjakan', td_due: 'Deadline', td_mark: 'Tandai selesai', td_del_confirm: 'Hapus tugas "{x}"?', td_v_title: 'Tugas belum ditulis.', td_v_order: 'Tanggal mau dikerjakan tidak boleh setelah deadline.',
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -194,7 +203,7 @@
       k_msg_mode: 'Hi, update: the {n} class on {a} will be held {w}. Thank you.',
       tab_amb: 'Student Ambassador', amb_title: 'Student Ambassador', amb_sub: 'School assignments: the day-before packing, the event itself and a 6 PM PUIS reminder are created automatically.', a_add: 'Add assignment',
       a_new: 'New assignment', a_edit: 'Edit assignment', a_f_school: 'School name', a_f_city: 'City / area', a_f_type: 'Destination type', a_in: 'In town (Greater Jakarta)', a_out: 'Out of town', a_in_s: 'In town', a_out_s: 'Out of town',
-      a_type_hint: 'Detected from the city. Greater Jakarta = in town, anywhere else = out of town (can span several days).', a_f_maps: 'School Google Maps link (optional)', a_f_purpose: 'Purpose', a_f_assign: 'Assigned by (Assign By)',
+      a_type_hint: 'Detected from the city. Greater Jakarta = in town, anywhere else = out of town (can span several days).', a_f_maps: 'School Google Maps link (optional)', a_f_purpose: 'Purpose', a_p_pres: 'Presentation', a_p_both: 'Edufair & Presentation', a_p_other: 'Other (type your own)', a_f_assign: 'Assigned by (Assign By)',
       a_f_from: 'Date', a_f_to: 'Until', a_f_partners: 'Partners', a_addp: '+ Add partner', a_pname: 'Name', a_pphone: 'WhatsApp no.', a_f_lodge: 'Accommodation', a_l_name: 'Accommodation name', a_l_addr: 'Accommodation address', a_l_maps: 'Accommodation Google Maps link',
       a_info: '{n} items will be created: packing the day before at the Marketing Room, {d} event day(s), and a 6 PM PUIS reminder each event day.', a_none: 'No assignments here yet.', a_puis: 'Copy PUIS entries', a_cancel: 'Cancel',
       a_cancel_ask: 'Cancel the assignment to {x}? Enter a reason (optional):', a_saved: '{n} items created.', a_cancelled: 'Assignment cancelled.', a_lodging: 'Accommodation', a_maps: 'Open Maps', a_by: 'Assigned by', a_copied: 'PUIS entries copied.',
@@ -219,6 +228,15 @@
       rv_title: 'RSVP replies', rv_yes: 'Attending', rv_no: 'Not attending', rv_maybe: 'Maybe', rv_wait: 'Waiting',
       qa_ph: 'Quick add: "Meeting with Mr. Budi tomorrow at 3pm at the office"', qa_go: 'Fill form', qa_empty: 'Type a sentence first.', qa_read: 'Read: {x}. Check it, then save.', qa_nodate: 'date not found (set to today)', qa_notime: 'time not found', qa_date: 'date', qa_time: 'time', qa_loc: 'place',
       s_ics: 'Attach calendar invite (.ics) from the linked schedule', s_e_ics: 'Pick a linked schedule first to attach a calendar invite.',
+      tab_meeting: 'Meetings', meet_title: 'Meetings', meet_sub: 'Online or offline meetings. Online ones automatically get a Google Meet link for their time.', m_add: 'Add meeting', m_new: 'New meeting', m_edit: 'Edit meeting',
+      m_f_event: 'Event name', m_f_mode: 'Type', m_online: 'Online', m_offline: 'Offline', m_online_hint: 'A Google Meet link is created automatically after saving.', m_f_people: 'Participants', m_addp: 'Add participant', m_pname: 'Name', m_pemail: 'Email (optional)',
+      m_invite: 'Send Google Calendar invites to participants who have an email', m_title_prev: 'Calendar title:', m_none: 'No meetings here yet.', m_with: 'With', m_nolink: 'No Meet link yet', m_join: 'Join', m_copy: 'Copy link', m_copied: 'Meet link copied.',
+      m_mklink: 'Create Meet link', m_making: 'Creating Meet link\u2026', m_made: 'Meet link created.', m_invite_mail: 'Write invitation', m_saving: 'Saving and creating the Meet link\u2026', m_saved: 'Meeting saved.', m_v_event: 'Event name is empty.', m_meet_err: 'Meeting saved, but the Meet link failed: ', btn_remove: 'Remove',
+      todo_placeholder: '',
+      tab_todo: 'To-do', todo_title: 'To-do', todo_sub: 'Things to get done. Two optional dates: when you plan to do it and the real deadline.', td_add: 'Add details', td_ph: 'Type a task and press Enter (on the Today tab it is set for today)', td_quick: 'Add',
+      td_today: 'Today', td_all: 'All', td_done: 'Done', td_g_late: 'Overdue', td_g_today: 'Today', td_g_next: 'Upcoming', td_g_none: 'No date', td_none: 'No tasks yet.', td_none_today: 'Nothing to do today.', td_none_done: 'No completed tasks yet.',
+      td_new: 'New task', td_edit: 'Edit task', td_f_title: 'Task', td_f_plan: 'Plan to do on (optional)', td_f_due: 'Actual deadline (optional)', td_f_hint: 'A task shows under Today from its "plan" date, or when the deadline arrives. Both also go into the morning briefing email.',
+      td_plan: 'Plan', td_due: 'Deadline', td_mark: 'Mark done', td_del_confirm: 'Delete task "{x}"?', td_v_title: 'Task is empty.', td_v_order: 'The plan date cannot be after the deadline.',
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -286,14 +304,14 @@
     document.querySelectorAll('[data-i18n-ph]').forEach(function (e) { e.placeholder = t(e.getAttribute('data-i18n-ph')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderMeeting(); renderTodo(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); }
   }
 
   function setLang(l) {
     state.lang = l === 'en' ? 'en' : 'id';
     lsSet(KEY_LANG, state.lang);
     var sv = lsGet('ottley.view');
-    calMode = CAL_VIEWS.indexOf(sv) >= 0 ? sv : (isNarrow() ? '3day' : 'week');
+    calMode = 'week';
     setViewUi();
     applyLang();
   }
@@ -347,7 +365,7 @@
 
   function logout(msg) {
     state.session = null;
-    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; cData = null; sQ = null; rvData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
+    lastPing = null; lastDash = null; jData = null; calData = null; calCache = {}; kData = null; kSess = {}; kLibur = null; aData = null; mData = null; tdData = null; cData = null; sQ = null; rvData = null; sCtx = null; nData = null; sHist = null; sHistStale = true; sMode = 'list'; closeDetail(); closeMail(); closeForm(); closeNote(); resetSurat(true);
     lsDel(KEY_SESSION);
     if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
     show('view-login');
@@ -553,6 +571,7 @@
   var tab = 'home', jScope = 'upcoming', jData = null, homeStale = false, formState = null;
 
   function switchTab(name) {
+    var prevTab = tab;
     tab = name;
     document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-tab') === name); });
     $('tab-home').hidden = name !== 'home';
@@ -562,10 +581,14 @@
     $('tab-kelas').hidden = name !== 'kelas';
     $('tab-amb').hidden = name !== 'amb';
     $('tab-kontak').hidden = name !== 'kontak';
+    $('tab-meeting').hidden = name !== 'meeting';
+    $('tab-todo').hidden = name !== 'todo';
+    if (name === 'todo') loadTodo();
+    if (name === 'meeting') loadMeeting();
     if (name === 'kontak') loadKontak();
     if (name === 'amb') loadAmb();
     if (name === 'kelas') loadKelas();
-    if (name === 'jadwal') reloadJadwalView();
+    if (name === 'jadwal') { if (prevTab !== 'jadwal') calMode = 'week'; setViewUi(); reloadJadwalView(); }
     if (name === 'surat') { if (sMode === 'compose') showCompose(); else showSuratList(); }
     if (name === 'catatan') loadCatatan();
     if (name === 'home' && homeStale) { homeStale = false; refresh(); }
@@ -1182,6 +1205,13 @@
       return { name: r.querySelector('[data-p=n]').value.trim(), phone: r.querySelector('[data-p=p]').value.trim() };
     });
   }
+  var PURPOSES = ['Edufair', 'Presentasi', 'Edufair & Presentasi', 'Open House'];
+  function setPurpose(v) {
+    var known = PURPOSES.indexOf(v) >= 0;
+    $('bf-purpose-sel').value = known ? v : '__other';
+    $('bf-purpose').hidden = known; $('bf-purpose').value = known ? '' : v;
+  }
+  function getPurpose() { var v = $('bf-purpose-sel').value; return v === '__other' ? ($('bf-purpose').value.trim() || 'Edufair') : v; }
   function bRefresh() {
     var city = $('bf-city').value.trim(), school = $('bf-school').value.trim();
     if (!bTypeManual && (city || school)) $('bf-type').value = guessType(city, school);
@@ -1200,7 +1230,7 @@
     ((aData && aData.staff) || []).forEach(function (s) { var o = document.createElement('option'); o.value = s; dl.appendChild(o); });
     var today = todayIso();
     $('bf-school').value = a ? a.school : ''; $('bf-city').value = a ? a.city : ''; $('bf-maps').value = a ? a.maps : '';
-    $('bf-type').value = a ? a.type : 'Dalam kota'; $('bf-purpose').value = a ? a.purpose : 'Edufair';
+    $('bf-type').value = a ? a.type : 'Dalam kota'; setPurpose(a ? a.purpose : 'Edufair');
     $('bf-assign').value = a ? a.assignBy : ((aData && aData.staff && aData.staff[0]) || '');
     $('bf-from').value = a ? a.from : isoAdd(today, 2); $('bf-to').value = a ? a.to : '';
     $('bf-start').value = a ? a.start : ''; $('bf-end').value = a ? a.end : '';
@@ -1227,15 +1257,256 @@
     api('ambSave', {
       key: bForm.key, id: bForm.id || undefined,
       data: {
-        school: school, city: $('bf-city').value.trim(), maps: $('bf-maps').value.trim(), type: $('bf-type').value, purpose: $('bf-purpose').value.trim(), assignBy: $('bf-assign').value.trim(),
+        school: school, city: $('bf-city').value.trim(), maps: $('bf-maps').value.trim(), type: $('bf-type').value, purpose: getPurpose(), assignBy: $('bf-assign').value.trim(),
         from: $('bf-from').value, to: out ? ($('bf-to').value || $('bf-from').value) : $('bf-from').value, start: $('bf-start').value, end: $('bf-end').value,
         partners: bForm.partners, lodging: { name: $('bf-lname').value.trim(), address: $('bf-laddr').value.trim(), maps: $('bf-lmaps').value.trim() }, notes: $('bf-notes').value.trim()
       }
     }).then(function (r) {
       bSaving = false; lockUi(form, false, '.msg'); closeB(); ambChanged();
-      aScope = 'upcoming'; document.querySelectorAll('.seg-a').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-ascope') === aScope); });
+      aScope = 'upcoming'; document.querySelectorAll('[data-ascope]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-ascope') === aScope); });
       say('a-msg', r.syncError ? t('t_sync_warn') : t('a_saved', { n: r.count }), r.syncError ? 'warn' : 'ok'); loadAmb();
     }).catch(function (e) { bSaving = false; lockUi(form, false, '.msg'); say('bf-msg', errText(e), 'err'); });
+  }
+
+  // ---------- to-do ----------
+  var tdData = null, tdScope = 'today', tdForm = null, tdSaving = false;
+  function tdFmt(iso) { var p = parseIso(iso); return p ? p.d + ' ' + (MONTHS[state.lang][p.m - 1] || '').slice(0, 3) : iso; }
+  function tdGroup(x, today) {
+    if (x.due && x.due < today) return 'late';
+    if ((x.due && x.due === today) || (x.plan && x.plan <= today)) return 'today';
+    if (x.due || x.plan) return 'next';
+    return 'none';
+  }
+  function loadTodo() {
+    if (!tdData && !$('td-msg').textContent) say('td-msg', t('loading'));
+    api('tugasList', {})
+      .then(function (d) { tdData = d; if ($('td-msg').textContent === t('loading')) say('td-msg', ''); renderTodo(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('td-msg', errText(e), 'err'); });
+  }
+  function tdSet(d) { tdData = d; homeStale = true; renderTodo(); }
+  function renderTodo() {
+    var box = $('td-list');
+    if (!box) return;
+    box.innerHTML = '';
+    if (!tdData) return;
+    var today = tdData.today, open = tdData.items.filter(function (x) { return !x.done; }), done = tdData.items.filter(function (x) { return x.done; });
+    var by = function (a, b) { var ka = a.due || a.plan || '9999', kb = b.due || b.plan || '9999'; return ka < kb ? -1 : ka > kb ? 1 : 0; };
+    var sections = [];
+    if (tdScope === 'done') sections.push([null, done]);
+    else {
+      var g = { late: [], today: [], next: [], none: [] };
+      open.sort(by).forEach(function (x) { g[tdGroup(x, today)].push(x); });
+      sections.push(['td_g_late', g.late], ['td_g_today', g.today]);
+      if (tdScope === 'all') sections.push(['td_g_next', g.next], ['td_g_none', g.none]);
+    }
+    var any = false;
+    sections.forEach(function (s) {
+      if (!s[1].length) return;
+      any = true;
+      if (s[0]) box.appendChild(el('h3', 'mini', t(s[0]) + ' (' + s[1].length + ')'));
+      s[1].forEach(function (x) { box.appendChild(tdRow(x, today)); });
+    });
+    if (!any) box.appendChild(el('p', 'tiny', t(tdScope === 'done' ? 'td_none_done' : tdScope === 'today' ? 'td_none_today' : 'td_none')));
+  }
+  function tdRow(x, today) {
+    var row = el('div', 'tdrow' + (x.done ? ' done' : ''));
+    var cb = el('input'); cb.type = 'checkbox'; cb.checked = x.done; cb.setAttribute('aria-label', t('td_mark'));
+    cb.addEventListener('change', function () {
+      cb.disabled = true;
+      api('tugasDone', { id: x.id, done: cb.checked }).then(tdSet)
+        .catch(function (e) { cb.disabled = false; cb.checked = !cb.checked; say('td-msg', errText(e), 'err'); });
+    });
+    var w = el('div', 'w'); w.appendChild(el('b', '', x.title));
+    var chips = el('div', 'chips2');
+    if (x.plan) chips.appendChild(el('span', 'badge' + (x.plan < today && !x.done ? ' cx' : ''), t('td_plan') + ' ' + tdFmt(x.plan)));
+    if (x.due) chips.appendChild(el('span', 'badge' + (x.due < today && !x.done ? ' cx' : x.due === today ? ' mk' : ''), t('td_due') + ' ' + tdFmt(x.due)));
+    if (chips.childNodes.length) w.appendChild(chips);
+    if (x.notes) w.appendChild(el('small', '', x.notes));
+    var bar = el('div', 'tdbar');
+    if (!x.done) { var e = el('button', 'btn ghost sm', t('k_edit')); e.type = 'button'; e.addEventListener('click', function () { openTd(x); }); bar.appendChild(e); }
+    var d = el('button', 'btn ghost sm', t('k_del')); d.type = 'button';
+    d.addEventListener('click', function () {
+      if (!window.confirm(t('td_del_confirm', { x: x.title }))) return;
+      d.disabled = true;
+      api('tugasDelete', { id: x.id }).then(tdSet).catch(function (er) { d.disabled = false; say('td-msg', errText(er), 'err'); });
+    });
+    bar.appendChild(d);
+    row.appendChild(cb); row.appendChild(w); row.appendChild(bar);
+    return row;
+  }
+  function openTd(x) {
+    tdForm = { id: x ? x.id : '', key: newKey() };
+    $('tdf-title').textContent = t(x ? 'td_edit' : 'td_new');
+    $('tdf-title-in').value = x ? x.title : ''; $('tdf-plan').value = x ? x.plan : ''; $('tdf-due').value = x ? x.due : ''; $('tdf-notes').value = x ? x.notes : '';
+    say('tdf-msg', '');
+    $('tdsheet').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(function () { $('tdf-title-in').focus(); }, 50);
+  }
+  function closeTd() { $('tdsheet').hidden = true; tdForm = null; syncScroll(); }
+  function saveTd(payload, onErr) {
+    return api('tugasSave', payload).then(tdSet).catch(onErr);
+  }
+  function submitTd(ev) {
+    ev.preventDefault();
+    if (tdSaving || !tdForm) return;
+    if (!$('tdf-title-in').value.trim()) { say('tdf-msg', t('td_v_title'), 'err'); return; }
+    var plan = $('tdf-plan').value, due = $('tdf-due').value;
+    if (plan && due && plan > due) { say('tdf-msg', t('td_v_order'), 'err'); return; }
+    var form = $('tdf'); tdSaving = true; lockUi(form, true, '.msg'); say('tdf-msg', t('saving'));
+    saveTd({ id: tdForm.id || undefined, key: tdForm.key, title: $('tdf-title-in').value.trim(), notes: $('tdf-notes').value.trim(), plan: plan, due: due }, function (e) { tdSaving = false; lockUi(form, false, '.msg'); say('tdf-msg', errText(e), 'err'); })
+      .then(function () { if (!tdSaving) return; tdSaving = false; lockUi(form, false, '.msg'); closeTd(); });
+  }
+  function quickTd(ev) {
+    ev.preventDefault();
+    var v = $('td-q').value.trim();
+    if (!v) return;
+    var today = tdData ? tdData.today : todayIso();
+    $('td-q').value = '';
+    saveTd({ key: newKey(), title: v, plan: tdScope === 'today' ? today : '' }, function (e) { $('td-q').value = v; say('td-msg', errText(e), 'err'); });
+  }
+
+  // ---------- meeting ----------
+  var mData = null, mScope = 'upcoming', mForm = null, mSaving = false, mMode = 'Online';
+  var MEET_TAG = '[Meeting] ';
+  function parseMeetItem(it) {
+    var lines = String(it.notes || '').split('\n'), i = 0, event = '', people = [];
+    if (/^Acara: /.test(lines[i] || '')) { event = lines[i].slice(7); i++; }
+    if (/^Peserta: /.test(lines[i] || '')) {
+      lines[i].slice(9).split(/,\s+/).forEach(function (e) { var m = e.match(/^(.*?)(?:\s*\(([^()\s]+@[^()\s]+)\))?$/); if (m && m[1].trim()) people.push({ name: m[1].trim(), email: m[2] || '' }); });
+      i++;
+    }
+    return { id: it.id, event: event || String(it.title || '').replace(MEET_TAG, ''), participants: people, mode: it.mode || 'Online', date: it.date, start: it.start, end: it.end,
+      location: it.mode === 'Online' ? '' : it.location, maps: it.maps, notes: lines.slice(i).join('\n').replace(/^\n+/, ''), meet: it.meet || '', invite: !!(it.guests && it.guests.length), status: it.status };
+  }
+  function loadMeeting() {
+    var scope = mScope;
+    if (!mData && !$('m-msg').textContent) say('m-msg', t('loading'));
+    api('meetingList', { scope: scope })
+      .then(function (d) { if (scope !== mScope) return; mData = d; if ($('m-msg').textContent === t('loading')) say('m-msg', ''); renderMeeting(); })
+      .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('m-msg', errText(e), 'err'); });
+  }
+  function meetChanged() { calCache = {}; calData = null; jData = null; homeStale = true; mData = null; }
+  function renderMeeting() {
+    var box = $('m-list');
+    if (!box) return;
+    box.innerHTML = '';
+    if (!mData) return;
+    if (!mData.items.length) { box.appendChild(el('p', 'tiny', t('m_none'))); return; }
+    mData.items.forEach(function (m) {
+      var cx = m.status === 'Batal', card = el('div', 'ac' + (cx ? ' cx' : ''));
+      card.appendChild(el('h3', '', m.event));
+      var meta = el('p', 'meta', dayLabel(m.ymd) + ' \u00b7 ' + m.start + (m.end ? '\u2013' + m.end : '') + ' WIB ');
+      meta.appendChild(el('span', 'badge ' + (m.mode === 'Online' ? 'on' : ''), t(m.mode === 'Online' ? 'm_online' : 'm_offline')));
+      if (cx) { meta.appendChild(document.createTextNode(' ')); meta.appendChild(el('span', 'badge cx', t('a_badge_cx'))); }
+      card.appendChild(meta);
+      if (m.participants.length) card.appendChild(el('p', 'line', t('m_with') + ': ' + m.participants.map(function (p) { return p.name; }).join(', ')));
+      if (m.mode === 'Online') {
+        var pl = el('p', 'line');
+        if (m.meet) { var a = el('a', 'lnk', m.meet.replace(/^https:\/\//, '')); a.href = m.meet; a.target = '_blank'; a.rel = 'noopener'; pl.appendChild(a); }
+        else pl.appendChild(el('span', 'tiny', t('m_nolink')));
+        card.appendChild(pl);
+      } else {
+        if (m.location) card.appendChild(el('p', 'line', m.location));
+        var mu = safeUrl(m.maps);
+        if (mu) { var ma = el('a', 'lnk', t('maps')); ma.href = mu; ma.target = '_blank'; ma.rel = 'noopener'; var p0 = el('p', 'line'); p0.appendChild(ma); card.appendChild(p0); }
+      }
+      if (m.notes) card.appendChild(el('p', 'line', m.notes));
+      var bar = el('div', 'bar');
+      var mk = function (label, fn, cls) { var b = el('button', 'btn ' + (cls || 'ghost') + ' sm', label); b.type = 'button'; b.addEventListener('click', function () { fn(b); }); bar.appendChild(b); };
+      if (!cx) {
+        if (m.mode === 'Online' && m.meet) { mk(t('m_join'), function () { window.open(m.meet, '_blank', 'noopener'); }, 'primary'); mk(t('m_copy'), function () { copyText(m.meet, t('m_copied'), 'm-msg'); }); }
+        if (m.mode === 'Online' && !m.meet) mk(t('m_mklink'), function (b) { makeLink(m, b); });
+        mk(t('k_edit'), function () { openMt(m); });
+        mk(t('m_invite_mail'), function () { pendingEvent = m.id; switchTab('surat'); showCompose(); });
+        mk(t('a_cancel'), function (b) { setMeetStatus(m, 'Batal', b); });
+      } else {
+        mk(t('j_restore'), function (b) { setMeetStatus(m, 'Aktif', b); });
+      }
+      card.appendChild(bar);
+      box.appendChild(card);
+    });
+  }
+  function makeLink(m, btn) {
+    btn.disabled = true; say('m-msg', t('m_making'));
+    api('meetingLink', { id: m.id })
+      .then(function () { meetChanged(); loadMeeting(); say('m-msg', t('m_made'), 'ok'); })
+      .catch(function (e) { btn.disabled = false; say('m-msg', errText(e), 'err'); });
+  }
+  function setMeetStatus(m, status, btn) {
+    if (status === 'Batal' && !window.confirm(t('j_confirm_cancel', { t: m.event }))) return;
+    btn.disabled = true; say('m-msg', t('saving'));
+    api('jadwalStatus', { id: m.id, status: status })
+      .then(function (r) { meetChanged(); loadMeeting(); say('m-msg', r.syncError ? t('j_sync_err') + r.syncError : '', r.syncError ? 'err' : ''); })
+      .catch(function (e) { btn.disabled = false; say('m-msg', errText(e), 'err'); });
+  }
+  function mtTitle() {
+    var ppl = readMtPeople().filter(function (p) { return p.name || p.email; }).map(function (p) { return p.name || p.email.split('@')[0]; });
+    var shown = ppl.length > 4 ? ppl.slice(0, 4).join(', ') + ' +' + (ppl.length - 4) : ppl.join(', ');
+    return MEET_TAG + ($('mtf-event').value.trim() || '\u2026') + (shown ? ' - ' + shown : '') + ' - ' + mMode;
+  }
+  function mtRefresh() {
+    $('mtf-off').hidden = mMode !== 'Offline'; $('mtf-onhint').hidden = mMode !== 'Online';
+    document.querySelectorAll('.seg-m').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-mmode') === mMode); });
+    $('mtf-title-prev').textContent = t('m_title_prev') + ' ' + mtTitle();
+  }
+  function readMtPeople() {
+    return Array.prototype.map.call($('mtf-people').querySelectorAll('.prow'), function (r) {
+      return { name: r.querySelector('[data-p=name]').value.trim(), email: r.querySelector('[data-p=email]').value.trim() };
+    });
+  }
+  function renderMtPeople(list) {
+    var box = $('mtf-people'); box.innerHTML = '';
+    var dl = $('mtf-names'); dl.innerHTML = '';
+    (cData || []).forEach(function (c) { var o = document.createElement('option'); o.value = c.name; dl.appendChild(o); });
+    list.forEach(function (p, i) {
+      var row = el('div', 'prow');
+      var n = el('input'); n.type = 'text'; n.maxLength = 80; n.value = p.name; n.setAttribute('data-p', 'name'); n.setAttribute('list', 'mtf-names'); n.placeholder = t('m_pname');
+      var e = el('input'); e.type = 'email'; e.maxLength = 120; e.value = p.email; e.setAttribute('data-p', 'email'); e.placeholder = t('m_pemail');
+      n.addEventListener('change', function () {
+        var c = (cData || []).filter(function (x) { return x.name.toLowerCase() === n.value.trim().toLowerCase(); })[0];
+        if (c && !e.value) e.value = c.email || '';
+        mtRefresh();
+      });
+      [n, e].forEach(function (x) { x.addEventListener('input', mtRefresh); });
+      var rm = el('button', 'btn ghost sm', '\u00d7'); rm.type = 'button'; rm.setAttribute('aria-label', t('btn_remove'));
+      rm.addEventListener('click', function () { var cur = readMtPeople(); cur.splice(i, 1); renderMtPeople(cur); mtRefresh(); });
+      row.appendChild(n); row.appendChild(e); row.appendChild(rm); box.appendChild(row);
+    });
+  }
+  function openMt(m) {
+    mForm = { id: m ? m.id : '', key: newKey() };
+    mMode = m ? m.mode : 'Online';
+    $('mtf-title').textContent = t(m ? 'm_edit' : 'm_new');
+    $('mtf-event').value = m ? m.event : ''; $('mtf-date').value = m ? m.date : (jData ? jData.today : todayIso());
+    $('mtf-start').value = m ? m.start : ''; $('mtf-end').value = m ? m.end : '';
+    $('mtf-loc').value = m ? m.location : ''; $('mtf-maps').value = m ? m.maps : ''; $('mtf-notes').value = m ? m.notes : '';
+    $('mtf-invite').checked = m ? !!m.invite : false;
+    if (!cData) loadKontak();
+    renderMtPeople(m && m.participants.length ? m.participants : [{ name: '', email: '' }]);
+    say('mtf-msg', ''); mtRefresh();
+    $('mtsheet').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(function () { $('mtf-event').focus(); }, 50);
+  }
+  function closeMt() { $('mtsheet').hidden = true; mForm = null; syncScroll(); }
+  function submitMt(ev) {
+    ev.preventDefault();
+    if (mSaving || !mForm) return;
+    if (!$('mtf-event').value.trim()) { say('mtf-msg', t('m_v_event'), 'err'); return; }
+    if (!$('mtf-date').value) { say('mtf-msg', t('a_v_date'), 'err'); return; }
+    if (!$('mtf-start').value) { say('mtf-msg', t('a_v_start'), 'err'); return; }
+    if ($('mtf-end').value && $('mtf-end').value <= $('mtf-start').value) { say('mtf-msg', t('k_v_end'), 'err'); return; }
+    var form = $('mtf'); mSaving = true; lockUi(form, true, '.msg'); say('mtf-msg', t('m_saving'));
+    api('meetingSave', {
+      id: mForm.id || undefined, key: mForm.key,
+      data: { event: $('mtf-event').value.trim(), mode: mMode, participants: readMtPeople(), date: $('mtf-date').value, start: $('mtf-start').value, end: $('mtf-end').value,
+        location: $('mtf-loc').value.trim(), maps: $('mtf-maps').value.trim(), notes: $('mtf-notes').value.trim(), invite: $('mtf-invite').checked }
+    }).then(function (r) {
+      mSaving = false; lockUi(form, false, '.msg'); closeMt(); meetChanged();
+      mScope = 'upcoming'; document.querySelectorAll('[data-mscope]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-mscope') === 'upcoming'); });
+      loadMeeting();
+      var warn = r.syncError ? t('j_sync_err') + r.syncError : (r.meetError ? t('m_meet_err') + r.meetError : '');
+      say('m-msg', warn || t('m_saved'), warn ? 'err' : 'ok');
+    }).catch(function (e) { mSaving = false; lockUi(form, false, '.msg'); say('mtf-msg', errText(e), 'err'); });
   }
 
   // ---------- kontak ----------
@@ -1648,7 +1919,7 @@
         ensureJData(function () { openForm(null, { date: d, start: pad2(Math.floor(m / 60)) + ':' + pad2(m % 60) }); });
       });
       timed[d].forEach(function (it) {
-        var b = el('button', 'cal-ev' + (it.series ? (it.kind === 'Make-up' ? ' makeup' : it.kind === 'Kelas' ? ' kelas' : ' amb') : '') + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : '')); b.type = 'button';
+        var b = el('button', 'cal-ev' + (it.series ? (it.kind === 'Make-up' ? ' makeup' : it.kind === 'Kelas' ? ' kelas' : it.kind === 'Meeting' ? ' meet' : ' amb') : '') + (it.status === 'Draf' ? ' draft' : '') + (it._clash ? ' clash' : '')); b.type = 'button';
         b.appendChild(el('b', '', it.start + (it.end ? '–' + it.end : '')));
         b.appendChild(document.createTextNode(it.title));
         b.title = it.title + (it._clash ? ' (' + t('f_clash', { x: '' }).replace(/:\s*$/, '') + ')' : '');
@@ -2042,6 +2313,7 @@
       var a = el('a', '', t('maps')); a.href = mu; a.target = '_blank'; a.rel = 'noopener noreferrer'; loc.appendChild(a);
     }
     dlRow(dl, t('d_loc'), loc.childNodes.length ? loc : '');
+    if (it.meet) { var ml = el('a', '', it.meet); ml.href = it.meet; ml.target = '_blank'; ml.rel = 'noopener noreferrer'; dlRow(dl, 'Google Meet', ml); }
     dlRow(dl, t('d_guests'), it.guests && it.guests.length ? it.guests.join('\n') : '');
     dlRow(dl, t('d_rem'), it.reminders && it.reminders.length ? it.reminders.map(remLabel).join(', ') + ' ' + t('d_before') : t('d_no_rem'));
     dlRow(dl, t('d_notes'), it.notes);
@@ -2052,7 +2324,7 @@
     $('d-mail').hidden = !(it.status === 'Aktif' && !it.error && it.ymd >= todayYmd);
     $('d-makeup').hidden = !(it.series && (it.kind === 'Kelas' || it.kind === 'Make-up'));
     $('d-makeup').onclick = function () { closeDetail(); openMakeup(it, null); };
-    $('d-edit').onclick = function () { closeDetail(); ensureJData(function () { openForm(it); }); };
+    $('d-edit').onclick = function () { closeDetail(); if (it.kind === 'Meeting') { openMt(parseMeetItem(it)); return; } ensureJData(function () { openForm(it); }); };
     $('d-mail').onclick = function () { closeDetail(); pendingEvent = it.id; switchTab('surat'); showCompose(); };
     $('d-cancel').onclick = function () {
       if (!cancelled && !window.confirm(t('j_confirm_cancel', { t: it.title }))) return;
@@ -2510,7 +2782,7 @@
     state.lang = saved === 'en' ? 'en' : 'id';
 
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
-    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'kelas') { kData = null; loadKelas(); } else if (tab === 'amb') { aData = null; loadAmb(); } else if (tab === 'kontak') { loadKontak(true); } else if (tab === 'catatan') loadCatatan(); else refresh(); });
+    $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'kelas') { kData = null; loadKelas(); } else if (tab === 'amb') { aData = null; loadAmb(); } else if (tab === 'meeting') { mData = null; loadMeeting(); } else if (tab === 'todo') { tdData = null; loadTodo(); } else if (tab === 'kontak') { loadKontak(true); } else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
     document.querySelectorAll('.seg-b').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -2551,6 +2823,20 @@
     $('pk-to').addEventListener('click', function () { usePk('s-to'); });
     $('pk-cc').addEventListener('click', function () { usePk('s-cc'); });
     $('s-sched').addEventListener('change', onSchedToggle);
+    $('td-add').addEventListener('click', function () { openTd(null); });
+    $('td-quick').addEventListener('submit', quickTd);
+    $('tdf').addEventListener('submit', submitTd);
+    $('tdf-cancel').addEventListener('click', closeTd);
+    document.querySelectorAll('[data-tscope]').forEach(function (b) { b.addEventListener('click', function () {
+      tdScope = b.getAttribute('data-tscope'); document.querySelectorAll('[data-tscope]').forEach(function (x) { x.classList.toggle('on', x === b); }); renderTodo(); }); });
+    $('m-add').addEventListener('click', function () { openMt(null); });
+    $('mtf').addEventListener('submit', submitMt);
+    $('mtf-cancel').addEventListener('click', closeMt);
+    $('mtf-addp').addEventListener('click', function () { var cur = readMtPeople(); cur.push({ name: '', email: '' }); renderMtPeople(cur); mtRefresh(); });
+    $('mtf-event').addEventListener('input', mtRefresh);
+    document.querySelectorAll('.seg-m').forEach(function (b) { b.addEventListener('click', function () { mMode = b.getAttribute('data-mmode'); mtRefresh(); }); });
+    document.querySelectorAll('[data-mscope]').forEach(function (b) { b.addEventListener('click', function () {
+      mScope = b.getAttribute('data-mscope'); document.querySelectorAll('[data-mscope]').forEach(function (x) { x.classList.toggle('on', x === b); }); mData = null; renderMeeting(); loadMeeting(); }); });
     $('qa').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var txt = $('qa-in').value.trim();
@@ -2584,9 +2870,10 @@
     $('bf-addp').addEventListener('click', function () { readPartners(); bForm.partners.push({ name: '', phone: '' }); renderPartners(); });
     ['bf-school', 'bf-city', 'bf-from', 'bf-to', 'bf-type'].forEach(function (id) { $(id).addEventListener('input', bRefresh); $(id).addEventListener('change', bRefresh); });
     $('bf-type').addEventListener('change', function () { bTypeManual = true; bRefresh(); });
-    document.querySelectorAll('.seg-a').forEach(function (b) { b.addEventListener('click', function () {
+    $('bf-purpose-sel').addEventListener('change', function () { var o = $('bf-purpose-sel').value === '__other'; $('bf-purpose').hidden = !o; if (o) $('bf-purpose').focus(); });
+    document.querySelectorAll('[data-ascope]').forEach(function (b) { b.addEventListener('click', function () {
       aScope = b.getAttribute('data-ascope'); aData = null;
-      document.querySelectorAll('.seg-a').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.querySelectorAll('[data-ascope]').forEach(function (x) { x.classList.toggle('on', x === b); });
       loadAmb();
     }); });
     $('kf').addEventListener('submit', submitK);
