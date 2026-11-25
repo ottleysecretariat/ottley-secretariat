@@ -21,10 +21,13 @@
 </head>
 <body>
   <header class="top">
+    <button id="btn-menu" class="menu-btn" type="button" aria-label="Menu" aria-controls="nav" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <span class="top-name">Ottley Secretariat</span>
+    <span id="top-tab" class="top-tab" aria-live="polite"></span>
     <button id="btn-lang" class="chip" type="button" aria-label="Language"></button>
   </header>
 
+  <div id="nav-ov" class="nav-ov" hidden></div>
   <nav id="nav" class="nav" aria-label="Menu" hidden>
     <div class="nav-brand">
       <img src="logo-square.png" alt="" width="44" height="44">
@@ -311,19 +314,45 @@
     <form id="jf" class="sheet-card" novalidate autocomplete="off">
       <h2 id="jf-title"></h2>
       <label class="fl"><span data-i18n="f_title"></span><input id="f-title" type="text" maxlength="200"></label>
-      <div class="grid3">
-        <label class="fl"><span data-i18n="f_date"></span><input id="f-date" type="date"></label>
-        <label class="fl"><span data-i18n="f_start"></span><input id="f-start" type="time"></label>
-        <label class="fl"><span data-i18n="f_end"></span><input id="f-end" type="time"></label>
+      <div id="f-patw" class="fl"><span data-i18n="p_pattern"></span>
+        <div class="seg seg-pat">
+          <button class="seg-a on" type="button" data-pat="one" data-i18n="p_one"></button>
+          <button class="seg-a" type="button" data-pat="multi" data-i18n="p_multi"></button>
+          <button class="seg-a" type="button" data-pat="repeat" data-i18n="p_repeat"></button>
+        </div>
       </div>
-      <p class="tiny tight" data-i18n="f_time_hint"></p>
-      <p id="f-clash" class="msg warn" role="status"></p>
+      <div id="f-single">
+        <div class="grid3">
+          <label class="fl"><span data-i18n="f_date"></span><input id="f-date" type="date"></label>
+          <label class="fl"><span data-i18n="f_start"></span><input id="f-start" type="time"></label>
+          <label class="fl"><span data-i18n="f_end"></span><input id="f-end" type="time"></label>
+        </div>
+        <p class="tiny tight" data-i18n="f_time_hint"></p>
+        <p id="f-clash" class="msg warn" role="status"></p>
+      </div>
+      <div id="f-multi" hidden>
+        <div id="f-gen" class="gen" hidden>
+          <div class="fl"><span data-i18n="p_wd"></span><div id="g-wd" class="chips"></div></div>
+          <div class="grid2">
+            <label class="fl"><span data-i18n="p_from"></span><input id="g-from" type="date"></label>
+            <label class="fl"><span data-i18n="p_to"></span><input id="g-to" type="date"></label>
+          </div>
+          <div class="grid2">
+            <label class="fl"><span data-i18n="f_start"></span><input id="g-start" type="time"></label>
+            <label class="fl"><span data-i18n="f_end"></span><input id="g-end" type="time"></label>
+          </div>
+          <button id="g-make" class="btn ghost sm" type="button" data-i18n="p_make"></button>
+        </div>
+        <div id="f-days"></div>
+        <button id="f-addday" class="btn ghost sm" type="button" data-i18n="p_add"></button>
+        <p id="f-mcount" class="tiny tight"></p>
+      </div>
       <label class="fl"><span data-i18n="f_loc"></span><input id="f-loc" type="text" maxlength="300"></label>
       <label class="fl"><span data-i18n="f_maps"></span><input id="f-maps" type="url" inputmode="url" placeholder="https://maps.app.goo.gl/..."></label>
       <label class="fl"><span data-i18n="f_guests"></span><textarea id="f-guests" rows="2" placeholder="nama@email.com, ..."></textarea></label>
       <div class="fl"><span data-i18n="f_rem"></span><div id="f-rem" class="chips"></div></div>
       <label class="fl"><span data-i18n="f_notes"></span><textarea id="f-notes" rows="3" maxlength="3000"></textarea></label>
-      <label class="fl"><span data-i18n="f_status"></span><select id="f-status"></select></label>
+      <label class="fl" id="f-statw"><span data-i18n="f_status"></span><select id="f-status"></select></label>
       <p id="jf-msg" class="msg" role="alert"></p>
       <div class="bar">
         <button id="jf-save" class="btn primary" type="submit" data-i18n="btn_save"></button>
@@ -596,6 +625,7 @@
       <dl id="d-rows" class="rows"></dl>
       <div class="bar">
         <button id="d-edit" class="btn primary" type="button" data-i18n="j_edit"></button>
+        <button id="d-series" class="btn ghost" type="button" data-i18n="p_cancel_series" hidden></button>
         <button id="d-makeup" class="btn ghost" type="button" data-i18n="k_makeup" hidden></button>
         <button id="d-mail" class="btn ghost" type="button" data-i18n="d_mail"></button>
         <button id="d-cancel" class="btn ghost" type="button"></button>
