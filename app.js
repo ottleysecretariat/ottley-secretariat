@@ -104,6 +104,12 @@
 
       next_up: 'Berikutnya',
 
+      td_f_time: 'Jam (opsional)', td_f_for: 'Jam ini untuk', td_f_rem: 'Ingatkan lewat email', td_r120: '2 jam sebelum', td_r60: '1 jam sebelum', td_r30: '30 menit sebelum', td_rem_hint: 'Pengingat dikirim ke email lo. Yang waktunya sudah lewat saat disimpan tidak dikirim.', td_v_time: 'Jam butuh tanggal deadline atau tanggal dikerjakan.',
+
+      a_p_guest: 'Terima tamu', a_f_party: 'Nama pihak / tamu / lokasi', a_f_pack: 'Ada packing (H-1 di Ruang Marketing)', a_info_np: 'Akan dibuat {n} jadwal: kegiatan {d} hari dan pengingat PUIS jam 18:00 tiap hari kegiatan (tanpa packing).',
+
+      p_edit_one: 'Ubah hari ini saja', p_edit_all: 'Ubah semua mulai hari ini', p_edit_all_note: 'Perubahan berlaku untuk entri ini dan semua entri sesudahnya di seri yang sama. Tanggal tidak berubah.', p_updated: '{n} entri diubah.', p_restore_series: 'Aktifkan lagi seri', p_restored: '{n} entri diaktifkan lagi.', p_copy: 'Salin', p_copy_hint: 'Salinan dibuat untuk seminggu kemudian. Ubah tanggalnya kalau perlu.',
+
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -245,6 +251,12 @@
 
       next_up: 'Up next',
 
+      td_f_time: 'Time (optional)', td_f_for: 'This time is for', td_f_rem: 'Remind me by email', td_r120: '2 hours before', td_r60: '1 hour before', td_r30: '30 minutes before', td_rem_hint: 'Reminders go to your email. Any whose time has already passed when you save are skipped.', td_v_time: 'A time needs a deadline date or a work date.',
+
+      a_p_guest: 'Hosting guests', a_f_party: 'Party / guest / venue name', a_f_pack: 'Include packing (day before, Marketing Room)', a_info_np: '{n} items will be created: {d} event day(s) and a 6 PM PUIS reminder each event day (no packing).',
+
+      p_edit_one: 'Edit this day only', p_edit_all: 'Edit all from this day', p_edit_all_note: 'Changes apply to this entry and every later entry in the same series. Dates do not change.', p_updated: '{n} entries updated.', p_restore_series: 'Reactivate series', p_restored: '{n} entries reactivated.', p_copy: 'Duplicate', p_copy_hint: 'Copy set one week later. Change the date if needed.',
+
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -292,12 +304,28 @@
 
   var state = { lang: 'id', session: null, busy: false };
 
-  var APP_V = '21', missingIds = [];
+  var APP_V = '22', missingIds = [];
   // Kalau ada elemen yang tidak ketemu (mis. index.html belum versi terbaru), jangan sampai seluruh aplikasi macet: pakai elemen kosong.
   function $(id) {
     var e = document.getElementById(id);
     if (!e) { if (missingIds.indexOf(id) < 0) missingIds.push(id); e = document.createElement('div'); }
     return e;
+  }
+  // ---------- tema: otomatis -> terang -> gelap ----------
+  var KEY_THEME = 'ottley.theme';
+  function themeMode() { var v = null; try { v = window.localStorage.getItem(KEY_THEME); } catch (e) { /* abaikan */ } return v === 'light' || v === 'dark' ? v : 'auto'; }
+  function applyThemeUi() {
+    var m = themeMode(), root = document.documentElement;
+    if (m === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', m);
+    var dark = m === 'dark' || (m === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.setAttribute('content', dark ? '#0e1311' : '#1f6f5c');
+    var b = document.getElementById('btn-theme');
+    if (b) { var lab = { auto: 'Tema: Otomatis / Auto', light: 'Tema: Terang / Light', dark: 'Tema: Gelap / Dark' }[m]; b.setAttribute('aria-label', lab); b.title = lab; }
+  }
+  function cycleTheme() {
+    var next = { auto: 'light', light: 'dark', dark: 'auto' }[themeMode()];
+    try { if (next === 'auto') window.localStorage.removeItem(KEY_THEME); else window.localStorage.setItem(KEY_THEME, next); } catch (e) { /* abaikan */ }
+    applyThemeUi();
   }
   function versionBanner(extra) {
     var m = document.querySelector('meta[name="app-v"]'), v = m ? m.getAttribute('content') : '';
@@ -1272,7 +1300,8 @@
       return { name: r.querySelector('[data-p=n]').value.trim(), phone: r.querySelector('[data-p=p]').value.trim() };
     });
   }
-  var PURPOSES = ['Edufair', 'Presentasi', 'Edufair & Presentasi', 'Open House'];
+  var PURPOSES = ['Edufair', 'Presentasi', 'Edufair & Presentasi', 'Open House', 'Terima tamu', 'Photoshoot'];
+  function isVisitPurpose() { var p = getPurpose(); return p === 'Terima tamu' || p === 'Photoshoot'; }
   function setPurpose(v) {
     var known = PURPOSES.indexOf(v) >= 0;
     $('bf-purpose-sel').value = known ? v : '__other';
@@ -1281,13 +1310,15 @@
   function getPurpose() { var v = $('bf-purpose-sel').value; return v === '__other' ? ($('bf-purpose').value.trim() || 'Edufair') : v; }
   function bRefresh() {
     var city = $('bf-city').value.trim(), school = $('bf-school').value.trim();
-    if (!bTypeManual && (city || school)) $('bf-type').value = guessType(city, school);
+    if (!bTypeManual && isVisitPurpose() && !city) $('bf-type').value = 'Dalam kota';
+    else if (!bTypeManual && (city || school)) $('bf-type').value = guessType(city, school);
+    var lbl = $('bf-school-lbl'); lbl.textContent = t(isVisitPurpose() ? 'a_f_party' : 'a_f_school');
     var out = $('bf-type').value === 'Luar kota';
     $('bf-to-wrap').hidden = !out; $('bf-lodge').hidden = !out;
     $('bf-typehint').textContent = t('a_type_hint');
     var from = $('bf-from').value, to = out ? ($('bf-to').value || from) : from, days = 0;
     if (from && to >= from) { var d = from, g = 0; while (d <= to && g++ < 40) { days++; d = isoAdd(d, 1); } }
-    $('bf-info').textContent = days ? t('a_info', { n: 1 + days * 2, d: days }) : '';
+    $('bf-info').textContent = days ? t($('bf-pack').checked ? 'a_info' : 'a_info_np', { n: ($('bf-pack').checked ? 1 : 0) + days * 2, d: days }) : '';
   }
   function openB(a) {
     bForm = { id: a ? a.id : '', key: newKey(), partners: a && a.partners.length ? a.partners.map(function (p) { return { name: p.name, phone: p.phone }; }) : [{ name: '', phone: '' }] };
@@ -1303,6 +1334,7 @@
     $('bf-start').value = a ? a.start : ''; $('bf-end').value = a ? a.end : '';
     $('bf-lname').value = a ? a.lodging.name : ''; $('bf-laddr').value = a ? a.lodging.address : ''; $('bf-lmaps').value = a ? a.lodging.maps : '';
     $('bf-notes').value = a ? a.notes : '';
+    $('bf-pack').checked = a ? a.packing !== false : true;
     say('bf-msg', ''); renderPartners(); bRefresh();
     $('bsheet').hidden = false; document.body.style.overflow = 'hidden';
     setTimeout(function () { $('bf-school').focus(); }, 50);
@@ -1326,7 +1358,7 @@
       data: {
         school: school, city: $('bf-city').value.trim(), maps: $('bf-maps').value.trim(), type: $('bf-type').value, purpose: getPurpose(), assignBy: $('bf-assign').value.trim(),
         from: $('bf-from').value, to: out ? ($('bf-to').value || $('bf-from').value) : $('bf-from').value, start: $('bf-start').value, end: $('bf-end').value,
-        partners: bForm.partners, lodging: { name: $('bf-lname').value.trim(), address: $('bf-laddr').value.trim(), maps: $('bf-lmaps').value.trim() }, notes: $('bf-notes').value.trim()
+        partners: bForm.partners, lodging: { name: $('bf-lname').value.trim(), address: $('bf-laddr').value.trim(), maps: $('bf-lmaps').value.trim() }, notes: $('bf-notes').value.trim(), packing: $('bf-pack').checked
       }
     }).then(function (r) {
       bSaving = false; lockUi(form, false, '.msg'); closeB(); ambChanged();
@@ -1385,8 +1417,8 @@
     });
     var w = el('div', 'w'); w.appendChild(el('b', '', x.title));
     var chips = el('div', 'chips2');
-    if (x.plan) chips.appendChild(el('span', 'badge' + (x.plan < today && !x.done ? ' cx' : ''), t('td_plan') + ' ' + tdFmt(x.plan)));
-    if (x.due) chips.appendChild(el('span', 'badge' + (x.due < today && !x.done ? ' cx' : x.due === today ? ' mk' : ''), t('td_due') + ' ' + tdFmt(x.due)));
+    if (x.plan) chips.appendChild(el('span', 'badge' + (x.plan < today && !x.done ? ' cx' : ''), t('td_plan') + ' ' + tdFmt(x.plan) + (x.time && x.timeFor === 'plan' ? ' · ' + x.time : '')));
+    if (x.due) chips.appendChild(el('span', 'badge' + (x.due < today && !x.done ? ' cx' : x.due === today ? ' mk' : ''), t('td_due') + ' ' + tdFmt(x.due) + (x.time && x.timeFor === 'due' ? ' · ' + x.time : '')));
     if (chips.childNodes.length) w.appendChild(chips);
     if (x.notes) w.appendChild(el('small', '', x.notes));
     var bar = el('div', 'tdbar');
@@ -1405,9 +1437,28 @@
     tdForm = { id: x ? x.id : '', key: newKey() };
     $('tdf-title').textContent = t(x ? 'td_edit' : 'td_new');
     $('tdf-title-in').value = x ? x.title : ''; $('tdf-plan').value = x ? x.plan : ''; $('tdf-due').value = x ? x.due : ''; $('tdf-notes').value = x ? x.notes : '';
+    $('tdf-time').value = x && x.time ? x.time : '';
+    tdForm.timeFor = x && x.time ? x.timeFor : '';
+    var rbox = $('tdf-rem'); rbox.innerHTML = '';
+    [120, 60, 30].forEach(function (m) {
+      var lb = el('label', 'chip-c'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = String(m);
+      cb.checked = x ? (x.reminders || []).indexOf(m) >= 0 : true;
+      lb.appendChild(cb); lb.appendChild(document.createTextNode(t('td_r' + m))); rbox.appendChild(lb);
+    });
+    tdTimeUi();
     say('tdf-msg', '');
     $('tdsheet').hidden = false; document.body.style.overflow = 'hidden';
     setTimeout(function () { $('tdf-title-in').focus(); }, 50);
+  }
+  // tampilkan pilihan jam & pengingat sesuai isian
+  function tdTimeUi() {
+    var has = !!$('tdf-time').value, plan = $('tdf-plan').value, due = $('tdf-due').value;
+    $('tdf-remw').hidden = !has;
+    var both = has && plan && due, sel = $('tdf-for'), cur = sel.value || (tdForm && tdForm.timeFor) || '';
+    $('tdf-forw').hidden = !both;
+    sel.innerHTML = '';
+    [['due', t('td_due')], ['plan', t('td_plan')]].forEach(function (o) { var op = el('option', '', o[1]); op.value = o[0]; sel.appendChild(op); });
+    sel.value = cur === 'plan' ? 'plan' : 'due';
   }
   function closeTd() { $('tdsheet').hidden = true; tdForm = null; syncScroll(); }
   function saveTd(payload, onErr) {
@@ -1417,10 +1468,15 @@
     ev.preventDefault();
     if (tdSaving || !tdForm) return;
     if (!$('tdf-title-in').value.trim()) { say('tdf-msg', t('td_v_title'), 'err'); return; }
-    var plan = $('tdf-plan').value, due = $('tdf-due').value;
+    var plan = $('tdf-plan').value, due = $('tdf-due').value, time = $('tdf-time').value, tfor = 'due', rems = [];
     if (plan && due && plan > due) { say('tdf-msg', t('td_v_order'), 'err'); return; }
+    if (time) {
+      if (!plan && !due) { say('tdf-msg', t('td_v_time'), 'err'); return; }
+      tfor = plan && due ? $('tdf-for').value : (plan ? 'plan' : 'due');
+      rems = [].filter.call($('tdf-rem').querySelectorAll('input:checked'), function () { return true; }).map(function (c) { return Number(c.value); });
+    }
     var form = $('tdf'); tdSaving = true; lockUi(form, true, '.msg'); say('tdf-msg', t('saving'));
-    saveTd({ id: tdForm.id || undefined, key: tdForm.key, title: $('tdf-title-in').value.trim(), notes: $('tdf-notes').value.trim(), plan: plan, due: due }, function (e) { tdSaving = false; lockUi(form, false, '.msg'); say('tdf-msg', errText(e), 'err'); })
+    saveTd({ id: tdForm.id || undefined, key: tdForm.key, title: $('tdf-title-in').value.trim(), notes: $('tdf-notes').value.trim(), plan: plan, due: due, time: time, timeFor: tfor, reminders: rems }, function (e) { tdSaving = false; lockUi(form, false, '.msg'); say('tdf-msg', errText(e), 'err'); })
       .then(function () { if (!tdSaving) return; tdSaving = false; lockUi(form, false, '.msg'); closeTd(); });
   }
   function quickTd(ev) {
@@ -2163,7 +2219,7 @@
   // QUICK-END
 
   // ---------- pola: beberapa hari / berulang ----------
-  var fPat = 'one', fDays = [];
+  var fPat = 'one', fDays = [], fSeriesAll = false;
   function syncDays() {
     var rows = $('f-days').querySelectorAll('.dayrow');
     if (!rows.length) return;
@@ -2191,7 +2247,10 @@
     if (editing) fPat = 'one';
     document.querySelectorAll('.seg-pat .seg-a').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-pat') === fPat); });
     var one = fPat === 'one';
-    $('f-single').hidden = !one; $('f-multi').hidden = one; $('f-statw').hidden = !one;
+    $('f-single').hidden = !one; $('f-multi').hidden = one; $('f-statw').hidden = !one || fSeriesAll;
+    $('f-sernote').hidden = !fSeriesAll;
+    if (fSeriesAll) { $('f-sernote').textContent = t('p_edit_all_note', { d: formState && formState.date ? formState.date : '' }); $('f-date').parentNode.hidden = true; $('f-clash').hidden = true; $('jf-title').textContent = t('p_edit_all'); }
+    else { $('f-date').parentNode.hidden = false; $('f-clash').hidden = false; }
     $('f-gen').hidden = fPat !== 'repeat';
     if (!one) {
       if (fPat === 'repeat' && !$('g-wd').children.length) {
@@ -2237,6 +2296,21 @@
     if (fDays.length > 60) fDays.length = 60;
     renderDays();
   }
+  function submitSeriesAll() {
+    var f = readForm();
+    if (!f.title) { say('jf-msg', t('v_title'), 'err'); $('f-title').focus(); return; }
+    if (f.reminders.length > 5) { say('jf-msg', t('f_rem'), 'err'); return; }
+    state.saving = true; $('jf-save').disabled = true; lockUi($('jf'), true, '.msg'); say('jf-msg', t('saving'));
+    api('jadwalSeriesUpdate', { id: formState.id, item: { title: f.title, start: f.start, end: f.end, location: f.location, maps: f.maps, guests: f.guests, reminders: f.reminders, notes: f.notes } })
+      .then(function (r) {
+        closeForm(); homeStale = true;
+        if (tab === 'home') { homeStale = false; refresh(); }
+        if (calMode !== 'list') loadCal(true); else reloadJadwalView(true);
+        say('j-msg', r.syncError ? t('j_sync_err') + r.syncError : t('p_updated', { n: r.count }), r.syncError ? 'err' : 'ok');
+      })
+      .catch(function (e) { if (e && e.code === 'unauthorized') { logout(t('err_unauthorized')); return; } say('jf-msg', errText(e), 'err'); })
+      .then(function () { state.saving = false; $('jf-save').disabled = false; lockUi($('jf'), false); });
+  }
   function submitMulti() {
     syncDays();
     var f = readForm();
@@ -2266,11 +2340,11 @@
   function openForm(it, preset) {
     preset = preset || {};
     formState = it ? JSON.parse(JSON.stringify(it)) : {
-      id: '', title: preset.title || '', date: preset.date || (jData ? jData.today : todayIso()), start: preset.start || '', end: preset.end || '', location: preset.location || '', maps: '', notes: '', guests: [],
-      reminders: jData ? jData.defaults.slice() : [], status: 'Aktif'
+      id: '', title: preset.title || '', date: preset.date || (jData ? jData.today : todayIso()), start: preset.start || '', end: preset.end || '', location: preset.location || '', maps: preset.maps || '', notes: preset.notes || '', guests: preset.guests || [],
+      reminders: preset.reminders || (jData ? jData.defaults.slice() : []), status: 'Aktif'
     };
     formState._key = newKey();
-    fPat = 'one'; fDays = [];
+    fPat = 'one'; fDays = []; fSeriesAll = !!(preset && preset.seriesAll);
     buildForm(formState);
     $('sheet').hidden = false;
     document.body.style.overflow = 'hidden';
@@ -2329,6 +2403,7 @@
     ev.preventDefault();
     if (state.saving || !formState) return;
     if (fPat !== 'one' && !formState.id) { submitMulti(); return; }
+    if (fSeriesAll) { submitSeriesAll(); return; }
     var item = readForm();
     if (!item.title) { say('jf-msg', t('v_title'), 'err'); $('f-title').focus(); return; }
     if (!item.date) { say('jf-msg', t('v_date'), 'err'); $('f-date').focus(); return; }
@@ -2497,6 +2572,36 @@
     $('d-makeup').onclick = function () { closeDetail(); openMakeup(it, null); };
     var isMulti = !!(it.series && (it.kind === 'Multi' || it.kind === 'Rutinitas'));
     $('d-series').hidden = !(isMulti && it.status !== 'Batal');
+    $('d-series-edit').hidden = !(isMulti && it.status !== 'Batal');
+    $('d-series-restore').hidden = !(isMulti && it.status === 'Batal');
+    $('d-edit').textContent = t(isMulti ? 'p_edit_one' : 'j_edit');
+    $('d-copy').hidden = !(!it.error && (!it.kind || it.kind === 'Multi' || it.kind === 'Rutinitas'));
+    $('d-copy').onclick = function () {
+      closeDetail();
+      ensureJData(function () {
+        openForm(null, { title: String(it.title || '').replace(/\s*\(Hari \d+\/\d+\)\s*$/, ''), date: it.date ? isoAdd(it.date, 7) : '', start: it.start, end: it.end, location: it.location, maps: it.maps, notes: it.notes, guests: it.guests || [], reminders: it.reminders || [] });
+        say('jf-msg', t('p_copy_hint'), '');
+      });
+    };
+    $('d-series-edit').onclick = function () {
+      closeDetail();
+      ensureJData(function () {
+        var c = JSON.parse(JSON.stringify(it)); c.title = String(c.title || '').replace(/\s*\(Hari \d+\/\d+\)\s*$/, '');
+        openForm(c, { seriesAll: true });
+      });
+    };
+    $('d-series-restore').onclick = function () {
+      var card = $('dsheet').firstElementChild;
+      lockUi(card, true, '.msg'); say('d-msg', t('saving'));
+      api('jadwalSeriesRestore', { series: it.series })
+        .then(function (r) {
+          closeDetail(); homeStale = true;
+          if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'home') { homeStale = false; refresh(); }
+          say(tab === 'jadwal' ? 'j-msg' : 'app-msg', r.syncError ? t('j_sync_err') + r.syncError : t('p_restored', { n: r.count }), r.syncError ? 'err' : 'ok');
+        })
+        .catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('d-msg', errText(e), 'err'); })
+        .then(function () { lockUi(card, false); });
+    };
     $('d-series').onclick = function () {
       if (!window.confirm(t('p_confirm_series'))) return;
       var card = $('dsheet').firstElementChild;
@@ -2969,6 +3074,8 @@
     var saved = lsGet(KEY_LANG);
     state.lang = saved === 'en' ? 'en' : 'id';
 
+    $('btn-theme').addEventListener('click', cycleTheme);
+    applyThemeUi();
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
     $('btn-refresh').addEventListener('click', function () { if (tab === 'jadwal') reloadJadwalView(true); else if (tab === 'kelas') { kData = null; loadKelas(); } else if (tab === 'amb') { aData = null; loadAmb(); } else if (tab === 'meeting') { mData = null; loadMeeting(); } else if (tab === 'todo') { tdData = null; loadTodo(); } else if (tab === 'kontak') { loadKontak(true); } else if (tab === 'catatan') loadCatatan(); else refresh(); });
     document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { switchTab(b.getAttribute('data-tab')); }); });
@@ -3015,6 +3122,7 @@
     $('td-quick').addEventListener('submit', quickTd);
     $('tdf').addEventListener('submit', submitTd);
     $('tdf-cancel').addEventListener('click', closeTd);
+    ['tdf-time', 'tdf-plan', 'tdf-due'].forEach(function (id) { $(id).addEventListener('input', tdTimeUi); $(id).addEventListener('change', tdTimeUi); });
     document.querySelectorAll('[data-tscope]').forEach(function (b) { b.addEventListener('click', function () {
       tdScope = b.getAttribute('data-tscope'); document.querySelectorAll('[data-tscope]').forEach(function (x) { x.classList.toggle('on', x === b); }); renderTodo(); }); });
     $('m-add').addEventListener('click', function () { openMt(null); });
@@ -3058,7 +3166,8 @@
     $('bf-addp').addEventListener('click', function () { readPartners(); bForm.partners.push({ name: '', phone: '' }); renderPartners(); });
     ['bf-school', 'bf-city', 'bf-from', 'bf-to', 'bf-type'].forEach(function (id) { $(id).addEventListener('input', bRefresh); $(id).addEventListener('change', bRefresh); });
     $('bf-type').addEventListener('change', function () { bTypeManual = true; bRefresh(); });
-    $('bf-purpose-sel').addEventListener('change', function () { var o = $('bf-purpose-sel').value === '__other'; $('bf-purpose').hidden = !o; if (o) $('bf-purpose').focus(); });
+    $('bf-pack').addEventListener('change', bRefresh);
+    $('bf-purpose-sel').addEventListener('change', function () { var o = $('bf-purpose-sel').value === '__other'; $('bf-purpose').hidden = !o; if (o) $('bf-purpose').focus(); bRefresh(); });
     document.querySelectorAll('[data-ascope]').forEach(function (b) { b.addEventListener('click', function () {
       aScope = b.getAttribute('data-ascope'); aData = null;
       document.querySelectorAll('[data-ascope]').forEach(function (x) { x.classList.toggle('on', x === b); });
