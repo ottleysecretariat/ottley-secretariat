@@ -110,6 +110,8 @@
 
       p_edit_one: 'Ubah hari ini saja', p_edit_all: 'Ubah semua mulai hari ini', p_edit_all_note: 'Perubahan berlaku untuk entri ini dan semua entri sesudahnya di seri yang sama. Tanggal tidak berubah.', p_updated: '{n} entri diubah.', p_restore_series: 'Aktifkan lagi seri', p_restored: '{n} entri diaktifkan lagi.', p_copy: 'Salin', p_copy_hint: 'Salinan dibuat untuk seminggu kemudian. Ubah tanggalnya kalau perlu.',
 
+      sy_btn: '↻ Sinkron sekarang', sy_run: 'Menyinkronkan…', sy_done: 'Selesai: {a} acara dikirim ke Kalender, {b} perubahan dari Kalender masuk.', sy_err: '{n} baris gagal, lihat kolom Status sinkron.', sy_started: 'Pembacaan perubahan Kalender mulai aktif.', sy_sheetwin: '{n} perubahan Kalender dilewati karena baris di Sheet lebih baru.', sy_sig: 'Perubahan dari Kalender mungkin tidak terbaca (rumus tanda sinkron beda). Kabari Claude.',
+
       view_list: 'Daftar', view_day: 'Hari', view_3day: '3 Hari', view_week: 'Minggu', view_month: 'Bulan', cal_today: 'Hari ini',
       cal_more: '+{n} lagi', cal_prev: 'Sebelumnya', cal_next: 'Berikutnya', f_clash: 'Bentrok dengan: {x}', cal_empty_hint: 'Ketuk area kosong untuk menambah jadwal di jam itu.',
       s_e_uploading: 'Tunggu, file masih diunggah.', s_e_limit_files: 'Maksimal {n} lampiran per email.', s_e_limit_mb: 'Total lampiran melebihi {mb} MB.',
@@ -257,6 +259,8 @@
 
       p_edit_one: 'Edit this day only', p_edit_all: 'Edit all from this day', p_edit_all_note: 'Changes apply to this entry and every later entry in the same series. Dates do not change.', p_updated: '{n} entries updated.', p_restore_series: 'Reactivate series', p_restored: '{n} entries reactivated.', p_copy: 'Duplicate', p_copy_hint: 'Copy set one week later. Change the date if needed.',
 
+      sy_btn: '↻ Sync now', sy_run: 'Syncing…', sy_done: 'Done: {a} events sent to Calendar, {b} changes pulled from Calendar.', sy_err: '{n} rows failed, see the Sync status column.', sy_started: 'Reading Calendar changes is now active.', sy_sheetwin: '{n} Calendar changes were skipped because the Sheet row is newer.', sy_sig: 'Changes from Calendar may not be picked up (sync signature differs). Tell Claude.',
+
       view_list: 'List', view_day: 'Day', view_3day: '3 Days', view_week: 'Week', view_month: 'Month', cal_today: 'Today',
       cal_more: '+{n} more', cal_prev: 'Previous', cal_next: 'Next', f_clash: 'Clashes with: {x}', cal_empty_hint: 'Tap an empty area to add an item at that time.',
       s_e_uploading: 'Please wait, files are still uploading.', s_e_limit_files: 'Maximum {n} attachments per email.', s_e_limit_mb: 'Total attachments exceed {mb} MB.',
@@ -304,7 +308,7 @@
 
   var state = { lang: 'id', session: null, busy: false };
 
-  var APP_V = '22', missingIds = [];
+  var APP_V = '23', missingIds = [];
   // Kalau ada elemen yang tidak ketemu (mis. index.html belum versi terbaru), jangan sampai seluruh aplikasi macet: pakai elemen kosong.
   function $(id) {
     var e = document.getElementById(id);
@@ -3210,6 +3214,21 @@
     $('j-add').addEventListener('click', function () { openForm(null); });
     $('jf').addEventListener('submit', submitForm);
     $('jf-cancel').addEventListener('click', closeForm);
+    $('j-sync').addEventListener('click', function () {
+      var b = $('j-sync'); if (b.disabled) return;
+      b.disabled = true; say('j-sync-msg', t('sy_run'));
+      api('jadwalSyncNow', {}).then(function (r) {
+        var push = (r.push.dibuat || 0) + (r.push.diperbarui || 0) + (r.push.dihapus || 0), pull = ((r.pull && r.pull.diubah) || 0) + ((r.pull && r.pull.dibatalkan) || 0);
+        var msg = t('sy_done', { a: push, b: pull }), bad = false;
+        if (r.push.galat) { msg += ' ' + t('sy_err', { n: r.push.galat }); bad = true; }
+        if (r.pull && r.pull.started) msg += ' ' + t('sy_started');
+        if (r.pull && r.pull.sheetMenang) msg += ' ' + t('sy_sheetwin', { n: r.pull.sheetMenang });
+        if (r.tanda && r.tanda.total >= 3 && r.tanda.cocok < r.tanda.total / 2) { msg += ' ' + t('sy_sig'); bad = true; }
+        say('j-sync-msg', msg, bad ? 'err' : 'ok');
+        homeStale = true; if (calMode !== 'list') loadCal(true); else reloadJadwalView(true);
+      }).catch(function (e) { if (e && e.code === 'unauthorized') logout(t('err_unauthorized')); else say('j-sync-msg', errText(e), 'err'); })
+        .then(function () { b.disabled = false; });
+    });
     $('btn-menu').addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open')); });
     $('nav-ov').addEventListener('click', function () { setMenu(false); });
     document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && document.body.classList.contains('menu-open')) { setMenu(false); $('btn-menu').focus(); } });
