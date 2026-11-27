@@ -308,7 +308,7 @@
 
   var state = { lang: 'id', session: null, busy: false };
 
-  var APP_V = '24', missingIds = [];
+  var APP_V = '25', missingIds = [];
   // Kalau ada elemen yang tidak ketemu (mis. index.html belum versi terbaru), jangan sampai seluruh aplikasi macet: pakai elemen kosong.
   function $(id) {
     var e = document.getElementById(id);
@@ -362,7 +362,7 @@
     document.querySelectorAll('[data-i18n-ph]').forEach(function (e) { e.placeholder = t(e.getAttribute('data-i18n-ph')); });
     $('btn-lang').textContent = state.lang === 'id' ? 'EN' : 'ID';
     renderGoogleButton();
-    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderMeeting(); renderTodo(); (function () { var tl = document.querySelector('.tab[data-tab="' + tab + '"] span'); if (tl) $('top-tab').textContent = tl.textContent; })(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); renderPlusLang(); }
+    if (state.session && !$('view-app').hidden) { renderConn(lastPing); renderDash(lastDash); renderJadwal(); if (!$('sheet').hidden) buildForm(formState); renderSuratLang(); renderNotes(); renderHist(); setUploadLabel(); renderUps(); renderCal(); renderKelas(); renderAmb(); renderMeeting(); renderTodo(); (function () { var tl = document.querySelector('.tab[data-tab="' + tab + '"] span'); if (tl) $('top-tab').textContent = tl.textContent; })(); renderKontak(); renderPk(); renderQueue(); renderRsvp(); renderPlusLang(); jvChips(); }
   }
 
   function setLang(l) {
@@ -3647,12 +3647,257 @@
     });
   }
 
+  // =====================  JARVIS: suara + perintah (jalan di browser, tanpa API key)  =====================
+  var JV = {
+    id: {
+      hello: 'Halo {n}. Mau ngapain? Ngomong atau ketik, misalnya "agenda besok".',
+      help: 'Gw ngerti perintah kayak:\n• "agenda hari ini / besok / lusa / minggu ini / minggu depan"\n• "jadwal berikutnya"\n• "tambah meeting besok jam 3 di kampus"\n• "tambah to-do kirim proposal"\n• "to-do apa aja" · "ada bentrok?"\n• "cari proposal"\n• "statistik minggu ini" · "rekap"\n• "buka jadwal / meeting / to-do / kelas / surat / kontak / catatan"\n• "bagikan agenda besok"\n• "sinkron kalender" · "mode gelap / terang" · "bahasa inggris"',
+      none: 'Gw belum ngerti itu. Coba "bantuan" buat lihat perintah.',
+      nomic: 'Browser ini belum mendukung suara. Ketik aja perintahnya.',
+      micdeny: 'Izin mikrofon ditolak. Aktifkan lewat pengaturan browser, atau ketik aja.',
+      listen: 'Mendengarkan...', nospeech: 'Gak kedengeran apa-apa. Coba lagi.',
+      empty_day: 'Gak ada agenda {w}.', day_n: 'Agenda {w}: {n} jadwal.', next_none: 'Gak ada jadwal berikutnya.', next: 'Berikutnya {when}: {title}.',
+      w_today: 'hari ini', w_tomorrow: 'besok', w_after: 'lusa', w_week: 'minggu ini', w_nweek: 'minggu depan', allday: 'seharian',
+      form: 'Gw buka formnya. Cek dulu, lalu Simpan.', form_nodate: ' Tanggalnya belum kebaca.', form_notime: ' Jamnya belum kebaca.',
+      td_added: 'To-do ditambah: {x}.', td_empty: 'Semua to-do beres.', td_n: '{n} to-do belum selesai{late}.', td_late: ', {n} terlambat', td_top: 'Teratas: {x}.',
+      warn_none: 'Aman, gak ada bentrok atau hari tanpa jeda makan.', warn_n: '{c} bentrok, {m} hari tanpa jeda makan.',
+      stat: 'Minggu ini: {e} jadwal, {h} jam, {d} to-do selesai.', stat_m: 'Bulan ini: {e} jadwal, {h} jam, {d} to-do selesai.',
+      searching: 'Mencari "{q}"...', go: 'Membuka {x}.', share: 'Membuka menu bagikan.', sync: 'Sinkron: {a} dikirim ke Kalender, {b} masuk dari Kalender.', syncing: 'Menyinkron...',
+      dark: 'Mode gelap.', light: 'Mode terang.', auto: 'Tema otomatis.', lang: 'Oke, bahasa diganti.', err: 'Gagal: {x}',
+      title: 'Jarvis', ph: 'Ngomong atau ketik perintah...', mic: 'Bicara', send: 'Kirim', mute: 'Suara balasan', thinking: 'Sebentar...',
+      c1: 'Agenda hari ini', c2: 'Agenda besok', c3: 'Berikutnya', c4: 'Cek bentrok', c5: 'To-do', c6: 'Bantuan'
+    },
+    en: {
+      hello: 'Hi {n}. What can I do? Speak or type, e.g. "agenda tomorrow".',
+      help: 'I understand commands like:\n• "agenda today / tomorrow / this week / next week"\n• "what is next"\n• "add meeting tomorrow at 3 pm at campus"\n• "add to-do send proposal"\n• "my to-dos" · "any conflicts?"\n• "search proposal"\n• "statistics this week" · "recap"\n• "open schedule / meeting / to-do / classes / letters / contacts / notes"\n• "share tomorrow\'s agenda"\n• "sync calendar" · "dark / light mode" · "switch to Indonesian"',
+      none: 'I did not get that. Try "help" to see commands.',
+      nomic: 'This browser has no voice support. Just type the command.',
+      micdeny: 'Microphone permission denied. Enable it in browser settings, or just type.',
+      listen: 'Listening...', nospeech: 'Heard nothing. Try again.',
+      empty_day: 'Nothing scheduled {w}.', day_n: 'Agenda {w}: {n} items.', next_none: 'Nothing coming up.', next: 'Next {when}: {title}.',
+      w_today: 'today', w_tomorrow: 'tomorrow', w_after: 'the day after tomorrow', w_week: 'this week', w_nweek: 'next week', allday: 'all day',
+      form: 'Opening the form. Check it, then Save.', form_nodate: ' I could not read the date.', form_notime: ' I could not read the time.',
+      td_added: 'To-do added: {x}.', td_empty: 'All to-dos are done.', td_n: '{n} open to-dos{late}.', td_late: ', {n} overdue', td_top: 'Top: {x}.',
+      warn_none: 'All clear: no conflicts or days without a meal break.', warn_n: '{c} conflicts, {m} days without a meal break.',
+      stat: 'This week: {e} events, {h} hours, {d} to-dos done.', stat_m: 'This month: {e} events, {h} hours, {d} to-dos done.',
+      searching: 'Searching "{q}"...', go: 'Opening {x}.', share: 'Opening share.', sync: 'Sync: {a} sent to Calendar, {b} pulled from Calendar.', syncing: 'Syncing...',
+      dark: 'Dark mode.', light: 'Light mode.', auto: 'Automatic theme.', lang: 'Okay, language switched.', err: 'Failed: {x}',
+      title: 'Jarvis', ph: 'Speak or type a command...', mic: 'Speak', send: 'Send', mute: 'Spoken replies', thinking: 'One moment...',
+      c1: 'Agenda today', c2: 'Agenda tomorrow', c3: 'Next up', c4: 'Check conflicts', c5: 'To-dos', c6: 'Help'
+    }
+  };
+  function jt(k, v) { var s = (JV[state.lang] && JV[state.lang][k]) || JV.id[k] || k; if (v) Object.keys(v).forEach(function (x) { s = s.replace('{' + x + '}', v[x]); }); return s; }
+
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition, jvRec = null, jvListening = false, jvVoice = true, jvOpen = false, jvGreeted = false;
+  var JV_TABS = [
+    [/\b(beranda|home|dashboard)\b/, 'home', 'Beranda'], [/\b(jadwal|schedule|calendar|kalender)\b/, 'jadwal', 'Jadwal'], [/\b(meeting|rapat)\b/, 'meeting', 'Meeting'],
+    [/\b(to-?do|tugas|tasks?)\b/, 'todo', 'To-do'], [/\b(kelas|class(es)?)\b/, 'kelas', 'Kelas'], [/\b(ambassador|ambasador|ambass)\b/, 'amb', 'Student Ambassador'],
+    [/\b(surat|letters?|email)\b/, 'surat', 'Surat'], [/\b(kontak|contacts?)\b/, 'kontak', 'Kontak'], [/\b(catatan|notes?)\b/, 'catatan', 'Catatan'],
+    [/\b(statistik|statistics|stats)\b/, 'stat', 'Statistik'], [/\b(rekap|recap)\b/, 'rekap', 'Rekap'], [/\b(cari|search)\b/, 'cari', 'Cari'], [/\b(pengaturan|settings?)\b/, 'atur', 'Pengaturan']
+  ];
+
+  function jvBubble(text, who) {
+    var log = $('jv-log'); if (!log) return;
+    var b = el('div', 'jv-b ' + (who || 'bot')); b.textContent = text; log.appendChild(b); log.scrollTop = log.scrollHeight; return b;
+  }
+  function jvSpeak(text) {
+    if (!jvVoice || !window.speechSynthesis || !text) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(String(text).replace(/[•·\n]+/g, '. ').replace(/\s+/g, ' ')); u.lang = state.lang === 'en' ? 'en-US' : 'id-ID'; u.rate = 1.02;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* abaikan */ }
+  }
+  function jvReply(text, speak) { jvBubble(text, 'bot'); jvSpeak(speak == null ? text : speak); }
+  function jvName() { var n = (state.session && state.session.name) || ''; return n.split(/\s+/)[0] || ''; }
+
+  function jvPeriod(low) {
+    var td = todayIso();
+    if (/\b(minggu depan|next week|pekan depan)\b/.test(low)) { var m = isoAdd(mondayOf(td), 7); return { from: m, to: isoAdd(m, 6), w: 'w_nweek' }; }
+    if (/\b(minggu ini|this week|pekan ini)\b/.test(low)) { var m2 = mondayOf(td); return { from: m2, to: isoAdd(m2, 6), w: 'w_week' }; }
+    if (/\b(lusa|day after tomorrow)\b/.test(low)) return { from: isoAdd(td, 2), to: isoAdd(td, 2), w: 'w_after' };
+    if (/\b(besok|tomorrow)\b/.test(low)) return { from: isoAdd(td, 1), to: isoAdd(td, 1), w: 'w_tomorrow' };
+    if (/\b(hari ini|today|sekarang|now)\b/.test(low)) return { from: td, to: td, w: 'w_today' };
+    return null;
+  }
+  function jvItemLine(day, it, multi) {
+    var tm = it.allDay ? jt('allday') : (it.start || '') ;
+    return (multi ? dShort(day.date) + ' ' : '') + tm + ' ' + it.title;
+  }
+  function jvAgenda(per) {
+    jvBubble(jt('thinking'), 'bot');
+    api('rekap', { from: per.from, to: per.to }).then(function (d) {
+      jvDropThinking();
+      var multi = per.from !== per.to, lines = [], n = 0;
+      d.days.forEach(function (day) { day.items.forEach(function (it) { if (it.kind === 'PUIS') return; n++; lines.push('• ' + jvItemLine(day, it, multi)); }); });
+      if (!n) { jvReply(jt('empty_day', { w: jt(per.w) })); return; }
+      var head = jt('day_n', { w: jt(per.w), n: n });
+      jvBubble(head + '\n' + lines.slice(0, 12).join('\n') + (lines.length > 12 ? '\n…' : ''), 'bot');
+      jvSpeak(head + ' ' + lines.slice(0, 5).map(function (l) { return l.replace('• ', ''); }).join('. '));
+    }).catch(jvFail);
+  }
+  function jvDropThinking() { var log = $('jv-log'); if (!log) return; var l = log.lastChild; if (l && l.textContent === jt('thinking')) log.removeChild(l); }
+  function jvFail(e) { jvDropThinking(); jvReply(jt('err', { x: errText(e) })); }
+
+  function jvNext() {
+    var data = lastDash; if (!data || !data.agenda) { jvReply(jt('next_none')); return; }
+    var w = wibNow(), nowHm = ('0' + w.getHours()).slice(-2) + ':' + ('0' + w.getMinutes()).slice(-2), ty = data.today.replace(/-/g, ''), it = null;
+    for (var i = 0; i < data.agenda.length; i++) {
+      var x = data.agenda[i];
+      if (x.status !== 'Aktif' || x.kind === 'PUIS') continue;
+      if (x.ymd > ty || (x.ymd === ty && (x.allDay || (x.end || x.start) >= nowHm))) { it = x; break; }
+    }
+    if (!it) { jvReply(jt('next_none')); return; }
+    jvReply(jt('next', { when: it.ymd === ty ? (it.allDay ? jt('allday') : it.start) : dayLabel(it.ymd) + (it.allDay ? '' : ' ' + it.start), title: it.title }));
+  }
+  function jvTodos() {
+    api('tugasList', {}).then(function (d) {
+      var open = d.items.filter(function (x) { return !x.done; }), td = d.today || todayIso();
+      if (!open.length) { jvReply(jt('td_empty')); return; }
+      open.sort(function (a, b) { var ra = PRANK[a.prio] != null ? PRANK[a.prio] : 1, rb = PRANK[b.prio] != null ? PRANK[b.prio] : 1; return ra - rb || String(a.due || '9999').localeCompare(String(b.due || '9999')); });
+      var late = open.filter(function (x) { return x.due && x.due < td; }).length;
+      var head = jt('td_n', { n: open.length, late: late ? jt('td_late', { n: late }) : '' });
+      jvBubble(head + '\n' + open.slice(0, 6).map(function (x) { return '☐ ' + x.title + (x.prio === 'Penting' ? ' ❗' : ''); }).join('\n'), 'bot');
+      jvSpeak(head + ' ' + jt('td_top', { x: open[0].title }));
+    }).catch(jvFail);
+  }
+  function jvWarn() {
+    api('bentrok', {}).then(function (r) {
+      warnData = r; renderWarn();
+      if (!r.conflicts.length && !r.meals.length) { jvReply(jt('warn_none')); return; }
+      var lines = r.conflicts.slice(0, 4).map(function (c) { return '• ' + dShort(c.date) + ' ' + c.a.title + ' / ' + c.b.title; }).concat(r.meals.slice(0, 4).map(function (m) { return '• ' + dShort(m.date) + ' ' + t(m.meal === 'dinner' ? 'warn_dinner' : 'warn_lunch'); }));
+      var head = jt('warn_n', { c: r.conflicts.length, m: r.meals.length });
+      jvBubble(head + '\n' + lines.join('\n'), 'bot'); jvSpeak(head);
+    }).catch(jvFail);
+  }
+  function jvStat(month) {
+    api('statistik', { period: month ? 'month' : 'week', offset: 0 }).then(function (d) {
+      var h = Math.round(d.totals.minutes / 6) / 10;
+      jvReply(jt(month ? 'stat_m' : 'stat', { e: d.totals.events, h: state.lang === 'id' ? String(h).replace('.', ',') : h, d: d.totals.tugasDone }));
+    }).catch(jvFail);
+  }
+  function jvTheme(mode) {
+    for (var i = 0; i < 3 && themeMode() !== mode; i++) cycleTheme();
+    jvReply(jt(mode === 'dark' ? 'dark' : mode === 'light' ? 'light' : 'auto'));
+  }
+
+  function jvRun(raw) {
+    var text = String(raw || '').trim(); if (!text) return;
+    jvBubble(text, 'me'); $('jv-in').value = '';
+    var low = ' ' + text.toLowerCase().replace(/[.,!?]+/g, ' ').replace(/^\s*(hey |hai |halo |hi |ok |oke )?jarvis\b[\s,]*/, '').replace(/\b(tolong|dong|deh|ya|please|bisa|can you|could you)\b/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
+    var m, per;
+    low = low.trim();
+    if (!low || /^(halo|hai|hi|hello|hey|p|woi)$/.test(low)) { jvReply(jt('hello', { n: jvName() })); return; }
+    if (/^(bantuan|help|bisa apa|apa saja|what can you do|commands?|perintah)/.test(low)) { jvReply(jt('help'), ''); return; }
+    // tambah to-do
+    if ((m = /^(tambah|tambahkan|buat|bikin|catat|add|create|new)\s+(?:sebuah\s+)?(?:to-?do|tugas|task)\s*(?:untuk|buat|:)?\s*(.+)$/.exec(low))) {
+      var title = m[2].replace(/^./, function (c) { return c.toUpperCase(); });
+      api('tugasSave', { key: newKey(), title: title }).then(function (d) { tdData = d; renderTodo(); jvReply(jt('td_added', { x: title })); }).catch(jvFail); return;
+    }
+    // tambah jadwal
+    if ((m = /^(tambah|tambahkan|buat|bikin|jadwalkan|add|schedule|set up|set|new)\s+(?:sebuah\s+)?(jadwal|meeting|rapat|acara|event|appointment|schedule)?\s*(.+)$/.exec(low))) {
+      var kindWord = m[2] && /meeting|rapat/.test(m[2]) ? (/rapat/.test(m[2]) ? 'Rapat ' : 'Meeting ') : '';
+      var today = jData ? jData.today : todayIso(), r = parseQuick(m[3], today), msg = jt('form');
+      if (!r.hasDate) msg += jt('form_nodate'); if (!r.hasTime) msg += jt('form_notime');
+      var ttl = (r.title || m[3]); if (kindWord && !new RegExp('^' + kindWord.trim(), 'i').test(ttl)) ttl = kindWord + ttl;
+      switchTab('jadwal');
+      ensureJData(function () { openForm(null, { title: ttl.replace(/^./, function (c) { return c.toUpperCase(); }), date: r.date, start: r.start, end: r.end, location: r.location }); });
+      jvReply(msg); closeJv(); return;
+    }
+    // cari
+    if ((m = /^(cari|carikan|search|find|temukan|look for)\s+(.+)$/.exec(low))) {
+      var q = m[2].replace(/^(tentang|soal|about|for)\s+/, '');
+      jvReply(jt('searching', { q: q }), ''); closeJv(); switchTab('cari'); $('cari-in').value = q; doCari(); return;
+    }
+    // bagikan
+    if (/\b(bagikan|share|kirim)\b/.test(low) && /\b(agenda|jadwal|schedule)\b/.test(low)) {
+      per = jvPeriod(low); closeJv(); openShare(per ? (per.w === 'w_tomorrow' ? 'tomorrow' : per.w === 'w_week' ? 'week' : per.w === 'w_nweek' ? 'nweek' : 'today') : 'today'); jvReply(jt('share'), ''); return;
+    }
+    if (/\b(sinkron|sync|sinkronkan)\b/.test(low)) {
+      jvBubble(jt('syncing'), 'bot');
+      api('jadwalSyncNow', {}).then(function (r) { jvDropThinking(); jvReply(jt('sync', { a: r.push, b: r.pull })); }).catch(jvFail); return;
+    }
+    if (/\b(bentrok|bertabrakan|conflicts?|clash|jeda makan|meal break)\b/.test(low)) { jvWarn(); return; }
+    if (/\b(berikutnya|selanjutnya|next|setelah ini|habis ini|what.?s next)\b/.test(low) && !/\b(minggu|week)\b/.test(low)) { jvNext(); return; }
+    if (/\b(to-?do|tugas|tasks?)\b/.test(low) && !/\b(buka|open|go to|ke)\b/.test(low)) { jvTodos(); return; }
+    if (/\b(agenda|jadwal|schedule|acara|ada apa|what.?s on|apa aja|what do i have)\b/.test(low) && (per = jvPeriod(low))) { jvAgenda(per); return; }
+    if (/\b(agenda|jadwal|schedule|ada apa|what.?s on)\b/.test(low) && /\b(apa|what|ada|have)\b/.test(low)) { jvAgenda({ from: todayIso(), to: todayIso(), w: 'w_today' }); return; }
+    if (/\b(statistik|statistics|stats|ringkasan)\b/.test(low) && /\b(minggu|bulan|week|month|ini|this)\b/.test(low)) { jvStat(/\b(bulan|month)\b/.test(low)); return; }
+    // tema & bahasa
+    if (/\b(mode gelap|dark|gelap)\b/.test(low)) { jvTheme('dark'); return; }
+    if (/\b(mode terang|light|terang)\b/.test(low)) { jvTheme('light'); return; }
+    if (/\b(otomatis|auto|automatic)\b/.test(low) && /\b(tema|theme|mode)\b/.test(low)) { jvTheme('auto'); return; }
+    if (/\b(bahasa inggris|english|inggris|to english)\b/.test(low)) { setLang('en'); jvReply(jt('lang')); return; }
+    if (/\b(bahasa indonesia|indonesian|indonesia)\b/.test(low)) { setLang('id'); jvReply(jt('lang')); return; }
+    // buka tab
+    if ((m = /^(buka|bukain|ke|go to|open|tampilkan|lihat|show|pergi ke|switch to)\s+(?:tab\s+|halaman\s+|section\s+)?(.+)$/.exec(low)) || JV_TABS.some(function (x) { return x[0].test(low) && low.split(' ').length <= 3; })) {
+      var what = m ? m[2] : low;
+      for (var i = 0; i < JV_TABS.length; i++) if (JV_TABS[i][0].test(what)) { jvReply(jt('go', { x: JV_TABS[i][2] }), ''); closeJv(); switchTab(JV_TABS[i][1]); return; }
+    }
+    jvReply(jt('none'));
+  }
+
+  function jvMic() {
+    if (!SR) { jvReply(jt('nomic'), ''); return; }
+    if (jvListening && jvRec) { try { jvRec.stop(); } catch (e) { /* abaikan */ } return; }
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) { /* abaikan */ }
+    jvRec = new SR(); jvRec.lang = state.lang === 'en' ? 'en-US' : 'id-ID'; jvRec.interimResults = true; jvRec.maxAlternatives = 1; jvRec.continuous = false;
+    var finalText = '';
+    jvRec.onstart = function () { jvListening = true; $('jv-mic').classList.add('on'); $('jv-in').placeholder = jt('listen'); };
+    jvRec.onresult = function (ev) {
+      var s = '', fin = '';
+      for (var i = ev.resultIndex; i < ev.results.length; i++) { var tr = ev.results[i][0].transcript; if (ev.results[i].isFinal) fin += tr; else s += tr; }
+      if (fin) finalText = fin; $('jv-in').value = fin || s;
+    };
+    jvRec.onerror = function (ev) {
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') jvReply(jt('micdeny'), '');
+      else if (ev.error === 'no-speech') jvBubble(jt('nospeech'), 'bot');
+    };
+    jvRec.onend = function () {
+      jvListening = false; $('jv-mic').classList.remove('on'); $('jv-in').placeholder = jt('ph');
+      if (finalText) jvRun(finalText);
+    };
+    try { jvRec.start(); } catch (e) { jvListening = false; }
+  }
+  function openJv() {
+    $('jv').hidden = false; jvOpen = true; document.body.style.overflow = 'hidden';
+    if (!jvGreeted) { jvGreeted = true; jvBubble(jt('hello', { n: jvName() }), 'bot'); }
+    setTimeout(function () { $('jv-in').focus(); }, 60);
+  }
+  function closeJv() {
+    $('jv').hidden = true; jvOpen = false;
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) { /* abaikan */ }
+    if (jvListening && jvRec) { try { jvRec.abort(); } catch (e) { /* abaikan */ } }
+    syncScroll();
+  }
+  function jvChips() {
+    var box = $('jv-chips'); if (!box) return; box.innerHTML = '';
+    [['c1', 'agenda hari ini'], ['c2', 'agenda besok'], ['c3', 'berikutnya'], ['c4', 'bentrok'], ['c5', 'to-do apa aja'], ['c6', 'bantuan']].forEach(function (c) {
+      var b = el('button', 'btn ghost sm', jt(c[0])); b.type = 'button'; b.addEventListener('click', function () { jvRun(c[1]); }); box.appendChild(b);
+    });
+    $('jv-title').textContent = jt('title'); $('jv-in').placeholder = jt('ph'); $('jv-mic').setAttribute('aria-label', jt('mic')); $('jv-send').setAttribute('aria-label', jt('send')); $('jv-voice-l').textContent = jt('mute');
+  }
+  function bootJarvis() {
+    jvVoice = lsGet('ottley.jv.voice') !== '0';
+    $('jv-voice').checked = jvVoice;
+    $('jv-fab').addEventListener('click', openJv);
+    $('jv-close').addEventListener('click', closeJv);
+    $('jv').addEventListener('click', function (e) { if (e.target === $('jv')) closeJv(); });
+    $('jv-form').addEventListener('submit', function (e) { e.preventDefault(); jvRun($('jv-in').value); });
+    $('jv-mic').addEventListener('click', jvMic);
+    if (!SR) $('jv-mic').classList.add('off');
+    $('jv-voice').addEventListener('change', function () { jvVoice = $('jv-voice').checked; lsSet('ottley.jv.voice', jvVoice ? '1' : '0'); if (!jvVoice && window.speechSynthesis) try { window.speechSynthesis.cancel(); } catch (e) { /* abaikan */ } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && jvOpen) closeJv(); });
+    jvChips();
+  }
+
   // ---------- mulai ----------
   function boot() {
     var saved = lsGet(KEY_LANG);
     state.lang = saved === 'en' ? 'en' : 'id';
 
     bootPlus();
+    bootJarvis();
     $('btn-theme').addEventListener('click', cycleTheme);
     applyThemeUi();
     $('btn-lang').addEventListener('click', function () { setLang(state.lang === 'id' ? 'en' : 'id'); });
