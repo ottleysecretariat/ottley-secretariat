@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#1f6f5c">
-  <meta name="app-v" content="24">
+  <meta name="app-v" content="25">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="logo-square.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -715,5 +715,18 @@
     </div>
   </div>
   <div id="print-area" hidden></div>
+  <button id="jv-fab" class="jv-fab" type="button" aria-label="Jarvis"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 00-3 3v6a3 3 0 006 0V6a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+  <div id="jv" class="sheet" hidden>
+    <div class="sheet-card jv-card" role="dialog" aria-modal="true" aria-labelledby="jv-title">
+      <div class="jv-head"><h2 id="jv-title">Jarvis</h2><label class="chip-c jv-vo"><input id="jv-voice" type="checkbox" checked><span id="jv-voice-l"></span></label><button id="jv-close" class="btn ghost sm" type="button" data-i18n="btn_close"></button></div>
+      <div id="jv-log" class="jv-log" aria-live="polite"></div>
+      <div id="jv-chips" class="jv-chips"></div>
+      <form id="jv-form" class="jv-form" autocomplete="off">
+        <input id="jv-in" type="text" maxlength="300" aria-label="Command">
+        <button id="jv-mic" class="jv-mic" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 00-3 3v6a3 3 0 006 0V6a3 3 0 00-3-3zM5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+        <button id="jv-send" class="btn primary" type="submit">&#10148;</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
